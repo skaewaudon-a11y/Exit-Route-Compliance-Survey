@@ -4,255 +4,483 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>SafeGuard Inspection</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-  :root {
-    --primary:#0058be;--primary-dark:#004395;--primary-light:#2170e4;
-    --primary-container:#d8e2ff;--surface:#f9f9ff;--surface-card:#ffffff;
-    --surface-container:#ecedf7;--surface-high:#e6e7f2;
-    --on-surface:#191b23;--on-surface-variant:#424754;
-    --outline:#727785;--outline-variant:#c2c6d6;
-    --success:#1b7f4a;--success-bg:#d4f4e2;
-    --warning:#9b5f00;--warning-bg:#ffecd0;
-    --error:#ba1a1a;--error-bg:#ffdad6;
-    --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-full:9999px;
-    --shadow-sm:0 1px 4px rgba(0,0,0,.08);--shadow-md:0 2px 12px rgba(0,0,0,.10);--shadow-lg:0 4px 24px rgba(0,0,0,.13);
-    --nav-height:64px;--bottom-nav:64px;
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'Segoe UI',Arial,sans-serif;background:var(--surface);color:var(--on-surface);min-height:100vh;overflow-x:hidden}
-  .top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:#fff;border-bottom:1px solid var(--outline-variant);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;box-shadow:var(--shadow-sm)}
-  .brand{font-size:20px;font-weight:800;color:var(--primary);line-height:1.2}
-  .brand span{display:block;font-size:12px;font-weight:600;color:var(--on-surface-variant);letter-spacing:.05em}
-  .nav-desktop-links{display:none;gap:4px}
-  @media(min-width:768px){.nav-desktop-links{display:flex}}
-  .nav-link-btn{padding:8px 16px;border-radius:var(--radius-full);border:none;background:transparent;font-size:13px;font-weight:600;color:var(--on-surface-variant);cursor:pointer;transition:all .18s}
-  .nav-link-btn.active{background:var(--primary-container);color:var(--primary)}
-  .nav-link-btn:hover:not(.active){background:var(--surface-container)}
-  .icon-btn{width:40px;height:40px;border-radius:var(--radius-full);border:none;background:transparent;cursor:pointer;color:var(--on-surface-variant);display:flex;align-items:center;justify-content:center;font-size:18px}
-  .icon-btn:hover{background:var(--surface-container)}
-  .avatar{width:36px;height:36px;border-radius:var(--radius-full);background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;border:2px solid var(--outline-variant)}
-  .main-content{margin-top:var(--nav-height);padding:20px 16px;padding-bottom:calc(var(--bottom-nav)+20px)}
-  @media(min-width:768px){.main-content{padding:28px 32px;padding-bottom:40px;max-width:900px;margin-left:auto;margin-right:auto}}
-  .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav);background:#fff;border-top:1px solid var(--outline-variant);display:flex;align-items:center;justify-content:space-around;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.07)}
-  @media(min-width:768px){.bottom-nav{display:none}}
-  .bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;cursor:pointer;flex:1}
-  .bottom-nav-item i{font-size:20px;color:var(--on-surface-variant)}
-  .bottom-nav-item span{font-size:11px;font-weight:600;color:var(--on-surface-variant)}
-  .bottom-nav-item.active i,.bottom-nav-item.active span{color:var(--primary)}
-  .page{display:none}.page.active{display:block}
-  .page-header{margin-bottom:20px}
-  .page-header h1{font-size:22px;font-weight:800}
-  .page-header p{font-size:13px;color:var(--on-surface-variant);margin-top:4px}
-  .status-bar{background:linear-gradient(135deg,#1a3a5c,#0058be);border-radius:var(--radius-md);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:20px}
-  .status-dot{width:10px;height:10px;border-radius:50%;background:#00e5a0;animation:pulse-dot 2s infinite;flex-shrink:0}
-  @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.3)}}
-  .status-text{font-size:12px;font-weight:600;color:#fff;flex:1}
-  .status-badge{background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--radius-full)}
-  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
-  @media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-  .stat-card{background:var(--surface-card);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant);display:flex;flex-direction:column;gap:6px}
-  .stat-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:4px}
-  .stat-val{font-size:28px;font-weight:800;line-height:1}
-  .stat-lbl{font-size:11px;font-weight:600;color:var(--on-surface-variant);letter-spacing:.05em;text-transform:uppercase}
-  .stat-card.blue .stat-icon{background:var(--primary-container);color:var(--primary)}
-  .stat-card.green .stat-icon{background:var(--success-bg);color:var(--success)}
-  .stat-card.warn .stat-icon{background:var(--warning-bg);color:var(--warning)}
-  .stat-card.red .stat-icon{background:var(--error-bg);color:var(--error)}
-  .section-title{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
-  .section-title::after{content:'';flex:1;height:1px;background:var(--outline-variant)}
-  .inspection-list{display:flex;flex-direction:column;gap:10px}
-  .inspection-item{background:var(--surface-card);border-radius:var(--radius-lg);padding:14px 16px;border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;transition:border-color .15s}
-  .inspection-item:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
-  .insp-icon{width:42px;height:42px;border-radius:var(--radius-md);background:var(--primary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-  .insp-info{flex:1;min-width:0}
-  .insp-title{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .insp-sub{font-size:12px;color:var(--on-surface-variant);margin-top:2px}
-  .badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--radius-full);font-size:11px;font-weight:700;white-space:nowrap;flex-shrink:0}
-  .badge.complied{background:var(--success-bg);color:var(--success)}
-  .badge.non-complied{background:var(--error-bg);color:var(--error)}
-  .badge.na{background:var(--surface-high);color:var(--outline)}
-  .realtime-badge{display:inline-flex;align-items:center;gap:5px;background:var(--success-bg);color:var(--success);font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-full)}
-  .realtime-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse-dot 1.8s infinite}
-  .item-actions{display:flex;gap:6px;flex-shrink:0}
-  .item-btn{width:32px;height:32px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
-  .item-btn.edit{color:var(--primary)}.item-btn.del{color:var(--error)}
-  .item-btn.edit:hover{background:var(--primary-container);border-color:var(--primary)}
-  .item-btn.del:hover{background:var(--error-bg);border-color:var(--error)}
-  .form-card{background:var(--surface-card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--outline-variant);overflow:hidden;margin-bottom:16px}
-  .form-section{padding:20px;border-bottom:1px solid var(--outline-variant)}
-  .form-section:last-child{border-bottom:none}
-  .form-section-title{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-  .section-num{width:30px;height:30px;border-radius:var(--radius-full);background:var(--primary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
-  .form-section-title h2{font-size:16px;font-weight:700}
-  .form-section-title p{font-size:12px;color:var(--on-surface-variant);margin-top:1px}
-  .form-grid{display:grid;grid-template-columns:1fr;gap:14px}
-  @media(min-width:600px){.form-grid{grid-template-columns:1fr 1fr}}
-  .col-span-2{grid-column:1/-1}
-  .field-group{display:flex;flex-direction:column;gap:6px}
-  .field-label{font-size:13px;font-weight:700;letter-spacing:.03em}
-  .field-input,.field-select,.field-textarea{width:100%;padding:11px 14px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:14px;color:var(--on-surface);font-family:inherit;transition:border-color .15s,box-shadow .15s;outline:none;appearance:none}
-  .field-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23727785' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:38px}
-  .field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,88,190,.13)}
-  .field-textarea{min-height:100px;resize:vertical}
-  .label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-  .info-btn{background:none;border:1.5px solid var(--primary-container);color:var(--primary);font-size:12px;font-weight:700;padding:4px 12px;border-radius:var(--radius-full);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
-  .info-btn:hover{background:var(--primary-container)}
-  .ref-panel{margin-top:10px;border-radius:var(--radius-lg);border:2px solid rgba(0,88,190,.20);overflow:hidden;box-shadow:var(--shadow-lg);animation:slideDown .22s ease}
-  @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
-  .ref-panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--primary);color:#fff}
-  .rph-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:8px}
-  .ref-panel-close{background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:16px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
-  .ref-panel-close:hover{background:rgba(255,255,255,.3)}
-  .ref-panel-body{padding:12px;background:#f8faff}
-  .ref-img-wrap{position:relative;cursor:zoom-in;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--outline-variant);line-height:0}
-  .ref-img-wrap img{width:100%;height:auto;display:block;transition:transform .2s}
-  .ref-img-wrap:hover img{transform:scale(1.01)}
-  .ref-img-zoom{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;pointer-events:none}
-  .ref-caption{font-size:11px;color:var(--on-surface-variant);margin-top:8px;font-style:italic;text-align:center;line-height:1.5}
-  .door-type-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
-  @media(max-width:479px){.door-type-cards{grid-template-columns:1fr}}
-  .dt-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);padding:12px 10px;cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative}
-  .dt-card:hover{border-color:var(--primary);background:#f0f4ff;transform:translateY(-1px);box-shadow:var(--shadow-md)}
-  .dt-card.selected{border-color:var(--primary);background:var(--primary-container);box-shadow:0 0 0 3px rgba(0,88,190,.15)}
-  .dt-card .dt-icon{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 8px;font-size:18px}
-  .dt-card .dt-name{font-size:11px;font-weight:800;letter-spacing:.03em;line-height:1.3}
-  .dt-card .dt-desc{font-size:10px;color:var(--on-surface-variant);margin-top:3px;line-height:1.4}
-  .dt-card.selected .dt-name{color:var(--primary)}
-  .dt-card .dt-check{position:absolute;top:6px;right:8px;font-size:14px;color:var(--primary);display:none}
-  .dt-card.selected .dt-check{display:block}
-  .dt-card.ead .dt-icon{background:#e8f5e9;color:#2e7d32}
-  .dt-card.ed .dt-icon{background:#e3f2fd;color:#1565c0}
-  .dt-card.edd .dt-icon{background:#fce4ec;color:#c62828}
-  .door-leaf-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
-  @media(max-width:479px){.door-leaf-cards{grid-template-columns:1fr 1fr}}
-  .dl-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative;overflow:hidden}
-  .dl-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-1px)}
-  .dl-card.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,88,190,.18)}
-  .dl-card .dl-img{width:100%;height:80px;display:block;background:#f0f4ff}
-  .dl-card .dl-name{font-size:11px;font-weight:800;padding:7px 6px 8px;color:var(--on-surface);line-height:1.3;background:#fff}
-  .dl-card.selected .dl-name{color:var(--primary);background:var(--primary-container)}
-  .dl-card .dl-check{position:absolute;top:6px;right:6px;font-size:15px;color:var(--primary);background:#fff;border-radius:50%;display:none;line-height:1}
-  .dl-card.selected .dl-check{display:block}
-  .toggle-card{background:#fff;border:1px solid var(--outline-variant);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)}
-  .toggle-info{flex:1}
-  .toggle-info .tl{font-size:13px;font-weight:700}
-  .toggle-info .ts{font-size:12px;color:var(--on-surface-variant);margin-top:2px}
-  .toggle-row{display:flex;align-items:center;gap:10px}
-  .na-btn{padding:5px 12px;border-radius:var(--radius-full);border:1.5px solid var(--outline-variant);background:#fff;font-size:11px;font-weight:700;color:var(--on-surface-variant);cursor:pointer;transition:all .15s}
-  .na-btn.active{background:var(--surface-high);border-color:var(--outline)}
-  .switch{position:relative;display:inline-block;width:48px;height:26px}
-  .switch input{opacity:0;width:0;height:0}
-  .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:var(--outline-variant);transition:.25s;border-radius:26px}
-  .slider:before{position:absolute;content:'';height:20px;width:20px;left:3px;bottom:3px;background:white;transition:.25s;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.18)}
-  input:checked+.slider{background:var(--primary)}
-  input:checked+.slider:before{transform:translateX(22px)}
-  .occupancy-wrap{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--outline-variant);border-radius:var(--radius-md);padding:11px 14px;transition:border-color .15s,box-shadow .15s}
-  .occupancy-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,88,190,.13)}
-  .occupancy-icon{width:36px;height:36px;border-radius:var(--radius-md);background:var(--warning-bg);color:var(--warning);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-  .occupancy-input{flex:1;border:none;outline:none;font-size:22px;font-weight:800;color:var(--on-surface);font-family:inherit;background:transparent;width:80px;text-align:center}
-  .occupancy-unit{font-size:13px;font-weight:600;color:var(--on-surface-variant)}
-  .occ-btns{display:flex;flex-direction:column;gap:4px}
-  .occ-btn{width:28px;height:28px;border-radius:var(--radius-sm);border:1.5px solid var(--outline-variant);background:var(--surface-container);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary);transition:all .15s}
-  .occ-btn:hover{background:var(--primary-container);border-color:var(--primary)}
-  .export-section{padding:20px}
-  .export-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .export-title i{color:var(--primary)}
-  .export-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-  .export-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:var(--radius-lg);border:1.5px solid var(--outline-variant);background:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm)}
-  .export-btn:hover{background:var(--surface-container);border-color:var(--primary);color:var(--primary)}
-  .export-hint{font-size:12px;color:var(--on-surface-variant);margin-top:10px;font-style:italic}
-  .action-area{display:flex;flex-direction:column;gap:10px;margin-top:16px}
-  .btn-primary{width:100%;padding:15px;border-radius:var(--radius-full);border:none;background:var(--primary);color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:0 4px 14px rgba(0,88,190,.30)}
-  .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
-  .btn-primary:disabled{background:var(--outline-variant);box-shadow:none;cursor:not-allowed;transform:none}
-  .btn-secondary{width:100%;padding:14px;border-radius:var(--radius-full);border:1.5px solid var(--outline-variant);background:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s}
-  .btn-secondary:hover{background:var(--surface-container)}
-  .progress-wrap{margin-bottom:20px}
-  .progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--on-surface-variant);margin-bottom:6px}
-  .progress-bar{height:5px;background:var(--surface-high);border-radius:var(--radius-full);overflow:hidden}
-  .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#2170e4);border-radius:var(--radius-full);transition:width .4s ease}
-  .edit-banner{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:1.5px solid #ff9800;border-radius:var(--radius-md);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:#e65100}
-  .filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
-  .btn-filter{padding:11px 20px;border-radius:var(--radius-md);border:none;background:var(--primary);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
-  .btn-filter:hover{background:var(--primary-dark)}
-  .report-table-wrap{overflow-x:auto}
-  .report-table{width:100%;border-collapse:collapse;font-size:13px}
-  .report-table th{background:var(--primary);color:#fff;padding:10px 12px;text-align:left;font-weight:700;font-size:12px;white-space:nowrap}
-  .report-table td{padding:10px 12px;border-bottom:1px solid var(--outline-variant);white-space:nowrap;vertical-align:middle}
-  .report-table tr:hover td{background:var(--surface-container)}
-  .table-card{background:var(--surface-card);border-radius:var(--radius-lg);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden}
-  .report-actions{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-  .btn-outline{padding:9px 18px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s}
-  .btn-outline:hover{background:var(--surface-container);border-color:var(--primary);color:var(--primary)}
-  .empty-state{text-align:center;padding:48px 20px;color:var(--on-surface-variant)}
-  .empty-state i{font-size:48px;margin-bottom:14px;opacity:.35;display:block}
-  .about-hero{background:linear-gradient(135deg,#004395,#0058be 60%,#2170e4);border-radius:var(--radius-lg);padding:28px 24px;margin-bottom:20px;box-shadow:var(--shadow-md)}
-  .about-hero .ah-logo{font-size:28px;font-weight:800;color:#fff;line-height:1.2}
-  .about-hero .ah-logo span{display:block;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.06em;margin-top:2px}
-  .about-hero .ah-ver{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-full);margin-top:10px}
-  .about-section{background:var(--surface-card);border-radius:var(--radius-lg);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px}
-  .about-item{padding:16px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--outline-variant)}
-  .about-item:last-child{border-bottom:none}
-  .about-icon{width:38px;height:38px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-  .about-text .at{font-size:14px;font-weight:700}
-  .about-text .as{font-size:12px;color:var(--on-surface-variant);margin-top:2px}
-  .howto-card{background:linear-gradient(135deg,rgba(0,88,190,.06),rgba(33,112,228,.04));border:1.5px solid rgba(0,88,190,.18);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px}
-  .howto-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .howto-steps{display:flex;flex-direction:column;gap:10px}
-  .howto-step{display:flex;align-items:flex-start;gap:12px}
-  .step-badge{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:1px}
-  .step-content .sc-title{font-size:13px;font-weight:700;color:var(--on-surface)}
-  .step-content .sc-desc{font-size:12px;color:var(--on-surface-variant);margin-top:2px;line-height:1.5}
-  .howto-tip{background:var(--warning-bg);border:1px solid rgba(155,95,0,.2);border-radius:var(--radius-md);padding:10px 14px;margin-top:14px;font-size:12px;color:var(--warning);font-weight:600;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-  .toast-wrap{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-  @media(min-width:768px){.toast-wrap{bottom:24px}}
-  .toast{padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:700;background:#1e2533;color:#fff;box-shadow:var(--shadow-lg);animation:toast-in .3s ease,toast-out .3s ease 2.5s forwards;max-width:340px;text-align:center;pointer-events:none}
-  .toast.success{background:var(--success)}.toast.error{background:var(--error)}.toast.warning{background:var(--warning)}
-  @keyframes toast-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes toast-out{to{opacity:0;transform:translateY(8px)}}
-  .spinner{display:inline-block;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
-  .modal-overlay.open{opacity:1;pointer-events:all}
-  .modal-box{background:#fff;border-radius:var(--radius-lg);max-width:360px;width:100%;padding:24px;box-shadow:var(--shadow-lg);transform:scale(.95);transition:transform .2s}
-  .modal-overlay.open .modal-box{transform:scale(1)}
-  .modal-title{font-size:17px;font-weight:800;margin-bottom:10px}
-  .modal-body{font-size:14px;color:var(--on-surface-variant);margin-bottom:20px;line-height:1.6}
-  .modal-actions{display:flex;gap:10px}
-  .modal-actions button{flex:1}
-  .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
-  .lightbox.open{opacity:1;pointer-events:all}
-  .lightbox-inner{max-width:92vw;max-height:90vh;position:relative}
-  .lightbox-inner img{max-width:100%;max-height:88vh;border-radius:var(--radius-md);box-shadow:0 8px 40px rgba(0,0,0,.5);display:block}
-  .lightbox-close{position:absolute;top:-14px;right:-14px;background:var(--primary);border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
-  .lightbox-caption{text-align:center;color:rgba(255,255,255,.75);font-size:12px;margin-top:10px;font-weight:600}
-  .sub-hidden{display:none}
+:root {
+  --wd-black:#00161F;--wd-navy:#002232;--wd-navy2:#002E42;
+  --wd-blue:#2266FF;--wd-blue-dark:#003399;--wd-teal:#00E5D1;
+  --wd-grad:linear-gradient(135deg,#003087 0%,#2266FF 55%,#00E5D1 100%);
+  --wd-grad-h:linear-gradient(90deg,#2266FF 0%,#00E5D1 100%);
+  --primary:#2266FF;--primary-dark:#003399;
+  --primary-container:rgba(34,102,255,.13);
+  --teal:#00E5D1;--teal-dim:rgba(0,229,209,.12);
+  --surface:#f0f4f8;--surface-card:#ffffff;
+  --surface-container:#e8eef5;--surface-high:#dce6f0;
+  --on-surface:#00161F;--on-surface-variant:#1a3a50;
+  --outline:#4a6b80;--outline-variant:#b8cdd8;
+  --success:#00875A;--success-bg:#d4f7ec;
+  --warning:#8a5200;--warning-bg:#fff0cc;
+  --error:#c0001a;--error-bg:#ffdad9;
+  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;
+  --shadow-sm:0 1px 4px rgba(0,22,31,.08);
+  --shadow-md:0 4px 16px rgba(0,22,31,.12);
+  --shadow-lg:0 8px 32px rgba(0,22,31,.18);
+  --nav-height:64px;--bottom-nav:64px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--on-surface);min-height:100vh;overflow-x:hidden}
+
+/* ══════════════════════════ LOGIN SCREEN ══════════════════════════ */
+#loginScreen{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 50%,var(--wd-navy2) 100%);
+  display:flex;align-items:center;justify-content:center;padding:20px
+}
+#loginScreen.hidden{display:none}
+.login-card{
+  background:rgba(255,255,255,.04);backdrop-filter:blur(20px);
+  border:1px solid rgba(0,229,209,.2);border-radius:24px;
+  padding:40px 36px;width:100%;max-width:420px;
+  box-shadow:0 24px 64px rgba(0,0,0,.4)
+}
+.login-logo{text-align:center;margin-bottom:32px}
+.login-logo-mark{
+  width:64px;height:64px;border-radius:18px;
+  background:var(--wd-grad-h);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 14px;font-size:26px;color:#fff;
+  box-shadow:0 8px 24px rgba(34,102,255,.45)
+}
+.login-logo-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.login-logo-sub{font-size:11px;font-weight:600;color:rgba(0,229,209,.8);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
+.login-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:6px;letter-spacing:.03em;display:block}
+.login-input-wrap{position:relative;margin-bottom:16px}
+.login-input{
+  width:100%;padding:13px 16px;padding-right:44px;
+  background:rgba(255,255,255,.08);border:1.5px solid rgba(0,229,209,.2);
+  border-radius:var(--radius-md);color:#fff;font-size:14px;font-family:inherit;
+  outline:none;transition:border-color .15s,box-shadow .15s
+}
+.login-input::placeholder{color:rgba(255,255,255,.35)}
+.login-input:focus{border-color:var(--wd-teal);box-shadow:0 0 0 3px rgba(0,229,209,.12)}
+.login-input-icon{
+  position:absolute;right:14px;top:50%;transform:translateY(-50%);
+  color:rgba(255,255,255,.4);font-size:15px;cursor:pointer;
+  transition:color .15s;user-select:none
+}
+.login-input-icon:hover{color:var(--wd-teal)}
+.login-error{
+  background:rgba(192,0,26,.15);border:1px solid rgba(192,0,26,.35);
+  border-radius:var(--radius-md);padding:10px 14px;
+  font-size:12px;font-weight:600;color:#ff6b6b;
+  margin-bottom:16px;display:none;align-items:center;gap:8px
+}
+.login-error.show{display:flex}
+.btn-login{
+  width:100%;padding:14px;border-radius:var(--radius-full);border:none;
+  background:var(--wd-grad-h);color:#fff;font-size:14px;font-weight:700;
+  cursor:pointer;transition:all .18s;box-shadow:0 4px 16px rgba(34,102,255,.4);
+  font-family:inherit;letter-spacing:.03em;margin-top:4px
+}
+.btn-login:hover{opacity:.9;transform:translateY(-1px)}
+.btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.login-footer{text-align:center;margin-top:20px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6}
+
+/* ══════════════════════════ TOP NAV ══════════════════════════ */
+.top-nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-height);
+  background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 60%,var(--wd-navy2) 100%);
+  border-bottom:2px solid rgba(0,229,209,.35);
+  display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+  z-index:100;box-shadow:0 4px 24px rgba(0,22,31,.35)
+}
+.brand{font-size:17px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+.brand-dot{width:8px;height:8px;border-radius:50%;background:var(--wd-grad-h);flex-shrink:0}
+.brand-text span{display:block;font-size:10px;font-weight:600;color:rgba(0,229,209,.8);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.nav-desktop-links{display:none;gap:2px}
+@media(min-width:768px){.nav-desktop-links{display:flex}}
+.nav-link-btn{
+  padding:7px 14px;border-radius:var(--radius-full);border:none;
+  background:transparent;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);
+  cursor:pointer;transition:all .18s;font-family:inherit;letter-spacing:.02em
+}
+.nav-link-btn.active{background:rgba(0,229,209,.15);color:var(--wd-teal);border:1px solid rgba(0,229,209,.3)}
+.nav-link-btn:hover:not(.active){background:rgba(255,255,255,.09);color:#fff}
+.nav-right{display:flex;align-items:center;gap:6px}
+.icon-btn{
+  width:36px;height:36px;border-radius:var(--radius-full);border:none;
+  background:rgba(255,255,255,.08);cursor:pointer;color:rgba(255,255,255,.65);
+  display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s
+}
+.icon-btn:hover{background:rgba(0,229,209,.18);color:var(--wd-teal)}
+.user-chip{
+  display:flex;align-items:center;gap:8px;cursor:pointer;
+  background:rgba(255,255,255,.06);border:1px solid rgba(0,229,209,.2);
+  border-radius:var(--radius-full);padding:4px 12px 4px 4px;
+  transition:all .15s
+}
+.user-chip:hover{background:rgba(0,229,209,.1);border-color:rgba(0,229,209,.4)}
+.user-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--wd-grad-h);color:#00161F;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:10px;flex-shrink:0;letter-spacing:.03em
+}
+.user-name-nav{font-size:11px;font-weight:700;color:#fff;white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis}
+.user-role-nav{font-size:9px;font-weight:600;color:rgba(0,229,209,.75);display:block;line-height:1}
+.user-dropdown{
+  position:fixed;top:calc(var(--nav-height) + 8px);right:12px;
+  background:var(--wd-navy);border:1px solid rgba(0,229,209,.2);
+  border-radius:var(--radius-lg);min-width:200px;
+  box-shadow:var(--shadow-lg);z-index:200;overflow:hidden;
+  opacity:0;pointer-events:none;transform:translateY(-8px);
+  transition:opacity .18s,transform .18s
+}
+.user-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0)}
+.ud-header{padding:14px 16px;border-bottom:1px solid rgba(0,229,209,.12)}
+.ud-name{font-size:13px;font-weight:800;color:#fff}
+.ud-role{font-size:10px;color:rgba(0,229,209,.8);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.ud-item{
+  display:flex;align-items:center;gap:10px;padding:11px 16px;
+  font-size:12px;font-weight:600;color:rgba(255,255,255,.75);
+  cursor:pointer;transition:all .15s;border:none;background:none;
+  width:100%;text-align:left;font-family:inherit
+}
+.ud-item:hover{background:rgba(0,229,209,.1);color:#fff}
+.ud-item i{width:16px;text-align:center;font-size:13px}
+.ud-item.danger{color:rgba(255,100,100,.8)}
+.ud-item.danger:hover{background:rgba(192,0,26,.15);color:#ff6b6b}
+.ud-divider{height:1px;background:rgba(0,229,209,.1);margin:4px 0}
+.main-content{margin-top:var(--nav-height);padding:24px 16px;padding-bottom:calc(var(--bottom-nav)+24px)}
+@media(min-width:768px){.main-content{padding:32px 32px;padding-bottom:48px;max-width:920px;margin-left:auto;margin-right:auto}}
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav);
+  background:linear-gradient(180deg,var(--wd-navy) 0%,var(--wd-black) 100%);
+  border-top:1px solid rgba(0,229,209,.2);
+  display:flex;align-items:center;justify-content:space-around;
+  z-index:100;box-shadow:0 -4px 20px rgba(0,22,31,.3)
+}
+@media(min-width:768px){.bottom-nav{display:none}}
+.bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 10px;cursor:pointer;flex:1}
+.bottom-nav-item i{font-size:17px;color:rgba(255,255,255,.4)}
+.bottom-nav-item span{font-size:9px;font-weight:600;color:rgba(255,255,255,.4);letter-spacing:.03em}
+.bottom-nav-item.active i,.bottom-nav-item.active span{color:var(--wd-teal)}
+.page{display:none}.page.active{display:block}
+.page-header{margin-bottom:22px}
+.page-header h1{font-size:22px;font-weight:800;color:var(--wd-black);letter-spacing:-.4px}
+.page-header p{font-size:13px;color:var(--outline);margin-top:4px}
+.status-bar{
+  background:linear-gradient(135deg,var(--wd-black),var(--wd-navy) 60%,var(--wd-navy2));
+  border-radius:var(--radius-lg);padding:12px 16px;
+  display:flex;align-items:center;gap:10px;margin-bottom:20px;
+  border:1px solid rgba(0,229,209,.2);box-shadow:var(--shadow-md)
+}
+.status-dot{width:9px;height:9px;border-radius:50%;background:var(--wd-teal);animation:pulse-dot 2s infinite;flex-shrink:0}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.4)}}
+.status-text{font-size:12px;font-weight:600;color:#fff;flex:1}
+.status-badge{background:rgba(0,229,209,.15);color:var(--wd-teal);font-size:11px;font-weight:700;padding:3px 11px;border-radius:var(--radius-full);border:1px solid rgba(0,229,209,.3)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+@media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{background:var(--surface-card);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant);display:flex;flex-direction:column;gap:6px;transition:box-shadow .18s,transform .18s}
+.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.stat-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:4px}
+.stat-val{font-size:28px;font-weight:800;line-height:1}
+.stat-lbl{font-size:10px;font-weight:700;color:var(--outline);letter-spacing:.08em;text-transform:uppercase}
+.stat-card.blue .stat-icon{background:rgba(34,102,255,.12);color:var(--wd-blue)}.stat-card.blue .stat-val{color:var(--wd-blue)}
+.stat-card.green .stat-icon{background:var(--success-bg);color:var(--success)}.stat-card.green .stat-val{color:var(--success)}
+.stat-card.warn .stat-icon{background:var(--warning-bg);color:var(--warning)}.stat-card.warn .stat-val{color:var(--warning)}
+.stat-card.red .stat-icon{background:var(--error-bg);color:var(--error)}.stat-card.red .stat-val{color:var(--error)}
+.section-title{font-size:12px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--wd-blue-dark);letter-spacing:.05em;text-transform:uppercase}
+.section-title::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--outline-variant),transparent)}
+.inspection-list{display:flex;flex-direction:column;gap:8px}
+.inspection-item{background:var(--surface-card);border-radius:var(--radius-lg);padding:13px 15px;border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;transition:all .15s}
+.inspection-item:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateX(2px)}
+.insp-icon{width:40px;height:40px;border-radius:var(--radius-md);background:var(--primary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.insp-info{flex:1;min-width:0}
+.insp-title{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--wd-black)}
+.insp-sub{font-size:11px;color:var(--outline);margin-top:2px}
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:var(--radius-full);font-size:10px;font-weight:700;white-space:nowrap;flex-shrink:0;letter-spacing:.03em}
+.badge.complied{background:var(--success-bg);color:var(--success)}
+.badge.non-complied{background:var(--error-bg);color:var(--error)}
+.badge.na{background:var(--surface-high);color:var(--outline)}
+.realtime-badge{display:inline-flex;align-items:center;gap:5px;background:var(--success-bg);color:var(--success);font-size:10px;font-weight:700;padding:4px 10px;border-radius:var(--radius-full)}
+.realtime-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--success);animation:pulse-dot 1.8s infinite}
+.item-actions{display:flex;gap:5px;flex-shrink:0}
+.item-btn{width:30px;height:30px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.item-btn.edit{color:var(--primary)}.item-btn.del{color:var(--error)}
+.item-btn.edit:hover{background:var(--primary-container);border-color:var(--primary)}
+.item-btn.del:hover{background:var(--error-bg);border-color:var(--error)}
+.form-card{background:var(--surface-card);border-radius:var(--radius-xl);box-shadow:var(--shadow-md);border:1px solid var(--outline-variant);overflow:hidden;margin-bottom:16px;position:relative}
+.form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--wd-grad-h);border-radius:var(--radius-xl) var(--radius-xl) 0 0}
+.form-section{padding:22px;border-bottom:1px solid var(--outline-variant)}
+.form-section:last-child{border-bottom:none}
+.form-section-title{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.section-num{width:30px;height:30px;border-radius:50%;background:var(--wd-grad-h);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(34,102,255,.3)}
+.form-section-title h2{font-size:15px;font-weight:800;color:var(--wd-black);letter-spacing:-.2px}
+.form-section-title p{font-size:11px;color:var(--outline);margin-top:1px}
+.form-grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:600px){.form-grid{grid-template-columns:1fr 1fr}}
+.col-span-2{grid-column:1/-1}
+.field-group{display:flex;flex-direction:column;gap:5px}
+.field-label{font-size:12px;font-weight:700;color:var(--on-surface-variant);letter-spacing:.02em}
+.field-input,.field-select,.field-textarea{width:100%;padding:10px 13px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:13px;color:var(--on-surface);font-family:inherit;transition:border-color .15s,box-shadow .15s;outline:none;appearance:none}
+.field-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%234a6b80' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:36px}
+.field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(34,102,255,.12)}
+.field-select:disabled{background-color:var(--surface-container);color:var(--outline);cursor:not-allowed;opacity:.65}
+.field-textarea{min-height:90px;resize:vertical}
+.label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.info-btn{background:none;border:1.5px solid rgba(34,102,255,.3);color:var(--primary);font-size:11px;font-weight:700;padding:4px 11px;border-radius:var(--radius-full);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
+.info-btn:hover{background:var(--primary-container)}
+.ref-panel{margin-top:10px;border-radius:var(--radius-lg);border:2px solid rgba(34,102,255,.2);overflow:hidden;box-shadow:var(--shadow-lg);animation:slideDown .22s ease}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.ref-panel-header{display:flex;align-items:center;justify-content:space-between;padding:10px 15px;background:linear-gradient(90deg,var(--wd-navy),var(--primary));color:#fff}
+.rph-title{font-size:12px;font-weight:700;display:flex;align-items:center;gap:8px}
+.ref-panel-close{background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:14px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ref-panel-close:hover{background:rgba(255,255,255,.3)}
+.ref-panel-body{padding:12px;background:#f5f8ff}
+.ref-img-wrap{position:relative;cursor:zoom-in;border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--outline-variant);line-height:0}
+.ref-img-wrap img{width:100%;height:auto;display:block;transition:transform .2s}
+.ref-img-wrap:hover img{transform:scale(1.01)}
+.ref-img-zoom{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:4px 9px;border-radius:18px;display:flex;align-items:center;gap:4px;pointer-events:none}
+.ref-caption{font-size:11px;color:var(--outline);margin-top:7px;font-style:italic;text-align:center;line-height:1.5}
+.door-type-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+@media(max-width:479px){.door-type-cards{grid-template-columns:1fr}}
+.dt-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);padding:12px 10px;cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative}
+.dt-card:hover{border-color:var(--primary);background:#f0f5ff;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.dt-card.selected{border-color:var(--primary);background:var(--primary-container);box-shadow:0 0 0 3px rgba(34,102,255,.12)}
+.dt-card .dt-icon{width:38px;height:38px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 7px;font-size:16px}
+.dt-card .dt-name{font-size:10px;font-weight:800;letter-spacing:.03em;line-height:1.3}
+.dt-card .dt-desc{font-size:9px;color:var(--outline);margin-top:2px;line-height:1.4}
+.dt-card.selected .dt-name{color:var(--primary)}
+.dt-card .dt-check{position:absolute;top:5px;right:7px;font-size:13px;color:var(--primary);display:none}
+.dt-card.selected .dt-check{display:block}
+.dt-card.ead .dt-icon{background:#e3f9f5;color:#00875A}
+.dt-card.ed .dt-icon{background:rgba(34,102,255,.1);color:var(--wd-blue)}
+.dt-card.edd .dt-icon{background:#fff0e6;color:#c04000}
+.door-leaf-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:10px}
+@media(max-width:479px){.door-leaf-cards{grid-template-columns:1fr 1fr}}
+.dl-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative;overflow:hidden}
+.dl-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.dl-card.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(34,102,255,.15)}
+.dl-card .dl-img{width:100%;height:76px;display:block;background:#f0f5ff}
+.dl-card .dl-name{font-size:10px;font-weight:800;padding:7px 5px 8px;color:var(--on-surface);line-height:1.3;background:#fff}
+.dl-card.selected .dl-name{color:var(--primary);background:var(--primary-container)}
+.dl-card .dl-check{position:absolute;top:5px;right:5px;font-size:14px;color:var(--primary);background:#fff;border-radius:50%;display:none;line-height:1}
+.dl-card.selected .dl-check{display:block}
+.mech-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+@media(max-width:599px){.mech-cards{grid-template-columns:repeat(2,1fr)}}
+.mc-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);padding:11px 7px;cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative}
+.mc-card:hover{border-color:var(--primary);background:#f0f5ff;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.mc-card.selected{border-color:var(--primary);background:var(--primary-container);box-shadow:0 0 0 3px rgba(34,102,255,.12)}
+.mc-card .mc-img{width:100%;height:68px;display:block}
+.mc-card .mc-name{font-size:9px;font-weight:800;letter-spacing:.02em;line-height:1.3;padding:5px 3px;color:var(--on-surface)}
+.mc-card.selected .mc-name{color:var(--primary)}
+.mc-card .mc-check{position:absolute;top:4px;right:6px;font-size:12px;color:var(--primary);display:none}
+.mc-card.selected .mc-check{display:block}
+.ynna-card{background:#fff;border:1px solid var(--outline-variant);border-radius:var(--radius-lg);padding:13px 15px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm);gap:12px;transition:border-color .15s}
+.ynna-card:hover{border-color:rgba(34,102,255,.3)}
+.ynna-info{flex:1}.ynna-info .yl{font-size:12px;font-weight:700;color:var(--on-surface);line-height:1.4}
+.ynna-info .ys{font-size:11px;color:var(--outline);margin-top:2px}
+.ynna-btns{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.ynna-btn{min-width:42px;height:33px;padding:0 12px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:11px;font-weight:700;cursor:pointer;transition:all .16s;color:var(--outline);display:flex;align-items:center;justify-content:center;line-height:1;font-family:inherit}
+.ynna-btn:hover{background:var(--surface-container);border-color:var(--outline)}
+.ynna-btn.yes.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(34,102,255,.3)}
+.ynna-btn.no.active{background:var(--error);border-color:var(--error);color:#fff}
+.ynna-btn.na.active{background:var(--surface-high);border-color:var(--outline);color:var(--on-surface-variant)}
+.occupancy-wrap{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--outline-variant);border-radius:var(--radius-md);padding:10px 13px;transition:border-color .15s,box-shadow .15s}
+.occupancy-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(34,102,255,.1)}
+.occupancy-icon{width:34px;height:34px;border-radius:var(--radius-md);background:var(--warning-bg);color:var(--warning);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.occupancy-input{flex:1;border:none;outline:none;font-size:20px;font-weight:800;color:var(--on-surface);font-family:inherit;background:transparent;width:72px;text-align:center}
+.occupancy-unit{font-size:12px;font-weight:600;color:var(--outline)}
+.occ-btns{display:flex;flex-direction:column;gap:3px}
+.occ-btn{width:27px;height:27px;border-radius:var(--radius-sm);border:1.5px solid var(--outline-variant);background:var(--surface-container);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--primary);transition:all .15s}
+.occ-btn:hover{background:var(--primary-container);border-color:var(--primary)}
+.export-section{padding:20px}
+.export-title{font-size:14px;font-weight:700;margin-bottom:13px;display:flex;align-items:center;gap:8px;color:var(--wd-black)}
+.export-title i{color:var(--primary)}
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.export-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:var(--radius-lg);border:1.5px solid var(--outline-variant);background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm);font-family:inherit}
+.export-btn:hover{background:var(--surface-container);border-color:var(--primary);color:var(--primary)}
+.export-hint{font-size:11px;color:var(--outline);margin-top:9px;font-style:italic}
+.action-area{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.btn-primary{width:100%;padding:14px;border-radius:var(--radius-full);border:none;background:var(--wd-grad-h);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:0 4px 16px rgba(34,102,255,.35);font-family:inherit;letter-spacing:.02em}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px)}
+.btn-primary:disabled{background:var(--surface-high);box-shadow:none;cursor:not-allowed;transform:none;color:var(--outline)}
+.btn-secondary{width:100%;padding:13px;border-radius:var(--radius-full);border:1.5px solid var(--outline-variant);background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;font-family:inherit}
+.btn-secondary:hover{background:var(--surface-container)}
+.progress-wrap{margin-bottom:20px}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--outline);margin-bottom:5px}
+.progress-bar{height:5px;background:var(--surface-high);border-radius:var(--radius-full);overflow:hidden}
+.progress-fill{height:100%;background:var(--wd-grad-h);border-radius:var(--radius-full);transition:width .4s ease}
+.edit-banner{background:linear-gradient(135deg,#fffbe6,#fff3cc);border:1.5px solid #f5a623;border-radius:var(--radius-md);padding:11px 15px;margin-bottom:15px;display:flex;align-items:center;gap:10px;font-size:12px;font-weight:700;color:#7a4800}
+.filter-bar{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px}
+.btn-filter{padding:10px 18px;border-radius:var(--radius-md);border:none;background:var(--wd-grad-h);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 2px 8px rgba(34,102,255,.25)}
+.btn-filter:hover{opacity:.9}
+.report-table-wrap{overflow-x:auto}
+.report-table{width:100%;border-collapse:collapse;font-size:12px}
+.report-table th{background:linear-gradient(90deg,var(--wd-navy),var(--wd-navy2));color:#fff;padding:10px 12px;text-align:left;font-weight:700;font-size:11px;white-space:nowrap;letter-spacing:.03em}
+.report-table td{padding:10px 12px;border-bottom:1px solid var(--outline-variant);white-space:nowrap;vertical-align:middle;color:var(--on-surface)}
+.report-table tr:hover td{background:var(--surface-container)}
+.table-card{background:var(--surface-card);border-radius:var(--radius-lg);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden}
+.report-actions{display:flex;gap:9px;margin-bottom:13px;flex-wrap:wrap}
+.btn-outline{padding:9px 17px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .15s;font-family:inherit}
+.btn-outline:hover{background:var(--surface-container);border-color:var(--primary);color:var(--primary)}
+.btn-outline.danger:hover{background:var(--error-bg);border-color:var(--error);color:var(--error)}
+.empty-state{text-align:center;padding:44px 20px;color:var(--outline)}
+.empty-state i{font-size:44px;margin-bottom:12px;opacity:.3;display:block}
+.settings-section{background:var(--surface-card);border-radius:var(--radius-xl);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:16px;position:relative}
+.settings-section::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--wd-grad-h);border-radius:var(--radius-xl) var(--radius-xl) 0 0}
+.settings-section-header{padding:18px 20px;border-bottom:1px solid var(--outline-variant);display:flex;align-items:center;justify-content:space-between}
+.settings-section-header h2{font-size:15px;font-weight:800;color:var(--wd-black);display:flex;align-items:center;gap:10px}
+.settings-section-header h2 i{color:var(--primary);font-size:16px}
+.settings-section-header p{font-size:11px;color:var(--outline);margin-top:2px}
+.btn-add-user{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border-radius:var(--radius-full);border:none;background:var(--wd-grad-h);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 2px 10px rgba(34,102,255,.3);white-space:nowrap;transition:all .15s}
+.btn-add-user:hover{opacity:.9;transform:translateY(-1px)}
+.user-list{padding:0}
+.user-row{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--outline-variant);transition:background .15s}
+.user-row:last-child{border-bottom:none}
+.user-row:hover{background:var(--surface-container)}
+.user-row-avatar{width:38px;height:38px;border-radius:50%;background:var(--wd-grad-h);color:#00161F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;letter-spacing:.02em}
+.user-row-info{flex:1;min-width:0}
+.user-row-name{font-size:13px;font-weight:700;color:var(--wd-black)}
+.user-row-meta{font-size:11px;color:var(--outline);margin-top:2px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.role-badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:var(--radius-full);font-size:10px;font-weight:700;letter-spacing:.04em}
+.role-badge.admin{background:rgba(34,102,255,.12);color:var(--wd-blue);border:1px solid rgba(34,102,255,.2)}
+.role-badge.user{background:var(--teal-dim);color:#007B6E;border:1px solid rgba(0,229,209,.25)}
+.role-badge.viewer{background:var(--surface-high);color:var(--outline);border:1px solid var(--outline-variant)}
+.user-row-actions{display:flex;gap:5px;flex-shrink:0}
+.danger-zone{padding:20px;background:rgba(192,0,26,.03);border-top:1px solid rgba(192,0,26,.12)}
+.danger-zone-title{font-size:12px;font-weight:700;color:var(--error);margin-bottom:12px;display:flex;align-items:center;gap:7px;letter-spacing:.04em;text-transform:uppercase}
+.danger-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:479px){.danger-actions{grid-template-columns:1fr}}
+.btn-danger{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:var(--radius-lg);border:1.5px solid rgba(192,0,26,.3);background:#fff;font-size:12px;font-weight:700;color:var(--error);cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm);font-family:inherit}
+.btn-danger:hover{background:var(--error-bg);border-color:var(--error);box-shadow:0 4px 16px rgba(192,0,26,.15)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,22,31,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:#fff;border-radius:var(--radius-xl);max-width:420px;width:100%;padding:0;box-shadow:var(--shadow-lg);transform:scale(.95);transition:transform .2s;overflow:hidden}
+.modal-overlay.open .modal-box{transform:scale(1)}
+.modal-header{padding:20px 22px 16px;border-bottom:1px solid var(--outline-variant);display:flex;align-items:flex-start;gap:12px}
+.modal-header-icon{width:40px;height:40px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.modal-title{font-size:16px;font-weight:800;color:var(--wd-black)}
+.modal-subtitle{font-size:12px;color:var(--outline);margin-top:2px}
+.modal-body{padding:20px 22px}
+.modal-body p{font-size:13px;color:var(--on-surface-variant);line-height:1.6}
+.modal-warning-box{background:var(--error-bg);border:1px solid rgba(192,0,26,.25);border-radius:var(--radius-md);padding:12px 14px;margin-top:12px;font-size:12px;color:var(--error);font-weight:600;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.modal-footer{padding:16px 22px;border-top:1px solid var(--outline-variant);display:flex;gap:10px}
+.modal-footer button{flex:1;padding:12px;border-radius:var(--radius-full);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+.modal-btn-cancel{border:1.5px solid var(--outline-variant);background:#fff;color:var(--on-surface)}
+.modal-btn-cancel:hover{background:var(--surface-container)}
+.modal-btn-confirm{border:none;background:var(--wd-grad-h);color:#fff;box-shadow:0 3px 10px rgba(34,102,255,.3)}
+.modal-btn-confirm:hover{opacity:.9;transform:translateY(-1px)}
+.modal-btn-danger{border:none;background:var(--error);color:#fff;box-shadow:0 3px 10px rgba(192,0,26,.25)}
+.modal-btn-danger:hover{opacity:.9;transform:translateY(-1px)}
+.clear-steps{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.clear-step{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface-container);border-radius:var(--radius-md);font-size:12px;font-weight:600;color:var(--on-surface-variant)}
+.clear-step i{color:var(--error);width:16px;text-align:center}
+.confirm-type-input{width:100%;margin-top:12px;padding:10px 13px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.confirm-type-input:focus{border-color:var(--error);box-shadow:0 0 0 3px rgba(192,0,26,.1)}
+.user-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:479px){.user-form-grid{grid-template-columns:1fr}}
+.pass-input-wrap{position:relative}
+.pass-input-wrap .field-input{padding-right:42px}
+.pass-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--outline);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.pass-toggle:hover{color:var(--primary)}
+#deleteModal .modal-header-icon{background:var(--error-bg);color:var(--error)}
+#userModal .modal-header-icon{background:var(--primary-container);color:var(--primary)}
+#clearDataModal .modal-header-icon{background:var(--error-bg);color:var(--error)}
+.bpi-popup-overlay{position:fixed;inset:0;background:rgba(0,22,31,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.bpi-popup-overlay.open{opacity:1;pointer-events:all}
+.bpi-popup-box{background:#fff;border-radius:var(--radius-xl);width:100%;max-width:320px;padding:0;box-shadow:var(--shadow-lg);transform:scale(.95);transition:transform .2s;overflow:hidden}
+.bpi-popup-overlay.open .bpi-popup-box{transform:scale(1)}
+.bpi-popup-header{background:linear-gradient(135deg,var(--wd-navy),var(--primary));color:#fff;padding:15px 19px;display:flex;align-items:center;justify-content:space-between}
+.bpi-popup-header-text h3{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
+.bpi-popup-header-text p{font-size:10px;color:rgba(255,255,255,.7);margin-top:2px}
+.bpi-popup-close{background:rgba(255,255,255,.15);border:none;color:#fff;cursor:pointer;font-size:15px;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.bpi-popup-close:hover{background:rgba(255,255,255,.3)}
+.bpi-popup-body{padding:18px;display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.bpi-option-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);padding:17px 11px;cursor:pointer;transition:all .18s;background:#fff;text-align:center;display:flex;flex-direction:column;align-items:center;gap:7px}
+.bpi-option-card:hover{border-color:var(--primary);background:#f0f5ff;transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.bpi-option-card .bpi-icon{width:42px;height:42px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px}
+.bpi-option-card.tho .bpi-icon{background:rgba(34,102,255,.1);color:var(--wd-blue)}
+.bpi-option-card.hdd .bpi-icon{background:var(--teal-dim);color:#007B6E}
+.bpi-option-card .bpi-name{font-size:14px;font-weight:800;color:var(--on-surface)}
+.bpi-option-card .bpi-sub-count{font-size:10px;color:var(--outline)}
+.bpi-option-card:hover .bpi-name{color:var(--primary)}
+.bu-display-pill{display:inline-flex;align-items:center;gap:6px;background:var(--primary-container);color:var(--primary);font-size:11px;font-weight:700;padding:4px 11px;border-radius:var(--radius-full);margin-top:5px}
+.bu-display-pill button{background:none;border:none;color:var(--primary);cursor:pointer;font-size:12px;display:flex;align-items:center;padding:0;margin-left:2px;opacity:.7}
+.bu-display-pill button:hover{opacity:1}
+.room-hint{font-size:10px;color:var(--outline);margin-top:3px;display:flex;align-items:center;gap:4px}
+.occ-type-desc{font-size:11px;color:var(--on-surface-variant);margin-top:3px;padding:6px 10px;background:rgba(34,102,255,.05);border-radius:var(--radius-sm);border-left:3px solid var(--primary);display:none;line-height:1.5}
+.occ-type-desc.show{display:block}
+.sub-hidden{display:none}
+.about-hero{background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 50%,var(--wd-navy2) 100%);border-radius:var(--radius-lg);padding:28px 24px;margin-bottom:20px;box-shadow:var(--shadow-md);border:1px solid rgba(0,229,209,.2)}
+.about-hero .ah-logo{font-size:24px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.3px}
+.about-hero .ah-logo span{display:block;font-size:11px;font-weight:600;color:rgba(0,229,209,.8);letter-spacing:.08em;margin-top:2px;text-transform:uppercase}
+.about-hero .ah-ver{display:inline-flex;align-items:center;gap:6px;background:rgba(0,229,209,.12);color:var(--wd-teal);font-size:10px;font-weight:700;padding:4px 12px;border-radius:var(--radius-full);margin-top:10px;border:1px solid rgba(0,229,209,.25)}
+.about-section{background:var(--surface-card);border-radius:var(--radius-lg);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px}
+.about-item{padding:15px 17px;display:flex;align-items:center;gap:13px;border-bottom:1px solid var(--outline-variant)}
+.about-item:last-child{border-bottom:none}
+.about-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.about-text .at{font-size:13px;font-weight:700;color:var(--wd-black)}
+.about-text .as{font-size:11px;color:var(--outline);margin-top:2px}
+.howto-card{background:linear-gradient(135deg,rgba(34,102,255,.06),rgba(0,229,209,.04));border:1.5px solid rgba(34,102,255,.18);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px}
+.howto-title{font-size:14px;font-weight:800;color:var(--primary);margin-bottom:13px;display:flex;align-items:center;gap:8px}
+.howto-steps{display:flex;flex-direction:column;gap:10px}
+.howto-step{display:flex;align-items:flex-start;gap:12px}
+.step-badge{width:26px;height:26px;border-radius:50%;background:var(--wd-grad-h);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px}
+.step-content .sc-title{font-size:12px;font-weight:700;color:var(--on-surface)}
+.step-content .sc-desc{font-size:11px;color:var(--outline);margin-top:2px;line-height:1.5}
+.howto-tip{background:var(--warning-bg);border:1px solid rgba(138,82,0,.18);border-radius:var(--radius-md);padding:10px 13px;margin-top:13px;font-size:11px;color:var(--warning);font-weight:600;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.toast-wrap{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:7px;align-items:center;pointer-events:none}
+@media(min-width:768px){.toast-wrap{bottom:24px}}
+.toast{padding:11px 20px;border-radius:var(--radius-lg);font-size:12px;font-weight:700;background:#00161F;color:#fff;box-shadow:var(--shadow-lg);animation:toast-in .3s ease,toast-out .3s ease 2.5s forwards;max-width:330px;text-align:center;pointer-events:none}
+.toast.success{background:var(--success)}.toast.error{background:var(--error)}.toast.warning{background:var(--warning)}
+@keyframes toast-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toast-out{to{opacity:0;transform:translateY(6px)}}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+.lightbox.open{opacity:1;pointer-events:all}
+.lightbox-inner{max-width:92vw;max-height:90vh;position:relative}
+.lightbox-inner img{max-width:100%;max-height:88vh;border-radius:var(--radius-md);box-shadow:0 8px 40px rgba(0,0,0,.6);display:block}
+.lightbox-close{position:absolute;top:-13px;right:-13px;background:var(--primary);border:none;color:#fff;font-size:16px;cursor:pointer;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
+.lightbox-caption{text-align:center;color:rgba(255,255,255,.65);font-size:11px;margin-top:9px;font-weight:600}
 </style>
 </head>
 <body>
 
-<header class="top-nav">
-  <div class="brand">SafeGuard <span>INSPECTION SYSTEM</span></div>
-  <div style="display:flex;align-items:center;gap:6px">
-    <nav class="nav-desktop-links">
-      <button class="nav-link-btn active" onclick="showPage('home',this)">Home</button>
-      <button class="nav-link-btn" onclick="showPage('inspect',this)">Inspect</button>
-      <button class="nav-link-btn" onclick="showPage('reports',this)">Reports</button>
-      <button class="nav-link-btn" onclick="showPage('howto',this)">วิธีใช้</button>
-      <button class="nav-link-btn" onclick="showPage('about',this)">About</button>
-    </nav>
-    <div style="display:flex;align-items:center;gap:4px">
-      <button class="icon-btn"><i class="fa fa-bell"></i></button>
-      <div class="avatar">SK</div>
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="login-logo-mark"><i class="fa fa-shield-halved"></i></div>
+      <div class="login-logo-title">SafeGuard</div>
+      <div class="login-logo-sub">Inspection System · WD Security</div>
     </div>
+    <div class="login-error" id="loginError"><i class="fa fa-circle-exclamation"></i><span id="loginErrorMsg">Username หรือ Password ไม่ถูกต้อง</span></div>
+    <div class="field-group" style="margin-bottom:16px">
+      <label class="login-label">Username</label>
+      <div class="login-input-wrap">
+        <input class="login-input" type="text" id="loginUser" placeholder="กรอก Username" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
+        <span class="login-input-icon"><i class="fa fa-user"></i></span>
+      </div>
+    </div>
+    <div class="field-group" style="margin-bottom:20px">
+      <label class="login-label">Password</label>
+      <div class="login-input-wrap">
+        <input class="login-input" type="password" id="loginPass" placeholder="กรอก Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        <span class="login-input-icon" onclick="toggleLoginPass()" id="loginPassIcon"><i class="fa fa-eye"></i></span>
+      </div>
+    </div>
+    <button class="btn-login" id="loginBtn" onclick="doLogin()"><i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ</button>
+    <div class="login-footer">Western Digital Storage Technologies (Thailand) Ltd.<br>MFM Security · REO — Authorized Personnel Only</div>
   </div>
-</header>
+</div>
 
 <div class="toast-wrap" id="toastWrap"></div>
-
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <div class="lightbox-inner">
     <button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-xmark"></i></button>
@@ -261,27 +489,124 @@
   </div>
 </div>
 
+<!-- ══════════════ DELETE RECORD MODAL ══════════════ -->
 <div class="modal-overlay" id="deleteModal">
   <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-trash" style="color:var(--error)"></i> ยืนยันการลบ</div>
-    <div class="modal-body">คุณต้องการลบรายการนี้ออกจากระบบ?<br><strong id="deleteRecordLabel" style="color:var(--on-surface);font-size:13px;display:block;margin-top:6px"></strong></div>
-    <div class="modal-actions">
-      <button class="btn-primary" style="background:var(--error);font-size:13px;padding:11px" onclick="confirmDelete()">ลบ</button>
-      <button class="btn-secondary" style="font-size:13px;padding:11px" onclick="document.getElementById('deleteModal').classList.remove('open')">ยกเลิก</button>
+    <div class="modal-header">
+      <div class="modal-header-icon"><i class="fa fa-trash"></i></div>
+      <div><div class="modal-title">ยืนยันการลบรายการ</div><div class="modal-subtitle">การดำเนินการนี้ไม่สามารถย้อนกลับได้</div></div>
+    </div>
+    <div class="modal-body"><p>คุณต้องการลบรายการนี้ออกจากระบบ?</p><div class="modal-warning-box"><i class="fa fa-triangle-exclamation"></i><span id="deleteRecordLabel"></span></div></div>
+    <div class="modal-footer">
+      <button class="modal-btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('open')">ยกเลิก</button>
+      <button class="modal-btn-danger" onclick="confirmDelete()"><i class="fa fa-trash"></i> ลบรายการ</button>
     </div>
   </div>
 </div>
 
-<main class="main-content">
+<!-- ══════════════ CLEAR DATA MODAL ══════════════ -->
+<div class="modal-overlay" id="clearDataModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-header-icon"><i class="fa fa-triangle-exclamation"></i></div>
+      <div><div class="modal-title">ล้างข้อมูลทั้งหมด</div><div class="modal-subtitle" id="clearDataSubtitle">ข้อมูลจะถูกลบออกจากระบบถาวร</div></div>
+    </div>
+    <div class="modal-body">
+      <p id="clearDataMsg">การดำเนินการนี้จะลบข้อมูลการตรวจสอบทั้งหมดออกจากฐานข้อมูลโดยถาวร ไม่สามารถกู้คืนได้</p>
+      <div class="clear-steps">
+        <div class="clear-step"><i class="fa fa-database"></i><span>ลบ records ทั้งหมดในออกจากฐานข้อมูล JS</span></div>
+        <div class="clear-step"><i class="fa fa-chart-bar"></i><span>Dashboard จะรีเซ็ตเป็น 0</span></div>
+        <div class="clear-step"><i class="fa fa-file-excel"></i><span>ไม่สามารถ Export ข้อมูลเดิมได้อีก</span></div>
+      </div>
+      <p style="margin-top:14px;font-size:12px;font-weight:700;color:var(--on-surface)">พิมพ์ <strong style="color:var(--error)">"CONFIRM"</strong> เพื่อยืนยัน:</p>
+      <input class="confirm-type-input" type="text" id="clearConfirmInput" placeholder='พิมพ์ "CONFIRM" ที่นี่' oninput="onClearConfirmInput()">
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn-cancel" onclick="closeClearModal()">ยกเลิก</button>
+      <button class="modal-btn-danger" id="clearConfirmBtn" disabled onclick="confirmClearData()"><i class="fa fa-trash"></i> ล้างข้อมูล</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ USER FORM MODAL ══════════════ -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal-box" style="max-width:480px">
+    <div class="modal-header">
+      <div class="modal-header-icon"><i class="fa fa-user-plus"></i></div>
+      <div><div class="modal-title" id="userModalTitle">เพิ่ม User ใหม่</div><div class="modal-subtitle">กรอกข้อมูลผู้ใช้งานระบบ</div></div>
+    </div>
+    <div class="modal-body">
+      <div class="user-form-grid">
+        <div class="field-group"><label class="field-label">ชื่อ-นามสกุล *</label><input class="field-input" type="text" id="uFullName" placeholder="Firstname Lastname"></div>
+        <div class="field-group"><label class="field-label">Username *</label><input class="field-input" type="text" id="uUsername" placeholder="username" autocomplete="off"></div>
+        <div class="field-group"><label class="field-label">Password *</label><div class="pass-input-wrap"><input class="field-input" type="password" id="uPassword" placeholder="Password" autocomplete="new-password"><button type="button" class="pass-toggle" onclick="togglePassField('uPassword',this)"><i class="fa fa-eye"></i></button></div></div>
+        <div class="field-group"><label class="field-label">Role *</label><select class="field-select" id="uRole"><option value="admin">Admin — เข้าถึงทุกฟีเจอร์</option><option value="user" selected>User — บันทึก/แก้ไข</option><option value="viewer">Viewer — ดูข้อมูลเท่านั้น</option></select></div>
+        <div class="field-group col-span-2" style="grid-column:1/-1"><label class="field-label">แผนก / ตำแหน่ง</label><input class="field-input" type="text" id="uDept" placeholder="เช่น Security Department, Coordinator"></div>
+      </div>
+      <div id="userFormError" style="display:none;background:var(--error-bg);border:1px solid rgba(192,0,26,.25);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;font-weight:600;color:var(--error);margin-top:12px"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="modal-btn-cancel" onclick="closeUserModal()">ยกเลิก</button>
+      <button class="modal-btn-confirm" onclick="saveUser()"><i class="fa fa-floppy-disk"></i> บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ BPI POPUP ══════════════ -->
+<div class="bpi-popup-overlay" id="bpiPopup">
+  <div class="bpi-popup-box">
+    <div class="bpi-popup-header">
+      <div class="bpi-popup-header-text"><h3><i class="fa fa-building"></i> เลือก BPI Site</h3><p>กรุณาเลือก Site ของ BPI</p></div>
+      <button class="bpi-popup-close" onclick="closeBpiPopup()"><i class="fa fa-xmark"></i></button>
+    </div>
+    <div class="bpi-popup-body">
+      <div class="bpi-option-card hdd" onclick="selectBpiSub('BPI-HDD')"><div class="bpi-icon"><i class="fa fa-hard-drive"></i></div><div class="bpi-name">HDD</div><div class="bpi-sub-count">4 Buildings</div></div>
+      <div class="bpi-option-card tho" onclick="selectBpiSub('BPI-THO')"><div class="bpi-icon"><i class="fa fa-industry"></i></div><div class="bpi-name">THO</div><div class="bpi-sub-count">6 Buildings</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ TOP NAV ══════════════ -->
+<header class="top-nav" id="topNav" style="display:none">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div class="brand-text">SafeGuard<span>INSPECTION SYSTEM</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px">
+    <nav class="nav-desktop-links">
+      <button class="nav-link-btn active" onclick="showPage('home',this)">Home</button>
+      <button class="nav-link-btn" onclick="showPage('inspect',this)">Inspect</button>
+      <button class="nav-link-btn" onclick="showPage('reports',this)">Reports</button>
+      <button class="nav-link-btn" onclick="showPage('settings',this)">Settings</button>
+      <button class="nav-link-btn" onclick="showPage('howto',this)">วิธีใช้</button>
+      <button class="nav-link-btn" onclick="showPage('about',this)">About</button>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" title="แจ้งเตือน"><i class="fa fa-bell"></i></button>
+      <div class="user-chip" id="userChip" onclick="toggleUserDropdown()">
+        <div class="user-avatar" id="navAvatar">SK</div>
+        <div><div class="user-name-nav" id="navUserName">Loading...</div><span class="user-role-nav" id="navUserRole">USER</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════ USER DROPDOWN ══════════════ -->
+<div class="user-dropdown" id="userDropdown">
+  <div class="ud-header"><div class="ud-name" id="ddUserName">—</div><div class="ud-role" id="ddUserRole">—</div></div>
+  <button class="ud-item" onclick="showPage('settings',null,'bnSettings');toggleUserDropdown()"><i class="fa fa-gear"></i> ตั้งค่าระบบ</button>
+  <button class="ud-item" onclick="openClearModal('all');toggleUserDropdown()"><i class="fa fa-trash-can"></i> ล้างข้อมูลทั้งหมด</button>
+  <div class="ud-divider"></div>
+  <button class="ud-item danger" onclick="doLogout()"><i class="fa fa-right-from-bracket"></i> ออกจากระบบ</button>
+</div>
+
+<!-- ══════════════ MAIN ══════════════ -->
+<main class="main-content" id="appMain" style="display:none">
 
   <!-- HOME -->
   <div class="page active" id="page-home">
     <div class="page-header"><h1>Dashboard</h1><p>Exit Route Compliance Survey — Overview &amp; Recent Activity</p></div>
-    <div class="status-bar">
-      <div class="status-dot"></div>
-      <span class="status-text" id="statusText">กำลังเชื่อมต่อระบบ...</span>
-      <span class="status-badge" id="liveCount">0 records</span>
-    </div>
+    <div class="status-bar"><div class="status-dot"></div><span class="status-text" id="statusText">กำลังเชื่อมต่อระบบ...</span><span class="status-badge" id="liveCount">0 records</span></div>
     <div class="stats-grid">
       <div class="stat-card blue"><div class="stat-icon"><i class="fa fa-door-open"></i></div><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Total</div></div>
       <div class="stat-card green"><div class="stat-icon"><i class="fa fa-circle-check"></i></div><div class="stat-val" id="statComplied">0</div><div class="stat-lbl">Complied</div></div>
@@ -289,18 +614,16 @@
       <div class="stat-card warn"><div class="stat-icon"><i class="fa fa-clock"></i></div><div class="stat-val" id="statToday">0</div><div class="stat-lbl">Today</div></div>
     </div>
     <div class="section-title"><i class="fa fa-list-check" style="color:var(--primary)"></i> Recent Inspections <span class="realtime-badge"><span class="dot"></span>Live</span></div>
-    <div class="inspection-list" id="recentList">
-      <div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:15px;font-weight:600">ยังไม่มีข้อมูล</p><small style="font-size:13px;display:block;margin-top:6px">เริ่มบันทึกการตรวจสอบที่เมนู Inspect</small></div>
-    </div>
+    <div class="inspection-list" id="recentList"><div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:14px;font-weight:700">ยังไม่มีข้อมูล</p></div></div>
   </div>
 
   <!-- INSPECT -->
   <div class="page" id="page-inspect">
-    <div class="page-header"><h1 id="inspectTitle">Exit Route Compliance Survey</h1><p>กรอกข้อมูลให้ครบทุกช่องที่มีเครื่องหมาย * เพื่อบันทึกการตรวจสอบ</p></div>
+    <div class="page-header"><h1 id="inspectTitle">Exit Route Compliance Survey</h1><p>กรอกข้อมูลให้ครบทุกช่องที่มีเครื่องหมาย * เพื่อบันทึก</p></div>
     <div class="edit-banner" id="editBanner" style="display:none">
       <i class="fa fa-pen"></i>
-      <span>กำลังแก้ไขรายการ: <strong id="editBannerLabel"></strong></span>
-      <button type="button" onclick="cancelEdit()" style="margin-left:auto;background:none;border:1.5px solid #e65100;color:#e65100;padding:4px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:700;cursor:pointer">ยกเลิกแก้ไข</button>
+      <span>กำลังแก้ไข: <strong id="editBannerLabel"></strong></span>
+      <button type="button" onclick="cancelEdit()" style="margin-left:auto;background:none;border:1.5px solid #f5a623;color:#7a4800;padding:4px 11px;border-radius:var(--radius-full);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">ยกเลิก</button>
     </div>
     <div class="progress-wrap">
       <div class="progress-label"><span>Form Progress</span><span id="progressPct">0%</span></div>
@@ -309,233 +632,195 @@
     <form id="inspectForm" onsubmit="submitInspection(event)">
       <input type="hidden" id="editRecordId" value="">
 
-      <!-- S1: LOCATION -->
+      <!-- S1 -->
       <div class="form-card">
         <div class="form-section">
           <div class="form-section-title"><div class="section-num">1</div><div><h2>ข้อมูลสถานที่ (Location Information)</h2><p>Site, Building, Floor &amp; Area</p></div></div>
           <div class="form-grid">
             <div class="field-group">
               <label class="field-label">Site (BU) *</label>
-              <select class="field-select" id="bu" onchange="togglePRBSub()" required>
-                <option value="">Select BU...</option><option>PRB</option><option>BPI-THO</option><option>BPI-HDD</option>
+              <select class="field-select" id="bu" onchange="handleBUChange()" required>
+                <option value="">Select BU...</option>
+                <option value="PRB">PRB</option>
+                <option value="BPI">BPI</option>
               </select>
-            </div>
-            <div class="field-group sub-hidden" id="prbSubWrap">
-              <label class="field-label">Emergency Door Number</label>
-              <select class="field-select" id="emergencyDoorNum"></select>
+              <input type="hidden" id="buFull" value="">
+              <div id="bpiSelectedPill" style="display:none"><div class="bu-display-pill"><i class="fa fa-building"></i><span id="bpiPillText"></span><button type="button" onclick="clearBpiSub()" title="เปลี่ยน"><i class="fa fa-xmark"></i></button></div></div>
             </div>
             <div class="field-group">
               <label class="field-label">อาคาร (Building) *</label>
-              <select class="field-select" id="building" required>
-                <option value="">Select Building...</option>
-                <option>admin Office<option>Phase#1</option><option>Phase#2</option><option>Phase#3</option><option>Phase#4</option><option>Phase#5</option><option>Support Building</option><option>Utility</option><option>Outside</option>
-              </select>
+              <select class="field-select" id="building" onchange="onBuildingChange()" required><option value="">Select Building...</option></select>
             </div>
             <div class="field-group">
-              <label class="field-label">ชั้น (Floor) *</label>
+              <label class="field-label">Select Floor *</label>
               <select class="field-select" id="floor" required>
-                <option value="">Select Floor...</option><option>1</option><option>2</option><option>3</option>
+                <option value="">Select Floor...</option>
+                <option>ชั้น 1 (First Floor)</option><option>ชั้น 2 (Second Floor)</option>
+                <option>ชั้น 3 (Third Floor)</option><option>ชั้นดาดฟ้า (Rooftop)</option><option>อื่นๆ (Other)</option>
               </select>
             </div>
-            <div class="field-group">
-              <label class="field-label">พื้นที่/ห้อง (Area/Room) *</label>
-              <select class="field-select" id="area" required>
-                <option value="">Select Area...</option>
-                <option>Production</option><option>Chemical room</option><option>Electrical room</option><option>Office</option><option>Clinic</option><option>Canteen</option><option>Multipurpose Hall</option><option>Laboratory room</option><option>Car park building</option><option>Mix</option><option>Other</option>
-              </select>
+            <div class="field-group" id="roomNameWrap" style="display:none">
+              <label class="field-label">ชื่อห้อง (Room Name) *</label>
+              <select class="field-select" id="roomName" onchange="updateProgress()"><option value="">-- เลือก Building ก่อน --</option></select>
+              <div class="room-hint" id="roomHint" style="display:none"><i class="fa fa-door-open" style="font-size:9px;color:var(--primary)"></i><span id="roomHintText"></span></div>
             </div>
-            <!-- OCCUPANCY — moved up, no Door Number field -->
+            <div class="field-group sub-hidden" id="prbSubWrap">
+              <label class="field-label"><i class="fa fa-hashtag" style="color:var(--primary);margin-right:5px"></i>Emergency Door Number</label>
+              <select class="field-select" id="emergencyDoorNum"></select>
+            </div>
             <div class="field-group">
-              <label class="field-label"><i class="fa fa-users" style="color:var(--warning);margin-right:6px"></i>จำนวนคนที่อยู่ในห้อง (Occupancy)</label>
+              <label class="field-label">Occupancy Type *</label>
+              <select class="field-select" id="occupancyType" onchange="onOccTypeChange()" required>
+                <option value="">Select Occupancy Type...</option>
+                <option value="Office">Office — สำนักงาน</option>
+                <option value="Production">Production — การผลิต</option>
+                <option value="Chemical room">Chemical room — ห้องสารเคมี</option>
+                <option value="Electrical room">Electrical room — ห้องไฟฟ้า</option>
+                <option value="Clinic">Clinic — คลินิก</option>
+                <option value="Canteen">Canteen — โรงอาหาร</option>
+                <option value="Multipurpose Hall">Multipurpose Hall</option>
+                <option value="Laboratory room">Laboratory room</option>
+                <option value="Car park building">Car park building</option>
+                <option value="Mix">Mix — หลายประเภท</option>
+                <option value="Other">Other</option>
+              </select>
+              <div class="occ-type-desc" id="occTypeDesc"></div>
+            </div>
+            <div class="field-group">
+              <label class="field-label">จำนวนคน (Occupancy)</label>
               <div class="occupancy-wrap">
                 <div class="occupancy-icon"><i class="fa fa-users"></i></div>
                 <input class="occupancy-input" type="number" id="occupancy" min="0" max="9999" placeholder="0" value="">
                 <span class="occupancy-unit">คน</span>
-                <div class="occ-btns">
-                  <button type="button" class="occ-btn" onclick="changeOcc(1)"><i class="fa fa-plus"></i></button>
-                  <button type="button" class="occ-btn" onclick="changeOcc(-1)"><i class="fa fa-minus"></i></button>
-                </div>
+                <div class="occ-btns"><button type="button" class="occ-btn" onclick="changeOcc(1)"><i class="fa fa-plus"></i></button><button type="button" class="occ-btn" onclick="changeOcc(-1)"><i class="fa fa-minus"></i></button></div>
               </div>
-              <span style="font-size:11px;color:var(--on-surface-variant);margin-top:4px">จำนวนบุคคลในพื้นที่ขณะตรวจสอบ (เว้นว่างได้)</span>
             </div>
           </div>
+          <div style="margin-top:14px">
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">มีทางออกฉุกเฉิน? (Emergency Exit?)</div><div class="ys">Yes / No / N/A</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="eeYes" onclick="setField('emergencyExit','Yes','ee')">Yes</button><button type="button" class="ynna-btn no" id="eeNo" onclick="setField('emergencyExit','No','ee')">No</button><button type="button" class="ynna-btn na active" id="eeNA" onclick="setField('emergencyExit','N/A','ee')">N/A</button></div></div>
+          </div>
+          <input type="hidden" id="emergencyExit" value="N/A">
         </div>
       </div>
 
-      <!-- S2: DOOR SPECS -->
+      <!-- S2 -->
       <div class="form-card">
         <div class="form-section">
-          <div class="form-section-title"><div class="section-num">2</div><div><h2>รายละเอียดประตู (Door Specifications)</h2><p>Door type, leaf, mechanism &amp; behavior</p></div></div>
-
-          <!-- DOOR TYPE -->
+          <div class="form-section-title"><div class="section-num">2</div><div><h2>รายละเอียดประตู (Door Specifications)</h2><p>Type, leaf, mechanism &amp; behavior</p></div></div>
           <div class="field-group col-span-2" style="margin-bottom:14px">
-            <div class="label-row">
-              <label class="field-label">ประเภทประตู (Door Type) *</label>
-              <button type="button" class="info-btn" onclick="togglePanel('doorTypePanel')"><i class="fa fa-image"></i> ดูรูปตัวอย่าง</button>
-            </div>
+            <div class="label-row"><label class="field-label">ประเภทประตู (Door Type) *</label><button type="button" class="info-btn" onclick="togglePanel('doorTypePanel')"><i class="fa fa-image"></i> ดูรูป</button></div>
             <div class="door-type-cards">
-              <div class="dt-card ead" onclick="selectDoorType('EXIT ACCESS DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon"><i class="fa fa-door-open"></i></div><div class="dt-name">EXIT ACCESS DOOR</div><div class="dt-desc">Occupied area → Corridor</div></div>
-              <div class="dt-card ed" onclick="selectDoorType('EXIT DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:#e3f2fd;color:#1565c0"><i class="fa fa-sign-out-alt"></i></div><div class="dt-name">EXIT DOOR</div><div class="dt-desc">Corridor → Stair enclosure</div></div>
-              <div class="dt-card edd" onclick="selectDoorType('EXIT DISCHARGE DOORS',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:#fce4ec;color:#c62828"><i class="fa fa-person-running"></i></div><div class="dt-name">EXIT DISCHARGE DOORS</div><div class="dt-desc">Stair enclosure → Outside</div></div>
+              <div class="dt-card ead" onclick="selectDoorType('EXIT ACCESS DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon"><i class="fa fa-door-open"></i></div><div class="dt-name">EXIT ACCESS DOOR</div><div class="dt-desc">Occupied → Corridor</div></div>
+              <div class="dt-card ed" onclick="selectDoorType('EXIT DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:rgba(34,102,255,.1);color:var(--wd-blue)"><i class="fa fa-sign-out-alt"></i></div><div class="dt-name">EXIT DOOR</div><div class="dt-desc">Corridor → Stair</div></div>
+              <div class="dt-card edd" onclick="selectDoorType('EXIT DISCHARGE DOORS',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:#fff0e6;color:#c04000"><i class="fa fa-person-running"></i></div><div class="dt-name">EXIT DISCHARGE</div><div class="dt-desc">Stair → Outside</div></div>
             </div>
-            <select class="field-select" id="doorType" required style="display:none">
-              <option value="">Select Type...</option><option>EXIT ACCESS DOOR</option><option>EXIT DOOR</option><option>EXIT DISCHARGE DOORS</option>
-            </select>
+            <select class="field-select" id="doorType" required style="display:none"><option value="">Select...</option><option>EXIT ACCESS DOOR</option><option>EXIT DOOR</option><option>EXIT DISCHARGE DOORS</option></select>
             <div class="ref-panel" id="doorTypePanel" style="display:none">
-              <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-map-location-dot"></i> 2D Layout — Means of Egress Reference</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorTypePanel')"><i class="fa fa-xmark"></i></button></div>
-              <div class="ref-panel-body">
-                <div class="ref-img-wrap" onclick="openLightbox(IMGS.egress,'2D Layout — Means of Egress')"><img id="imgEgress" src="/api/placeholder/800/450" alt="Means of Egress"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Click to enlarge</div></div>
-                <p class="ref-caption">เขียว=Exit Access Door · น้ำเงิน=Exit Door · แดง=Exit Discharge Door</p>
-              </div>
+              <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-map-location-dot"></i> 2D Layout Reference</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorTypePanel')"><i class="fa fa-xmark"></i></button></div>
+              <div class="ref-panel-body"><div class="ref-img-wrap" onclick="openLightbox(IMGS.egress,'2D Layout')"><img id="imgEgress" src="/api/placeholder/800/450" alt="Egress"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Enlarge</div></div></div>
             </div>
           </div>
-
-          <!-- DOOR LEAF -->
           <div class="field-group col-span-2" style="margin-bottom:14px">
-            <div class="label-row">
-              <label class="field-label">ประเภทบานประตู (Door Leaf Type) *</label>
-              <button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> ดูรูปตัวอย่าง</button>
-            </div>
+            <label class="field-label">ประเภทบาน (Door Leaf) *</label>
             <div class="door-leaf-cards">
-              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Double Door',this)">
-                <i class="fa fa-check-circle dl-check"></i>
-                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
-                  <rect x="15" y="8" width="38" height="64" rx="2" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
-                  <rect x="67" y="8" width="38" height="64" rx="2" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
-                  <circle cx="53" cy="40" r="3" fill="#1565c0"/><circle cx="67" cy="40" r="3" fill="#1565c0"/>
-                  <path d="M53 40 Q38 28 15 28" stroke="#1565c0" stroke-width="1" fill="none" stroke-dasharray="3,2" opacity=".6"/>
-                  <path d="M67 40 Q82 28 105 28" stroke="#1565c0" stroke-width="1" fill="none" stroke-dasharray="3,2" opacity=".6"/>
-                  <line x1="5" y1="8" x2="5" y2="72" stroke="#888" stroke-width="3" stroke-linecap="round"/>
-                  <line x1="115" y1="8" x2="115" y2="72" stroke="#888" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-                <div class="dl-name">Swinging Double</div>
-              </div>
-              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Single Door',this)">
-                <i class="fa fa-check-circle dl-check"></i>
-                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
-                  <rect x="25" y="8" width="55" height="64" rx="2" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
-                  <circle cx="76" cy="40" r="3" fill="#1565c0"/>
-                  <path d="M25 8 Q25 72 80 72" stroke="#1565c0" stroke-width="1" fill="none" stroke-dasharray="4,2" opacity=".7"/>
-                  <line x1="10" y1="8" x2="10" y2="72" stroke="#888" stroke-width="3" stroke-linecap="round"/>
-                </svg>
-                <div class="dl-name">Swinging Single</div>
-              </div>
-              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Double Door',this)">
-                <i class="fa fa-check-circle dl-check"></i>
-                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
-                  <rect x="5" y="12" width="110" height="4" rx="2" fill="#607d8b"/>
-                  <rect x="5" y="64" width="110" height="4" rx="2" fill="#607d8b"/>
-                  <rect x="8" y="16" width="48" height="48" rx="2" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5"/>
-                  <rect x="64" y="16" width="48" height="48" rx="2" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5"/>
-                  <polygon points="10,37 6,40 10,43" fill="#388e3c"/>
-                  <polygon points="110,37 114,40 110,43" fill="#388e3c"/>
-                </svg>
-                <div class="dl-name">H. Sliding Double</div>
-              </div>
-              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Single Door',this)">
-                <i class="fa fa-check-circle dl-check"></i>
-                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
-                  <rect x="5" y="12" width="110" height="4" rx="2" fill="#607d8b"/>
-                  <rect x="5" y="64" width="110" height="4" rx="2" fill="#607d8b"/>
-                  <rect x="10" y="16" width="70" height="48" rx="2" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5"/>
-                  <polygon points="10,37 6,40 10,43" fill="#388e3c"/>
-                </svg>
-                <div class="dl-name">H. Sliding Single</div>
-              </div>
-              <div class="dl-card" onclick="selectDoorLeaf('Vertical Sliding Door',this)">
-                <i class="fa fa-check-circle dl-check"></i>
-                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#fff8f0">
-                  <rect x="12" y="2" width="4" height="76" rx="2" fill="#607d8b"/>
-                  <rect x="104" y="2" width="4" height="76" rx="2" fill="#607d8b"/>
-                  <rect x="16" y="32" width="88" height="44" rx="2" fill="#ffe0b2" stroke="#e65100" stroke-width="1.5"/>
-                  <path d="M60 24 L60 32" stroke="#e65100" stroke-width="1.5" stroke-dasharray="3,2"/>
-                  <polygon points="56,18 60,8 64,18" fill="#e65100"/>
-                </svg>
-                <div class="dl-name">Vertical Sliding</div>
-              </div>
-              <div class="dl-card" onclick="selectDoorLeaf('Door missing',this)">
-                <i class="fa fa-check-circle dl-check"></i>
-                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#fff5f5">
-                  <rect x="10" y="8" width="100" height="64" rx="3" fill="#ffcdd2" stroke="#e53935" stroke-width="2" stroke-dasharray="6,3"/>
-                  <line x1="20" y1="18" x2="100" y2="62" stroke="#e53935" stroke-width="2.5"/>
-                  <line x1="100" y1="18" x2="20" y2="62" stroke="#e53935" stroke-width="2.5"/>
-                </svg>
-                <div class="dl-name">Door Missing</div>
-              </div>
+              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Double Door',this)"><i class="fa fa-check-circle dl-check"></i><svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:76px;background:#f0f5ff"><rect x="15" y="8" width="38" height="64" rx="2" fill="#bbdefb" stroke="#2266FF" stroke-width="1.5"/><rect x="67" y="8" width="38" height="64" rx="2" fill="#bbdefb" stroke="#2266FF" stroke-width="1.5"/><circle cx="53" cy="40" r="3" fill="#2266FF"/><circle cx="67" cy="40" r="3" fill="#2266FF"/><line x1="5" y1="8" x2="5" y2="72" stroke="#4a6b80" stroke-width="3" stroke-linecap="round"/><line x1="115" y1="8" x2="115" y2="72" stroke="#4a6b80" stroke-width="3" stroke-linecap="round"/></svg><div class="dl-name">Swinging Double</div></div>
+              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Single Door',this)"><i class="fa fa-check-circle dl-check"></i><svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:76px;background:#f0f5ff"><rect x="25" y="8" width="55" height="64" rx="2" fill="#bbdefb" stroke="#2266FF" stroke-width="1.5"/><circle cx="76" cy="40" r="3" fill="#2266FF"/><line x1="10" y1="8" x2="10" y2="72" stroke="#4a6b80" stroke-width="3" stroke-linecap="round"/></svg><div class="dl-name">Swinging Single</div></div>
+              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Double Door',this)"><i class="fa fa-check-circle dl-check"></i><svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:76px;background:#f0f5ff"><rect x="5" y="12" width="110" height="4" rx="2" fill="#607d8b"/><rect x="5" y="64" width="110" height="4" rx="2" fill="#607d8b"/><rect x="8" y="16" width="48" height="48" rx="2" fill="#c8e6c9" stroke="#00875A" stroke-width="1.5"/><rect x="64" y="16" width="48" height="48" rx="2" fill="#c8e6c9" stroke="#00875A" stroke-width="1.5"/></svg><div class="dl-name">H.Sliding Double</div></div>
+              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Single Door',this)"><i class="fa fa-check-circle dl-check"></i><svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:76px;background:#f0f5ff"><rect x="5" y="12" width="110" height="4" rx="2" fill="#607d8b"/><rect x="5" y="64" width="110" height="4" rx="2" fill="#607d8b"/><rect x="10" y="16" width="70" height="48" rx="2" fill="#c8e6c9" stroke="#00875A" stroke-width="1.5"/></svg><div class="dl-name">H.Sliding Single</div></div>
+              <div class="dl-card" onclick="selectDoorLeaf('Vertical Sliding Door',this)"><i class="fa fa-check-circle dl-check"></i><svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:76px;background:#fff8f0"><rect x="12" y="2" width="4" height="76" rx="2" fill="#607d8b"/><rect x="104" y="2" width="4" height="76" rx="2" fill="#607d8b"/><rect x="16" y="32" width="88" height="44" rx="2" fill="#ffe0b2" stroke="#e65100" stroke-width="1.5"/><polygon points="56,18 60,8 64,18" fill="#e65100"/></svg><div class="dl-name">Vertical Sliding</div></div>
+              <div class="dl-card" onclick="selectDoorLeaf('Door missing',this)"><i class="fa fa-check-circle dl-check"></i><svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:76px;background:#fff5f5"><rect x="10" y="8" width="100" height="64" rx="3" fill="#ffcdd2" stroke="#e53935" stroke-width="2" stroke-dasharray="6,3"/><line x1="20" y1="18" x2="100" y2="62" stroke="#e53935" stroke-width="2.5"/><line x1="100" y1="18" x2="20" y2="62" stroke="#e53935" stroke-width="2.5"/></svg><div class="dl-name">Door Missing</div></div>
             </div>
-            <select class="field-select" id="doorLeaf" required style="display:none">
-              <option value="">Select Leaf Type...</option>
-              <option>Swinging Type - Double Door</option><option>Swinging Type - Single Door</option>
-              <option>Horizontal Sliding Door - Double Door</option><option>Horizontal Sliding Door - Single Door</option>
-              <option>Vertical Sliding Door</option><option>Door missing</option>
-            </select>
+            <select class="field-select" id="doorLeaf" required style="display:none"><option value="">Select...</option><option>Swinging Type - Double Door</option><option>Swinging Type - Single Door</option><option>Horizontal Sliding Door - Double Door</option><option>Horizontal Sliding Door - Single Door</option><option>Vertical Sliding Door</option><option>Door missing</option></select>
+          </div>
+          <div class="field-group col-span-2" style="margin-bottom:14px">
+            <div class="label-row"><label class="field-label">กลไกการเปิดประตู (Mechanism) *</label><button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> ดูรูป</button></div>
+            <div class="mech-cards">
+              <div class="mc-card" onclick="selectMechanism('Push Bar',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="8" y="10" width="84" height="52" rx="4" fill="#e3f2fd" stroke="#2266FF" stroke-width="1.5"/><rect x="20" y="33" width="60" height="8" rx="4" fill="#2266FF"/><text x="50" y="56" text-anchor="middle" font-size="8" fill="#2266FF" font-family="Arial" font-weight="700">PUSH BAR</text></svg><div class="mc-name">Push Bar</div></div>
+              <div class="mc-card" onclick="selectMechanism('Push Bar with vertical panic bolt',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="8" y="10" width="84" height="52" rx="4" fill="#e3f2fd" stroke="#2266FF" stroke-width="1.5"/><rect x="20" y="33" width="60" height="7" rx="3.5" fill="#2266FF"/><rect x="45" y="10" width="6" height="52" rx="3" fill="#1976d2" opacity=".5"/></svg><div class="mc-name">Push Bar+Bolt</div></div>
+              <div class="mc-card" onclick="selectMechanism('Latch',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="10" y="10" width="56" height="52" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/><rect x="56" y="33" width="18" height="6" rx="3" fill="#2e7d32"/><circle cx="75" cy="36" r="4" fill="#4caf50"/><text x="38" y="56" text-anchor="middle" font-size="9" fill="#2e7d32" font-family="Arial" font-weight="700">LATCH</text></svg><div class="mc-name">Latch</div></div>
+              <div class="mc-card" onclick="selectMechanism('Knob',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#fff8f0"><rect x="10" y="10" width="56" height="52" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/><circle cx="70" cy="36" r="14" fill="#fff" stroke="#e65100" stroke-width="1.8"/><circle cx="70" cy="36" r="8" fill="#ff8a65"/><text x="38" y="56" text-anchor="middle" font-size="9" fill="#e65100" font-family="Arial" font-weight="700">KNOB</text></svg><div class="mc-name">Knob</div></div>
+              <div class="mc-card" onclick="selectMechanism('Auto-Slide',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f3e5f5"><rect x="5" y="14" width="90" height="6" rx="3" fill="#7b1fa2" opacity=".4"/><rect x="5" y="52" width="90" height="6" rx="3" fill="#7b1fa2" opacity=".4"/><rect x="10" y="20" width="38" height="32" rx="3" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/><rect x="52" y="20" width="38" height="32" rx="3" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/><text x="50" y="68" text-anchor="middle" font-size="7" fill="#7b1fa2" font-family="Arial" font-weight="700">AUTO SLIDE</text></svg><div class="mc-name">Auto-Slide</div></div>
+              <div class="mc-card" onclick="selectMechanism('Manual-Slide',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#fce4ec"><rect x="5" y="14" width="90" height="6" rx="3" fill="#880e4f" opacity=".4"/><rect x="5" y="52" width="90" height="6" rx="3" fill="#880e4f" opacity=".4"/><rect x="10" y="20" width="38" height="32" rx="3" fill="#fce4ec" stroke="#c2185b" stroke-width="1.5"/><rect x="52" y="20" width="38" height="32" rx="3" fill="#fce4ec" stroke="#c2185b" stroke-width="1.5"/><rect x="43" y="30" width="14" height="12" rx="3" fill="#c2185b"/></svg><div class="mc-name">Manual-Slide</div></div>
+              <div class="mc-card" onclick="selectMechanism('Other',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#e8eaf6"><rect x="15" y="12" width="70" height="48" rx="8" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/><text x="50" y="34" text-anchor="middle" font-size="20" fill="#3949ab" font-family="Arial" font-weight="900">?</text></svg><div class="mc-name">Other</div></div>
+              <div class="mc-card" onclick="selectMechanism('N/A',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f5f5f5"><rect x="15" y="12" width="70" height="48" rx="8" fill="#eeeeee" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="5,3"/><text x="50" y="40" text-anchor="middle" font-size="16" fill="#757575" font-family="Arial" font-weight="900">N/A</text></svg><div class="mc-name">N/A</div></div>
+            </div>
+            <select class="field-select" id="mechanism" required style="display:none"><option value="">Select...</option><option>Push Bar</option><option>Push Bar with vertical panic bolt</option><option>Latch</option><option>Knob</option><option>Auto-Slide</option><option>Manual-Slide</option><option>Other</option><option>N/A</option></select>
             <div class="ref-panel" id="doorLeafPanel" style="display:none">
-              <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-door-open"></i> ประเภทประตูและอุปกรณ์เปิดประตู</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-xmark"></i></button></div>
-              <div class="ref-panel-body">
-                <div class="ref-img-wrap" onclick="openLightbox(IMGS.doorLeaf,'Door Types & Opening Devices')"><img id="imgDoorLeaf" src="/api/placeholder/813/327" alt="Door Types"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Click to enlarge</div></div>
-                <p class="ref-caption">ประเภทประตูและอุปกรณ์เปิดประตูทั้ง 7 ประเภท — คลิกรูปเพื่อขยาย</p>
-              </div>
+              <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-door-open"></i> Door Types &amp; Mechanisms</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-xmark"></i></button></div>
+              <div class="ref-panel-body"><div class="ref-img-wrap" onclick="openLightbox(IMGS.doorLeaf,'Door Types')"><img id="imgDoorLeaf" src="/api/placeholder/813/327" alt="Door Types"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Enlarge</div></div></div>
             </div>
           </div>
-
-          <div class="form-grid">
-            <div class="field-group col-span-2">
-              <label class="field-label">กลไกการปล่อย (Releasing Mechanism) *</label>
-              <select class="field-select" id="mechanism" required>
-                <option value="">Select Mechanism...</option>
-                <option>Push Bar</option><option>Push Bar with vertical panic bolt</option><option>Latch</option><option>Knob</option><option>Auto-Slide</option><option>Manual-Slide</option><option>Other</option><option>N/A</option>
-              </select>
-            </div>
-          </div>
-          <div style="display:grid;gap:10px;margin-top:14px">
-            <div class="toggle-card"><div class="toggle-info"><div class="tl">เปิดด้วยจังหวะเดียว? (Single motion?)</div><div class="ts">ประตูเปิดได้ด้วยการกระทำเพียงครั้งเดียว</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'singleMotion')">N/A</button><label class="switch"><input type="checkbox" id="singleMotion"><span class="slider"></span></label></div></div>
-            <div class="toggle-card"><div class="toggle-info"><div class="tl">ประตูเปิดตามทิศทางการหนีไฟ (Egress direction)</div><div class="ts">ทิศทางการเปิดประตูสอดคล้องกับเส้นทางหนีไฟ</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'egressSwing')">N/A</button><label class="switch"><input type="checkbox" id="egressSwing"><span class="slider"></span></label></div></div>
-            <div class="toggle-card"><div class="toggle-info"><div class="tl">ประตูปิดเองได้หลังจากเปิด? (Self-close)</div><div class="ts">มีกลไกปิดประตูอัตโนมัติหลังจากเปิด</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'selfClose')">N/A</button><label class="switch"><input type="checkbox" id="selfClose"><span class="slider"></span></label></div></div>
+          <div style="display:grid;gap:9px;margin-top:4px">
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูเปิดด้วยการกระทำเดียว? (Single motion?)</div><div class="ys">การที่ผู้ใช้งานสามารถปลดล็อกและเปิดประตูเพื่อออกจากพื้นที่ได้ด้วยการเคลื่อนไหวเพียงอย่างเดียว โดยไม่ต้องทำหลายขั้นตอนต่อเนื่องกัน</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="smYes" onclick="setField('singleMotion','Yes','sm')">Yes</button><button type="button" class="ynna-btn no" id="smNo" onclick="setField('singleMotion','No','sm')">No</button><button type="button" class="ynna-btn na active" id="smNA" onclick="setField('singleMotion','N/A','sm')">N/A</button></div></div>
+            <input type="hidden" id="singleMotion" value="N/A">
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูเปิดในทิศทางหนีออก? (Egress direction?)</div><div class="ys">ทิศทางสอดคล้องกับเส้นทางหนีไฟ</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="esYes" onclick="setField('egressSwing','Yes','es')">Yes</button><button type="button" class="ynna-btn no" id="esNo" onclick="setField('egressSwing','No','es')">No</button><button type="button" class="ynna-btn na active" id="esNA" onclick="setField('egressSwing','N/A','es')">N/A</button></div></div>
+            <input type="hidden" id="egressSwing" value="N/A">
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูปิดกลับได้เองหลังเปิด? (Self-close?)</div><div class="ys">มีกลไกปิดประตูอัตโนมัติ</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="scYes" onclick="setField('selfClose','Yes','sc')">Yes</button><button type="button" class="ynna-btn no" id="scNo" onclick="setField('selfClose','No','sc')">No</button><button type="button" class="ynna-btn na active" id="scNA" onclick="setField('selfClose','N/A','sc')">N/A</button></div></div>
+            <input type="hidden" id="selfClose" value="N/A">
           </div>
         </div>
       </div>
 
-      <!-- S3: SAFETY -->
+      <!-- ════ S3 : FIXED — all 3 selects have proper </select> closing tags ════ -->
       <div class="form-card">
         <div class="form-section">
           <div class="form-section-title"><div class="section-num">3</div><div><h2>Safety &amp; Compliance</h2><p>Security access, local law &amp; RBA compliance status</p></div></div>
-          <div style="display:grid;gap:10px;margin-bottom:14px">
-            <div class="toggle-card"><div class="toggle-info"><div class="tl">Security access control?</div><div class="ts">มีระบบควบคุมการเข้าออกด้านความปลอดภัย</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'secAccess')">N/A</button><label class="switch"><input type="checkbox" id="secAccess"><span class="slider"></span></label></div></div>
-            <div class="toggle-card"><div class="toggle-info"><div class="tl">Can this door be used for external fire brigade re-entry?</div><div class="ts">ประตูนี้สามารถใช้สำหรับหน่วยดับเพลิงกลับเข้า</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'fireReentry')">N/A</button><label class="switch"><input type="checkbox" id="fireReentry"><span class="slider"></span></label></div></div>
+          <div style="display:grid;gap:9px;margin-bottom:14px">
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูติดตั้งระบบควบคุมการเข้าออก (Access Control) หรือไม่ (Does the door install "Security access control?)</div><div class="ys">มีระบบควบคุมการเข้า-ออก?</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="saYes" onclick="setField('secAccess','Yes','sa')">Yes</button><button type="button" class="ynna-btn no" id="saNo" onclick="setField('secAccess','No','sa')">No</button><button type="button" class="ynna-btn na active" id="saNA" onclick="setField('secAccess','N/A','sa')">N/A</button></div></div>
+            <input type="hidden" id="secAccess" value="N/A">
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูนี้ใช้สำหรับหน่วยดับเพลิงกลับเข้าอาคารได้หรือไม่? (Can this door be used for external fire brigade re-entry?)</div><div class="ys">ประตูหนีไฟถูกออกแบบให้คน หนีออก (Egress) ได้ง่าย แต่ในเหตุเพลิงไหม้ เจ้าหน้าที่ดับเพลิงอาจต้อง เข้ามาภายในอาคาร (Re-entry)</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="frYes" onclick="setField('fireReentry','Yes','fr')">Yes</button><button type="button" class="ynna-btn no" id="frNo" onclick="setField('fireReentry','No','fr')">No</button><button type="button" class="ynna-btn na active" id="frNA" onclick="setField('fireReentry','N/A','fr')">N/A</button></div></div>
+            <input type="hidden" id="fireReentry" value="N/A">
           </div>
           <div class="form-grid">
+
+            <!-- ✅ FIX 1: releaseCondition — เพิ่ม </select> -->
             <div class="field-group">
-              <label class="field-label">Security access control released when...</label>
+              <label class="field-label">ระบบควบคุมการเข้าออกจะปลดล็อกเมื่อ...(Security access control system...)</label>
               <select class="field-select" id="releaseCondition">
-                <option value="">Select Condition...</option>
-                <option>A. When Building General alarm activated</option><option>B. When no power supplied</option><option>C. Both A &amp; B</option>
+                <option value="">Select...</option>
+                <option value="A">A. When Building General Alarm Activated (เมื่อระบบสัญญาณเตือนภัยของอาคารทำงาน)</option>
+                <option value="B">B. When No Power Supplied (เมื่อไฟฟ้าดับหรือไม่มีแหล่งจ่ายไฟ)</option>
+                <option value="C">C. When Door Release Button is Pressed (เมื่อกดปุ่มปลดล็อกประตู)</option>
+                <option value="D">D. Both A &amp; C (ทั้งข้อ A และข้อ C)</option>
               </select>
             </div>
+
+            <!-- ✅ FIX 2: localLaw — เพิ่ม </select> -->
             <div class="field-group">
-              <label class="field-label">Complied with Local Law *</label>
+              <label class="field-label">สอดคล้องตามกฎหมาย (Complied with Local Law)</label>
               <select class="field-select" id="localLaw" required>
-                <option value="">Select Status...</option><option>Complied</option><option>Non-Complied</option><option>N/A</option>
+                <option value="">Select...</option>
+                <option value="Complied">Complied (สอดคล้องตามข้อกำหนด)</option>
+                <option value="Non-Complied">Non-Complied (ไม่สอดคล้องตามข้อกำหนด)</option>
+                <option value="Re-confirm">Re-confirm (รอการยืนยันผล / ต้องตรวจสอบเพิ่มเติม)</option>
+                <option value="N/A">N/A (ไม่เกี่ยวข้อง)</option>
               </select>
             </div>
+
+            <!-- ✅ FIX 3: rba — เพิ่ม </select> -->
             <div class="field-group">
-              <label class="field-label">Complied with RBA *</label>
+              <label class="field-label">สอดคล้องตามมาตรฐาน RBA (Complied with RBA)</label>
               <select class="field-select" id="rba" required>
-                <option value="">Select Status...</option><option>Complied</option><option>Non-Complied</option><option>N/A</option>
+                <option value="">Select...</option>
+                <option value="Complied">Complied (สอดคล้องตามข้อกำหนด)</option>
+                <option value="Non-Complied">Non-Complied (ไม่สอดคล้องตามข้อกำหนด)</option>
+                <option value="Re-confirm">Re-confirm (รอการยืนยันผล / ต้องตรวจสอบเพิ่มเติม)</option>
+                <option value="N/A">N/A (ไม่เกี่ยวข้อง)</option>
               </select>
             </div>
+
             <div class="field-group col-span-2">
               <label class="field-label">หมายเหตุ (Remark)</label>
-              <textarea class="field-textarea" id="remark" placeholder="กรุณาระบุหมายเหตุหรือข้อสังเกตเพิ่มเติมที่นี่..."></textarea>
+              <textarea class="field-textarea" id="remark" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
             </div>
           </div>
         </div>
         <div class="export-section">
-          <div class="export-title"><i class="fa fa-file-export"></i> ส่งออกข้อมูล (Export Data)</div>
+          <div class="export-title"><i class="fa fa-file-export"></i> Export Data</div>
           <div class="export-grid">
             <button type="button" class="export-btn" onclick="exportCSV()"><i class="fa fa-table" style="color:#1d7d4f"></i> Excel / CSV</button>
-            <button type="button" class="export-btn" onclick="window.print()"><i class="fa fa-file-pdf" style="color:#e5002f"></i> PDF / Print</button>
+            <button type="button" class="export-btn" onclick="window.print()"><i class="fa fa-file-pdf" style="color:#c0001a"></i> PDF / Print</button>
           </div>
-          <p class="export-hint">ดาวน์โหลดข้อมูลการตรวจสอบทั้งหมด</p>
         </div>
       </div>
 
@@ -548,24 +833,48 @@
 
   <!-- REPORTS -->
   <div class="page" id="page-reports">
-    <div class="page-header"><h1>Reports</h1><p>ดู กรอง แก้ไข ลบ และส่งออกข้อมูลการตรวจสอบ</p></div>
+    <div class="page-header"><h1>Reports</h1><p>ดู กรอง แก้ไข ลบ และส่งออกข้อมูล</p></div>
     <div class="filter-bar">
-      <select class="field-select" id="filterBU" style="max-width:140px"><option value="">All BU</option><option>PRB</option><option>BPI-THO</option><option>BPI-HDD</option></select>
-      <select class="field-select" id="filterCompliance" style="max-width:150px"><option value="">All Status</option><option>Complied</option><option>Non-Complied</option><option>N/A</option></select>
-      <input class="field-input" type="date" id="filterDate" style="max-width:155px">
+      <select class="field-select" id="filterBU" style="max-width:150px"><option value="">All BU</option><option value="PRB">PRB</option><option value="BPI-HDD">BPI-HDD</option><option value="BPI-THO">BPI-THO</option></select>
+      <select class="field-select" id="filterCompliance" style="max-width:140px"><option value="">All Status</option><option>Complied</option><option>Non-Complied</option><option>N/A</option></select>
+      <input class="field-input" type="date" id="filterDate" style="max-width:150px">
       <button class="btn-filter" onclick="applyFilter()"><i class="fa fa-filter"></i> Filter</button>
     </div>
     <div class="report-actions">
       <button class="btn-outline" onclick="exportCSV()"><i class="fa fa-download"></i> Export CSV</button>
       <button class="btn-outline" onclick="window.print()"><i class="fa fa-print"></i> Print</button>
+      <button class="btn-outline danger" onclick="openClearModal('filtered')" id="clearFilteredBtn"><i class="fa fa-trash"></i> ล้างที่กรอง</button>
+      <button class="btn-outline danger" onclick="openClearModal('all')"><i class="fa fa-trash-can"></i> ล้างทั้งหมด</button>
     </div>
     <div class="table-card">
       <div class="report-table-wrap">
         <table class="report-table">
-          <thead><tr><th>#</th><th>Date</th><th>BU</th><th>Building</th><th>Floor</th><th>Area</th><th>Occupancy</th><th>Door Type</th><th>Local Law</th><th>RBA</th><th>Inspector</th><th>Actions</th></tr></thead>
-          <tbody id="reportBody"><tr><td colspan="12" style="text-align:center;padding:40px;color:var(--on-surface-variant)"><i class="fa fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>กำลังโหลดข้อมูล...</td></tr></tbody>
+          <thead><tr><th>#</th><th>Date</th><th>BU</th><th>Building</th><th>Floor</th><th>Area/Room</th><th>Occ.Type</th><th>Emg.Exit</th><th>Occ.</th><th>Door Type</th><th>Local Law</th><th>RBA</th><th>Inspector</th><th>Actions</th></tr></thead>
+          <tbody id="reportBody"><tr><td colspan="14" style="text-align:center;padding:36px;color:var(--outline)"><i class="fa fa-inbox" style="font-size:26px;display:block;margin-bottom:7px;opacity:.3"></i>กำลังโหลด...</td></tr></tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="page" id="page-settings">
+    <div class="page-header"><h1>Settings</h1><p>จัดการผู้ใช้งาน สิทธิ์การเข้าถึง และตั้งค่าระบบ</p></div>
+    <div class="settings-section">
+      <div class="settings-section-header"><div><h2><i class="fa fa-users-gear"></i> User Management</h2><p>เพิ่ม แก้ไข และจัดการสิทธิ์ผู้ใช้งานระบบ</p></div><button class="btn-add-user" onclick="openAddUser()"><i class="fa fa-user-plus"></i> เพิ่ม User</button></div>
+      <div class="user-list" id="userList"><div class="empty-state" style="padding:28px"><i class="fa fa-users" style="font-size:32px"></i><p style="font-size:13px;font-weight:600">กำลังโหลด User...</p></div></div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-header"><div><h2><i class="fa fa-circle-info"></i> System Information</h2><p>ข้อมูลระบบ</p></div></div>
+      <div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Version</div><div style="font-size:16px;font-weight:800;color:var(--wd-blue)">v1.1</div></div>
+        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Records</div><div style="font-size:16px;font-weight:800;color:var(--success)" id="settingsRecordCount">0</div></div>
+        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Database</div><div style="font-size:13px;font-weight:700;color:var(--on-surface)">JS (JavaScript)</div></div>
+        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Project</div><div style="font-size:12px;font-weight:700;color:var(--on-surface)">Exit Route Compliance Survey</div></div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-header"><div><h2><i class="fa fa-triangle-exclamation" style="color:var(--error)"></i> Danger Zone</h2><p>การดำเนินการที่ไม่สามารถย้อนกลับได้</p></div></div>
+      <div class="danger-zone"><div class="danger-zone-title"><i class="fa fa-skull-crossbones"></i> ระวัง — การดำเนินการถาวร</div><div class="danger-actions"><button class="btn-danger" onclick="openClearModal('all')"><i class="fa fa-trash-can"></i> ล้างข้อมูลทั้งหมด</button><button class="btn-danger" onclick="openClearModal('today')"><i class="fa fa-calendar-xmark"></i> ล้างข้อมูลวันนี้</button></div></div>
     </div>
   </div>
 
@@ -573,14 +882,14 @@
   <div class="page" id="page-howto">
     <div class="page-header"><h1>วิธีใช้งาน</h1><p>คู่มือการใช้งาน SafeGuard Inspection System</p></div>
     <div class="howto-card">
-      <div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน — 4 ขั้นตอน</div>
+      <div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน</div>
       <div class="howto-steps">
-        <div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time — จำนวนรวม, Complied, Non-Complied และรายการล่าสุด</div></div></div>
-        <div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">คลิก Inspect เพื่อบันทึก</div><div class="sc-desc">กรอกข้อมูล 3 Section: ① ข้อมูลสถานที่ (รวมจำนวนคนในห้อง) → ② รายละเอียดประตู → ③ Safety &amp; Compliance แล้วกด Submit</div></div></div>
-        <div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">แก้ไข/ลบรายการ</div><div class="sc-desc">คลิกปุ่ม ✏️ แก้ไข หรือ 🗑 ลบ ที่แสดงในทุกรายการทั้งหน้า Dashboard และ Reports</div></div></div>
-        <div class="howto-step"><div class="step-badge">4</div><div class="step-content"><div class="sc-title">Export รายงาน</div><div class="sc-desc">Reports → Export CSV เพื่อดาวน์โหลดเป็น Excel หรือ Print เพื่อพิมพ์</div></div></div>
+        <div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">Login เข้าระบบ</div><div class="sc-desc">ใช้ Username/Password ที่ Admin กำหนดให้</div></div></div>
+        <div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time</div></div></div>
+        <div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">บันทึกการตรวจสอบ</div><div class="sc-desc">เลือก BU → Building → Room → กรอกข้อมูล → Submit</div></div></div>
+        <div class="howto-step"><div class="step-badge">4</div><div class="step-content"><div class="sc-title">Settings — จัดการ Users</div><div class="sc-desc">Admin เพิ่ม/แก้ไข/ลบ User และกำหนด Role ได้ที่เมนู Settings</div></div></div>
       </div>
-      <div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์ทันที — เปิดพร้อมกันหลายเครื่องได้</span></div>
+      <div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์</span></div>
     </div>
   </div>
 
@@ -589,166 +898,459 @@
     <div class="page-header"><h1>About</h1><p>ข้อมูลระบบและองค์กร</p></div>
     <div class="about-hero">
       <div class="ah-logo">SafeGuard <span>INSPECTION SYSTEM</span></div>
-      <div class="ah-ver"><i class="fa fa-tag"></i> Version 4.2 — No Door Number · Cloud Sync</div>
-      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div>
+      <div class="ah-ver"><i class="fa fa-tag"></i> Version 1.1 — Get Started Aug 15'@2026</div>
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div>
     </div>
     <div class="about-section">
-      <div class="about-item"><div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div><div class="about-text"><div class="at">Saksri Kaewaudon</div><div class="as">Coordinator 4 — Security | รายงานต่อ Sunpit Tanoobun</div></div></div>
+      <div class="about-item"><div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div><div class="about-text"><div class="at">Developed by @Ploypalin Miyampul</div><div class="as">Security Operation Center  | +6635277032</div></div></div>
       <div class="about-item"><div class="about-icon" style="background:var(--success-bg);color:var(--success)"><i class="fa fa-building"></i></div><div class="about-text"><div class="at">Organization</div><div class="as">WD Storage Technologies (Thailand) Ltd. — MFM Security · APAC</div></div></div>
     </div>
   </div>
 
 </main>
 
-<nav class="bottom-nav">
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<nav class="bottom-nav" id="appBottomNav" style="display:none">
   <div class="bottom-nav-item active" id="bnHome" onclick="showPage('home',null,'bnHome')"><i class="fa fa-house"></i><span>Home</span></div>
   <div class="bottom-nav-item" id="bnInspect" onclick="showPage('inspect',null,'bnInspect')"><i class="fa fa-door-open"></i><span>Inspect</span></div>
   <div class="bottom-nav-item" id="bnReports" onclick="showPage('reports',null,'bnReports')"><i class="fa fa-chart-bar"></i><span>Reports</span></div>
-  <div class="bottom-nav-item" id="bnHowto" onclick="showPage('howto',null,'bnHowto')"><i class="fa fa-circle-question"></i><span>วิธีใช้</span></div>
+  <div class="bottom-nav-item" id="bnSettings" onclick="showPage('settings',null,'bnSettings')"><i class="fa fa-gear"></i><span>Settings</span></div>
   <div class="bottom-nav-item" id="bnAbout" onclick="showPage('about',null,'bnAbout')"><i class="fa fa-circle-info"></i><span>About</span></div>
 </nav>
 
 <script>
+/* ════════════════════════════════════════
+   DATA — ไม่เปลี่ยนแปลง (ตรงจาก v7_Completed)
+════════════════════════════════════════ */
+const PRB_ROOMS={
+  'admin':['Emer Office engineering (New)','Emer Office 3','Emer Canteen OP10@17','Emer Loading Canteen OP11@17','Emer Office 4','Emer Office 5'],
+  'Phase # 1':['Emer Mainentrance','Emer Reading Room','Electrical Room (MR 1)','TIE TR2 Room','Machine Room 1','Emer Corridor 1','Emer Corridor 2','AHU Room 1','Emer Corridor 3','SUB2','Transfomer Yard2 (SUB2)','Emer Main Corridor 1','Emer Link Bridge','Emer final 1','Emer final 2','Emer Part Stock','Emer Cleaning','Emer Part Stock 1','Emer Cnnecting R','Emer Cnnecting L','Emer Relax Room'],
+  'Phase # 2':['Emer Mainentrance','Emer Link Bridge','Machine Room 2','Door UD/UDI Plant 5','Emer Part Stock 2','Emer Unit Stork','Emer Main Corridor 2','Emer Corridor 6','Transfomer Yard2 (SUB 4)','Substation 4 & TR/Yard 4 Ph.2','electrical room (SUB 4)','Fire Exit Link Bridge Area OP2','Fire Exit Link Bridge Area IP7','electrical room (SUB 3/3)','Emer Corridor 5','electrical room (SUB 3)','Emer Corridor 4','Emer PCS'],
+  'Phase # 3':['Emer Door TX 01','Emer Door Shipping 1','Emer Seal Process Shipping Dock [ No.5 ]','Shutter Door Shipping Dock [ No.4 ]','Emer Door Small Chiller','Emer Door Stair Laser Welding','Small Chiller 2','Emer Door Shipping 2 (TLC)','Emer Door Conveyor (Tranfer door)','Service Conveyor','Emer Door Featuring 2','electrical room Sub 8 TCL door1','electrical room Sub 8 TCL door2','Transformer Sub 8 TLC','Emer Door Featuring 1','Transformer Sub 7 TLC','Emer Door Transformer Sub 7'],
+  'Phase # 4':['Entrance Matting OP4','Lift Lobby IP5','Fire Exit Testing Area GL. I-11 OP6','Fire Exit Testing Area GL. E-11 IP14','Fire Exit Staging Area 3 IP6','Fire Exit Corridor IP10@3','Transformer room3#2','Transformer room3#1','MDB Room3','Utility3 Area','Fire Exit Corridor IP3','Fire Exit Testing Area GL. M-7','Fire Exit Locker Area IP3','Fire Exit AHU Room 1 IP9','Fire Exit AHU Room 2'],
+  'Phase # 5':['P5_1Fl-Stair No.5#2','P5_1Fl-Stair No.5#1','P5_1Fl-MDB Tranformer4','P5_1Fl-MDB Tranformer3','P5_1Fl-Emer MDB Room1','P5_1Fl-MDB Tranformer1','P5_1Fl-MDB Tranformer2','P5_1Fl-Stair No.2','D-G-3-6 (NO NAME)','P5_1Fl-AHU Room 1','P5-1Fl-Small Chiller Room','P5_1Fl-Stair No.1#1','P5_1Fl-Stair No.1#2','C-G-2-1 (NAME)','D-G-2-1 (1Door)','C-G-2-2 (2Door)','P5_1Fl-Stair No.3','P5_1Fl-Stair No.7','P5_1Fl-Stair No.4#1','P5_1Fl-Stair No.4#2','P5_1Fl-Stair No.4#3','P5_2nd-Stair No.5','P5_2Fl-MDB Tranformer4','P5_2Fl-MDB Tranformer3','P5-2Fl-Emer MDB Room2','P5_2Fl-MDB Tranformer1','P5_2Fl-MDB Tranformer2','P5_2nd-Stair2','P5-2Fl-Emer AHU Room1','P5_2nd-Stair1','P5_2nd-Stair6','P5_2nd-Stair3','P5_2nd-Stair 7','P5_2nd-Stair 4#1','P5_2nd-Stair 4#2','P5_3rd-Stair5','P5-3Fl-MDB Loading','P5_3Fl-MDB Tranformer Room6','P5_3Fl-MDB Tranformer Room5','P5_3Fl-MDB Tranformer Room4','P5_3Fl-MDB Tranformer Room3','P5_3Fl-MDB Tranformer Room2','P5_3Fl-MDB Tranformer Room1','P5_3Fl-Emer MDB Room3','P5_3rd-Stair2','P5-3Fl-Shutter Door Loading','P5_3rd-Stair1','P5_3rd-Stair6','P5_3rd-Stair3','P5_3rd-Stair7','3rd Fl--Stair No.4#2','3rd Fl-Stair No.4#1','P5_Roof Fl-Stair No.3','P5_Roof Fl-Stair No.4'],
+  'Utility':['Fire Exit MDB/HV Room IP2 (UT3)','Fire Exit Chiller Room IP5@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP6@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP7@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP4@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP8@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP9@2EN#17 (Shutter door UT3)','Transfomer Room IP1 (UT3)','Fire Exit MDB/HV Room IP3 (UT3)','Emer Chiller11 ( UT4)','Utility_Emer Chiller6 ( UT4)','Utility_Emer Air Com2#2 ( UT4)','Utility_Emer Air Com2 ( UT4)','Utility_Emer Air Com1#2 ( UT4)','Utility_Emer Air Com1 ( UT4)','Utility_Shutter Door Air Com2 ( UT4)','Utility_Shutter Door Chiller1 ( UT4)','Utility_Shutter Door Chiller2 ( UT4)','Utility_Shutter Door Chiller3 ( UT4)','Utility_Shutter Door Chiller4 ( UT4)','Utility_Shutter Door Chiller5 ( UT4)','Emer Chiller14 ( UT4)','Utility_Shutter Door Chiller6 ( UT4)','Utility_Shutter Door Chiller7 ( UT4)','Utility_Shutter Door Chiller8 ( UT4)','Utility_Shutter Door Chiller9 ( UT4)','Emer Chiller10 ( UT4)'],
+  'Support Building':['Car Park_Roof FL-Stair No.1','Car Park_3FL-Stair No.1','Car Park_3FL-Emer Canteen No.3','Car Park_3FL-Emer Canteen No.2','Car Park_3FL-Emer Canteen No.1']
+};
+const BPI_ROOMS={'BPI-HDD':{'B3':['B3L11 MSL LAB','B3L110 HEAD MEDIA LAB','B3L111 FA STORE LAB','B3L112 PCBA LAB','B3L113 TPE LAB','B3L114 IT HUB 1D','B3L115 RSS-FEA-Office','B3L116 CST LAB','B3L12 CHARACTERIZATION LAB','B3L13 METROLOGY LAB','B3L14 FW&FIT LAB','B3L15 SPW LAB','B3L16 FA LAB-1','B3L16 FA LAB-2','B3L18 TDE LAB','B3L19 MECHANICAL LAB','B3L215 IT HUB MAZZANINE Room','B3L216 IT HELP DESK ROOM','B3L21.1 EXECUTIVE AREA-1','B3L21.2 EXECUTIVE AREA-2'],'B4':['B4L1 IT HUB Room 1B','B4L215 MDB RM. 4-6','B4L216 MDB RM. 4-11','B4L217 MDB RM. 4-12','B4L218 MDB RM. 4-9','B4L219 Test Eng Command Center','B4L210 X-CALIBRE LAB_1','B4L11 CCTV Room/Security room','B4L13 TOOLING INSPECTION LAB','B4L14 CALIBRATION LAB'],'B6':['B6L133 EE ROOM','B6L134 IT HUB','B6L135 IT HUB 1B','B6L153 Laser welding 1','B6L154 Laser welding 2','B6L155 Laser welding 3'],'Central canteen':['B-Canteen Center Entry 1','B-Canteen Center Entry 2','B-Canteen Center Entry 3','B-Canteen Center Entry 4','B-Canteen Center Entry 5']},'BPI-THO':{'B1':['B1L11* Exit Door 1/1','B1L12* Exit Door 1/2','B1L13* Exit Door 1/4','B1L1E IT HUB','B1L143 HUB COMPUTER 1B','B1L148 IT HUB 1D','B1L150 HUB COMPUTER 1A','B1L154 THO ME INVENTORY','B1L155 ENTRANCE OFFICE B1/7','B1L157 OFFICE B1-45','B1L161 FINANCE B1-28','B1L162 INNOVATION ROOM','B1L164 HGA Development Lab','B1L165 HGA Development Lab (Robot)'],'B2':['B2/1L141 IT HUB RM 1-10','B2/1L146 EXIT DOOR 14','B2L164 CCTV security room','B2L128 HUB COMPUTER L1A','B2L130 ACT / ACF','B2L131 BONDING ALT','B2L132 HSA-AME','B2L134 RESONANCE LAB','B2L152 THO MSL','B2L153 BFC STORAGE','B2L160 EXIT DOOR 1','B2L161 EXIT DOOR 4','B2L162 EXIT DOOR 10','B2L163 EXIT DOOR 5'],'B6':['B6L253 HUB COMPUTER','B6L341 HUB COMPUTER 3A','B6L343 HUB COMPUTER 3B'],'B9':['THO office B9 Back door','THO office B9 Main Entrance'],'Facility':['B/L1-FE&M HUB ROOM','B/L2-FACILITY FRONT','B/L2-FACILITY REAR'],'Facility building':['B/L1-FACILITY STORE','B/L1-SECURITY ROOM']}};
+const OCC_TYPE_DESC={'Office':'สำนักงาน — พื้นที่ทำงานทั่วไป ห้องประชุม','Production':'พื้นที่การผลิต / โรงงานผลิต — สายการผลิต','Chemical room':'ห้องเก็บสารเคมี — มีสารอันตราย','Electrical room':'ห้องไฟฟ้า — ห้อง MDB, ตู้ควบคุม','Clinic':'คลินิก / ห้องพยาบาล','Canteen':'โรงอาหาร — ห้องอาหาร ครัว','Multipurpose Hall':'ห้องอเนกประสงค์ / หอประชุม','Laboratory room':'ห้องปฏิบัติการ — Lab ทดสอบ','Car park building':'อาคารจอดรถ','Mix':'ใช้งานหลายประเภทในพื้นที่เดียวกัน','Other':'อื่น ๆ'};
+const IMGS={egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'};
+window.addEventListener('load',()=>{document.getElementById('imgEgress').src=IMGS.egress;document.getElementById('imgDoorLeaf').src=IMGS.doorLeaf;});
+
+/* ════════════════════════════════════════
+   FIREBASE — ไม่เปลี่ยนแปลง (ตรงจาก v7_Completed)
+════════════════════════════════════════ */
 const firebaseConfig={apiKey:"AIzaSyBKP6uR6QhlLyRjfJiP-EjeaBC33Mpix8Y",authDomain:"smart-logistics-system-v1.firebaseapp.com",projectId:"smart-logistics-system-v1",storageBucket:"smart-logistics-system-v1.firebasestorage.app",messagingSenderId:"255204464932",appId:"1:255204464932:web:d52f72e9d12b33c3017bb1"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
-const COLLECTION="inspections";
-
-const IMGS={
-  egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',
-  doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'
-};
-window.addEventListener('load',()=>{
-  document.getElementById('imgEgress').src=IMGS.egress;
-  document.getElementById('imgDoorLeaf').src=IMGS.doorLeaf;
-});
-
-let allRecords=[];
-const naStates={};
+const COLLECTION='inspections';
+const USERS_COLLECTION='sg_users';
+let allRecords=[],currentFilteredRecords=[];
 let pendingDeleteId=null;
+let clearMode='all';
 
-document.getElementById('statusText').textContent='กำลังเชื่อมต่อระบบ...';
-db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(snap=>{
-  allRecords=snap.docs.map(d=>({id:d.id,...d.data()}));
-  document.getElementById('statusText').textContent='ระบบพร้อมใช้งาน — ข้อมูล Sync แบบ Real-time';
-  document.getElementById('liveCount').textContent=allRecords.length+' records';
-  renderDashboard(allRecords);
-  if(document.getElementById('page-reports').classList.contains('active'))renderTable(allRecords);
-},()=>{document.getElementById('statusText').textContent='เชื่อมต่อไม่สำเร็จ';});
+let currentUser=null;
+let editingUserId=null;
 
-const pages=['home','inspect','reports','howto','about'];
-const bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',howto:'bnHowto',about:'bnAbout'};
+async function ensureDefaultAdmin(){
+  const snap=await db.collection(USERS_COLLECTION).limit(1).get();
+  if(snap.empty){
+    await db.collection(USERS_COLLECTION).add({
+      fullName:'Saksri Kaewaudon',username:'saksri',
+      password:'wdsecurity2024',role:'admin',
+      dept:'Security Department SOC 614984',
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+  }
+}
+
+async function loadUsers(){
+  const snap=await db.collection(USERS_COLLECTION).orderBy('createdAt').get();
+  return snap.docs.map(d=>({id:d.id,...d.data()}));
+}
+
+async function renderUserList(){
+  const users=await loadUsers();
+  const ul=document.getElementById('userList');
+  if(!users.length){ul.innerHTML='<div class="empty-state" style="padding:28px"><i class="fa fa-users" style="font-size:32px"></i><p style="font-size:13px;font-weight:600">ยังไม่มี User</p></div>';return;}
+  const canEdit=currentUser&&currentUser.role==='admin';
+  ul.innerHTML=users.map(u=>{
+    const initials=u.fullName?u.fullName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'??';
+    const roleLbl={'admin':'Admin','user':'User','viewer':'Viewer'}[u.role]||u.role;
+    const roleClass=u.role||'user';
+    return `<div class="user-row">
+      <div class="user-row-avatar">${initials}</div>
+      <div class="user-row-info">
+        <div class="user-row-name">${u.fullName||'—'}${currentUser&&currentUser.id===u.id?' <span style="font-size:9px;background:rgba(0,229,209,.15);color:#007B6E;padding:1px 7px;border-radius:10px;font-weight:700;border:1px solid rgba(0,229,209,.3)">YOU</span>':''}</div>
+        <div class="user-row-meta">
+          <span>@${u.username||'—'}</span>
+          <span class="role-badge ${roleClass}">${roleLbl}</span>
+          ${u.dept?`<span>${u.dept}</span>`:''}
+        </div>
+      </div>
+      ${canEdit?`<div class="user-row-actions">
+        <button class="item-btn edit" onclick="openEditUser('${u.id}')" title="แก้ไข"><i class="fa fa-pen"></i></button>
+        ${currentUser.id!==u.id?`<button class="item-btn del" onclick="promptDeleteUser('${u.id}','${u.fullName}')" title="ลบ"><i class="fa fa-trash"></i></button>`:''}
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function openAddUser(){
+  if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin เท่านั้น','warning');return;}
+  editingUserId=null;
+  document.getElementById('userModalTitle').textContent='เพิ่ม User ใหม่';
+  document.getElementById('uFullName').value='';
+  document.getElementById('uUsername').value='';
+  document.getElementById('uPassword').value='';
+  document.getElementById('uRole').value='user';
+  document.getElementById('uDept').value='';
+  document.getElementById('userFormError').style.display='none';
+  document.getElementById('userModal').classList.add('open');
+}
+async function openEditUser(id){
+  if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin เท่านั้น','warning');return;}
+  const snap=await db.collection(USERS_COLLECTION).doc(id).get();
+  if(!snap.exists)return;
+  const u=snap.data();
+  editingUserId=id;
+  document.getElementById('userModalTitle').textContent='แก้ไข User';
+  document.getElementById('uFullName').value=u.fullName||'';
+  document.getElementById('uUsername').value=u.username||'';
+  document.getElementById('uPassword').value=u.password||'';
+  document.getElementById('uRole').value=u.role||'user';
+  document.getElementById('uDept').value=u.dept||'';
+  document.getElementById('userFormError').style.display='none';
+  document.getElementById('userModal').classList.add('open');
+}
+function closeUserModal(){document.getElementById('userModal').classList.remove('open');editingUserId=null;}
+async function saveUser(){
+  const fn=document.getElementById('uFullName').value.trim();
+  const un=document.getElementById('uUsername').value.trim();
+  const pw=document.getElementById('uPassword').value.trim();
+  const role=document.getElementById('uRole').value;
+  const dept=document.getElementById('uDept').value.trim();
+  const errEl=document.getElementById('userFormError');
+  if(!fn||!un||!pw){errEl.textContent='กรุณากรอกข้อมูลที่จำเป็นให้ครบ (ชื่อ, Username, Password)';errEl.style.display='block';return;}
+  const existing=await db.collection(USERS_COLLECTION).where('username','==',un).get();
+  const dupId=existing.docs.find(d=>d.id!==(editingUserId||''));
+  if(dupId){errEl.textContent='Username นี้มีในระบบแล้ว กรุณาใช้ชื่ออื่น';errEl.style.display='block';return;}
+  const data={fullName:fn,username:un,password:pw,role,dept};
+  if(editingUserId){
+    await db.collection(USERS_COLLECTION).doc(editingUserId).update({...data,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
+    showToast('แก้ไข User เรียบร้อย','success');
+  } else {
+    await db.collection(USERS_COLLECTION).add({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
+    showToast('เพิ่ม User เรียบร้อย','success');
+  }
+  closeUserModal();renderUserList();
+}
+async function promptDeleteUser(id,name){
+  if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin เท่านั้น','warning');return;}
+  if(currentUser.id===id){showToast('ไม่สามารถลบตัวเองได้','warning');return;}
+  if(!confirm('ลบ User "'+name+'" ออกจากระบบ?'))return;
+  await db.collection(USERS_COLLECTION).doc(id).delete();
+  showToast('ลบ User เรียบร้อย','error');renderUserList();
+}
+function togglePassField(id,btn){
+  const inp=document.getElementById(id);
+  const isPass=inp.type==='password';
+  inp.type=isPass?'text':'password';
+  btn.innerHTML=isPass?'<i class="fa fa-eye-slash"></i>':'<i class="fa fa-eye"></i>';
+}
+
+function toggleLoginPass(){
+  const inp=document.getElementById('loginPass');
+  const icon=document.getElementById('loginPassIcon').querySelector('i');
+  if(inp.type==='password'){inp.type='text';icon.className='fa fa-eye-slash';}
+  else{inp.type='password';icon.className='fa fa-eye';}
+}
+async function doLogin(){
+  const un=document.getElementById('loginUser').value.trim();
+  const pw=document.getElementById('loginPass').value;
+  const btn=document.getElementById('loginBtn');
+  const err=document.getElementById('loginError');
+  if(!un||!pw){err.querySelector('#loginErrorMsg').textContent='กรุณากรอก Username และ Password';err.classList.add('show');return;}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังตรวจสอบ...';err.classList.remove('show');
+  try{
+    const snap=await db.collection(USERS_COLLECTION).where('username','==',un).limit(1).get();
+    if(snap.empty||snap.docs[0].data().password!==pw){
+      err.querySelector('#loginErrorMsg').textContent='Username หรือ Password ไม่ถูกต้อง';
+      err.classList.add('show');btn.disabled=false;btn.innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';return;
+    }
+    const userData={id:snap.docs[0].id,...snap.docs[0].data()};
+    currentUser=userData;
+    loginSuccess(userData);
+  } catch(e){
+    err.querySelector('#loginErrorMsg').textContent='เชื่อมต่อ Firebase ไม่สำเร็จ: '+e.message;
+    err.classList.add('show');btn.disabled=false;btn.innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';
+  }
+}
+function loginSuccess(user){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('topNav').style.display='flex';
+  document.getElementById('appMain').style.display='block';
+  document.getElementById('appBottomNav').style.display='flex';
+  const initials=user.fullName?user.fullName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'??';
+  document.getElementById('navAvatar').textContent=initials;
+  document.getElementById('navUserName').textContent=user.fullName||user.username;
+  document.getElementById('navUserRole').textContent=(user.role||'user').toUpperCase();
+  document.getElementById('ddUserName').textContent=user.fullName||user.username;
+  document.getElementById('ddUserRole').textContent=(user.role||'user').toUpperCase()+' · '+(user.dept||'');
+  const settingsBtn=document.querySelectorAll('.nav-desktop-links .nav-link-btn')[3];
+  if(settingsBtn)settingsBtn.style.display=user.role==='admin'?'':'none';
+  initFirestoreListener();
+  renderUserList();
+  showToast('ยินดีต้อนรับ '+user.fullName,'success');
+}
+function doLogout(){
+  toggleUserDropdown();
+  currentUser=null;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('topNav').style.display='none';
+  document.getElementById('appMain').style.display='none';
+  document.getElementById('appBottomNav').style.display='none';
+  document.getElementById('loginUser').value='';
+  document.getElementById('loginPass').value='';
+  document.getElementById('loginError').classList.remove('show');
+  document.getElementById('loginBtn').disabled=false;
+  document.getElementById('loginBtn').innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';
+  allRecords=[];
+}
+
+function toggleUserDropdown(){const dd=document.getElementById('userDropdown');dd.classList.toggle('open');}
+document.addEventListener('click',function(e){const dd=document.getElementById('userDropdown');const chip=document.getElementById('userChip');if(dd&&chip&&!dd.contains(e.target)&&!chip.contains(e.target))dd.classList.remove('open');});
+
+let unsubscribe=null;
+function initFirestoreListener(){
+  if(unsubscribe)unsubscribe();
+  document.getElementById('statusText').textContent='กำลังเชื่อมต่อ...';
+  unsubscribe=db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(snap=>{
+    allRecords=snap.docs.map(d=>({id:d.id,...d.data()}));
+    currentFilteredRecords=allRecords;
+    document.getElementById('statusText').textContent='ระบบพร้อม — Real-time Sync';
+    document.getElementById('liveCount').textContent=allRecords.length+' records';
+    document.getElementById('settingsRecordCount').textContent=allRecords.length;
+    renderDashboard(allRecords);
+    if(document.getElementById('page-reports').classList.contains('active'))renderTable(allRecords);
+  },()=>{document.getElementById('statusText').textContent='เชื่อมต่อไม่สำเร็จ';});
+}
+
+const pages=['home','inspect','reports','settings','howto','about'];
+const bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',settings:'bnSettings',howto:'bnAbout',about:'bnAbout'};
 const desktopBtns=document.querySelectorAll('.nav-desktop-links .nav-link-btn');
 function showPage(name,desktopBtn,bnId){
   pages.forEach(p=>document.getElementById('page-'+p).classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   document.querySelectorAll('.bottom-nav-item').forEach(el=>el.classList.remove('active'));
-  const bnEl=document.getElementById(bnId||bnMap[name]);
-  if(bnEl)bnEl.classList.add('active');
-  desktopBtns.forEach(el=>el.classList.remove('active'));
-  if(desktopBtn)desktopBtn.classList.add('active');
-  if(name==='reports')renderTable(allRecords);
+  const bnEl=document.getElementById(bnId||bnMap[name]);if(bnEl)bnEl.classList.add('active');
+  desktopBtns.forEach(el=>el.classList.remove('active'));if(desktopBtn)desktopBtn.classList.add('active');
+  if(name==='reports'){renderTable(allRecords);}
+  if(name==='settings'){renderUserList();}
   window.scrollTo(0,0);
 }
 
-(function(){const sel=document.getElementById('emergencyDoorNum');for(let i=1;i<=300;i++){const o=document.createElement('option');o.value=i;o.textContent=i;sel.appendChild(o);}})();
-function togglePRBSub(){document.getElementById('prbSubWrap').style.display=document.getElementById('bu').value==='PRB'?'block':'none';updateProgress();}
+function openClearModal(mode){
+  clearMode=mode;
+  const modal=document.getElementById('clearDataModal');
+  document.getElementById('clearConfirmInput').value='';
+  document.getElementById('clearConfirmBtn').disabled=true;
+  if(mode==='all'){
+    document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลทั้งหมด '+allRecords.length+' records';
+    document.getElementById('clearDataMsg').textContent='การดำเนินการนี้จะลบข้อมูลการตรวจสอบทั้งหมดออกจาก Firebase Firestore โดยถาวร';
+  } else if(mode==='today'){
+    const todayCount=allRecords.filter(r=>{const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();}).length;
+    document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลวันนี้ '+todayCount+' records';
+    document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่บันทึกวันนี้ ('+new Date().toLocaleDateString('th-TH')+') จำนวน '+todayCount+' records';
+  } else {
+    document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลที่กรองแล้ว '+currentFilteredRecords.length+' records';
+    document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่แสดงอยู่ในตาราง Reports ('+currentFilteredRecords.length+' records)';
+  }
+  modal.classList.add('open');
+}
+function closeClearModal(){document.getElementById('clearDataModal').classList.remove('open');}
+function onClearConfirmInput(){
+  const val=document.getElementById('clearConfirmInput').value;
+  document.getElementById('clearConfirmBtn').disabled=val!=='CONFIRM';
+}
+async function confirmClearData(){
+  if(document.getElementById('clearConfirmInput').value!=='CONFIRM')return;
+  const btn=document.getElementById('clearConfirmBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังล้าง...';
+  try{
+    let toDelete=[];
+    if(clearMode==='all'){toDelete=allRecords;}
+    else if(clearMode==='today'){toDelete=allRecords.filter(r=>{const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();});}
+    else{toDelete=currentFilteredRecords;}
+    const batch=db.batch();
+    toDelete.forEach(r=>batch.delete(db.collection(COLLECTION).doc(r.id)));
+    await batch.commit();
+    showToast('ล้างข้อมูล '+toDelete.length+' records เรียบร้อย','success');
+    closeClearModal();
+  } catch(e){showToast('ล้างข้อมูลไม่สำเร็จ: '+e.message,'error');}
+  btn.disabled=false;btn.innerHTML='<i class="fa fa-trash"></i> ล้างข้อมูล';
+}
+
+(function initEmergencyDoor(){
+  const sel=document.getElementById('emergencyDoorNum');
+  for(let i=1;i<=300;i++){const o=document.createElement('option');o.value=i;o.textContent=i;sel.appendChild(o);}
+})();
+ensureDefaultAdmin();
+
+function setField(fid,val,pfx){
+  document.getElementById(fid).value=val;
+  document.getElementById(pfx+'Yes').classList.toggle('active',val==='Yes');
+  document.getElementById(pfx+'No').classList.toggle('active',val==='No');
+  document.getElementById(pfx+'NA').classList.toggle('active',val==='N/A');
+}
+function getField(fid){return document.getElementById(fid).value||'N/A';}
+function resetAllFields(){[['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(([f,p])=>setField(f,'N/A',p));}
+function onOccTypeChange(){const v=document.getElementById('occupancyType').value;const d=document.getElementById('occTypeDesc');if(v&&OCC_TYPE_DESC[v]){d.textContent=OCC_TYPE_DESC[v];d.classList.add('show');}else{d.classList.remove('show');}updateProgress();}
 function togglePanel(id){const p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none';}
 function selectDoorType(val,card){document.querySelectorAll('.dt-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('doorType').value=val;document.getElementById('doorTypePanel').style.display='none';updateProgress();}
-function selectDoorLeaf(val,card){document.querySelectorAll('.dl-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('doorLeaf').value=val;document.getElementById('doorLeafPanel').style.display='none';updateProgress();}
-function setNA(btn,fieldId){btn.classList.toggle('active');const chk=document.getElementById(fieldId);if(btn.classList.contains('active')){chk.disabled=true;chk.checked=false;naStates[fieldId]=true;}else{chk.disabled=false;delete naStates[fieldId];}}
-function getToggleVal(id){if(naStates[id])return 'N/A';return document.getElementById(id).checked?'Yes':'No';}
-function setToggleVal(id,val){const chk=document.getElementById(id);const naBtns=document.querySelectorAll(`[onclick="setNA(this,'${id}')"]`);if(val==='N/A'){naStates[id]=true;chk.disabled=true;chk.checked=false;naBtns.forEach(b=>b.classList.add('active'));}else{delete naStates[id];chk.disabled=false;chk.checked=val==='Yes';naBtns.forEach(b=>b.classList.remove('active'));}}
+function selectDoorLeaf(val,card){document.querySelectorAll('.dl-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('doorLeaf').value=val;updateProgress();}
+function selectMechanism(val,card){document.querySelectorAll('.mc-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('mechanism').value=val;updateProgress();}
 function changeOcc(delta){const inp=document.getElementById('occupancy');inp.value=Math.max(0,(parseInt(inp.value)||0)+delta);}
 
-const reqFields=['bu','building','floor','area','doorType','doorLeaf','mechanism','localLaw','rba'];
-function updateProgress(){let filled=0;reqFields.forEach(id=>{const el=document.getElementById(id);if(el&&el.value&&el.value.trim()!=='')filled++;});const pct=Math.round((filled/reqFields.length)*100);document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressPct').textContent=pct+'%';}
-reqFields.forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',updateProgress);});
+function handleBUChange(){
+  const val=document.getElementById('bu').value;
+  document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');
+  resetBuildingAndRoom();
+  if(val==='PRB'){document.getElementById('buFull').value='PRB';setBuildingMode('prb');}
+  else if(val==='BPI'){openBpiPopup();}
+  updateProgress();
+}
+function setBuildingMode(mode,sub){
+  const bldSel=document.getElementById('building');bldSel.innerHTML='<option value="">Select Building...</option>';
+  if(mode==='bpi'&&sub&&BPI_ROOMS[sub]){Object.keys(BPI_ROOMS[sub]).forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b+' ('+BPI_ROOMS[sub][b].length+' rooms)';bldSel.appendChild(o);});document.getElementById('roomNameWrap').style.display='flex';document.getElementById('prbSubWrap').classList.add('sub-hidden');}
+  else{Object.keys(PRB_ROOMS).forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b+' ('+PRB_ROOMS[b].length+' rooms)';bldSel.appendChild(o);});document.getElementById('roomNameWrap').style.display='flex';}
+}
+function resetBuildingAndRoom(){
+  const bldSel=document.getElementById('building');bldSel.innerHTML='<option value="">Select Building...</option>';
+  const roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">-- เลือก Building ก่อน --</option>';roomSel.disabled=true;
+  document.getElementById('roomHint').style.display='none';document.getElementById('roomNameWrap').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');
+}
+function onBuildingChange(){
+  const buFull=document.getElementById('buFull').value;const bld=document.getElementById('building').value;
+  const roomSel=document.getElementById('roomName');let rooms=[];
+  if(buFull==='PRB'&&bld&&PRB_ROOMS[bld]){rooms=PRB_ROOMS[bld];document.getElementById('prbSubWrap').classList.remove('sub-hidden');}
+  else if((buFull==='BPI-HDD'||buFull==='BPI-THO')&&bld&&BPI_ROOMS[buFull]&&BPI_ROOMS[buFull][bld]){rooms=BPI_ROOMS[buFull][bld];document.getElementById('prbSubWrap').classList.add('sub-hidden');}
+  else{roomSel.innerHTML='<option value="">-- เลือก Building ก่อน --</option>';roomSel.disabled=true;document.getElementById('roomHint').style.display='none';updateProgress();return;}
+  roomSel.innerHTML='<option value="">เลือกชื่อห้อง...</option>';rooms.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;roomSel.appendChild(o);});
+  roomSel.disabled=false;document.getElementById('roomHint').style.display='flex';document.getElementById('roomHintText').textContent=rooms.length+' ห้องใน '+bld;updateProgress();
+}
+function openBpiPopup(){document.getElementById('bpiPopup').classList.add('open');}
+function closeBpiPopup(){document.getElementById('bpiPopup').classList.remove('open');if(!document.getElementById('buFull').value)document.getElementById('bu').value='';updateProgress();}
+function selectBpiSub(sub){document.getElementById('buFull').value=sub;document.getElementById('bpiPillText').textContent=sub;document.getElementById('bpiSelectedPill').style.display='block';document.getElementById('bpiPopup').classList.remove('open');setBuildingMode('bpi',sub);updateProgress();}
+function clearBpiSub(){document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('bu').value='';resetBuildingAndRoom();updateProgress();}
+document.getElementById('bpiPopup').addEventListener('click',function(e){if(e.target===this)closeBpiPopup();});
+
+function updateProgress(){
+  const buFull=document.getElementById('buFull').value;let filled=0;const total=9;
+  if(buFull)filled++;if(document.getElementById('building').value)filled++;if(document.getElementById('floor').value)filled++;
+  if(document.getElementById('roomName').value)filled++;if(document.getElementById('occupancyType').value)filled++;
+  if(document.getElementById('doorType').value)filled++;if(document.getElementById('doorLeaf').value)filled++;
+  if(document.getElementById('mechanism').value)filled++;if(document.getElementById('localLaw').value&&document.getElementById('rba').value)filled++;
+  const pct=Math.round((filled/total)*100);
+  document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressPct').textContent=pct+'%';
+}
+['building','floor','roomName','occupancyType','mechanism','localLaw','rba'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',updateProgress);});
 
 function submitInspection(e){
   e.preventDefault();
+  if(!currentUser){showToast('กรุณา Login ก่อน','warning');return;}
+  const buFull=document.getElementById('buFull').value;
+  if(!buFull){showToast('กรุณาเลือก Site (BU)','warning');return;}
+  const areaVal=document.getElementById('roomName').value;
+  if(!areaVal){showToast('กรุณาเลือกชื่อห้อง','warning');return;}
   const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังบันทึก...';
-  const doc={bu:document.getElementById('bu').value,emergencyDoorNum:document.getElementById('emergencyDoorNum').value||'',building:document.getElementById('building').value,floor:document.getElementById('floor').value,area:document.getElementById('area').value,occupancy:document.getElementById('occupancy').value||'',doorType:document.getElementById('doorType').value,doorLeaf:document.getElementById('doorLeaf').value,mechanism:document.getElementById('mechanism').value,singleMotion:getToggleVal('singleMotion'),egressSwing:getToggleVal('egressSwing'),selfClose:getToggleVal('selfClose'),secAccess:getToggleVal('secAccess'),fireReentry:getToggleVal('fireReentry'),releaseCondition:document.getElementById('releaseCondition').value,localLaw:document.getElementById('localLaw').value,rba:document.getElementById('rba').value,remark:document.getElementById('remark').value,inspector:'Saksri K.'};
+  const doc={bu:buFull,emergencyDoorNum:buFull==='PRB'?(document.getElementById('emergencyDoorNum').value||''):'',building:document.getElementById('building').value,floor:document.getElementById('floor').value,area:areaVal,occupancyType:document.getElementById('occupancyType').value,emergencyExit:getField('emergencyExit'),occupancy:document.getElementById('occupancy').value||'',doorType:document.getElementById('doorType').value,doorLeaf:document.getElementById('doorLeaf').value,mechanism:document.getElementById('mechanism').value,singleMotion:getField('singleMotion'),egressSwing:getField('egressSwing'),selfClose:getField('selfClose'),secAccess:getField('secAccess'),fireReentry:getField('fireReentry'),releaseCondition:document.getElementById('releaseCondition').value,localLaw:document.getElementById('localLaw').value,rba:document.getElementById('rba').value,remark:document.getElementById('remark').value,inspector:currentUser.fullName||currentUser.username};
   const recId=document.getElementById('editRecordId').value;
   if(recId){
-    db.collection(COLLECTION).doc(recId).update({...doc,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAtISO:new Date().toISOString()}).then(()=>{showToast('แก้ไขเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';cancelEdit();showPage('reports',null,'bnReports');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===2));}).catch(err=>{showToast('แก้ไขไม่สำเร็จ: '+err.message,'error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
-  }else{
-    db.collection(COLLECTION).add({...doc,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdAtISO:new Date().toISOString()}).then(()=>{showToast('บันทึกเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';clearForm();showPage('home',null,'bnHome');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===0));}).catch(err=>{showToast('บันทึกไม่สำเร็จ: '+err.message,'error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
+    db.collection(COLLECTION).doc(recId).update({...doc,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAtISO:new Date().toISOString()})
+      .then(()=>{showToast('แก้ไขเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';cancelEdit();showPage('reports',null,'bnReports');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===2));})
+      .catch(err=>{showToast('แก้ไขไม่สำเร็จ','error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
+  } else {
+    db.collection(COLLECTION).add({...doc,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdAtISO:new Date().toISOString()})
+      .then(()=>{showToast('บันทึกเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';clearForm();showPage('home',null,'bnHome');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===0));})
+      .catch(err=>{showToast('บันทึกไม่สำเร็จ','error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
   }
 }
-
-function clearForm(){document.getElementById('inspectForm').reset();Object.keys(naStates).forEach(k=>delete naStates[k]);document.querySelectorAll('.na-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.switch input').forEach(c=>{c.disabled=false;});document.getElementById('prbSubWrap').style.display='none';document.querySelectorAll('.dt-card,.dl-card').forEach(c=>c.classList.remove('selected'));document.getElementById('doorTypePanel').style.display='none';document.getElementById('doorLeafPanel').style.display='none';document.getElementById('editRecordId').value='';document.getElementById('occupancy').value='';updateProgress();}
+function clearForm(){
+  document.getElementById('inspectForm').reset();document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');document.getElementById('occTypeDesc').classList.remove('show');resetAllFields();document.querySelectorAll('.dt-card,.dl-card,.mc-card').forEach(c=>c.classList.remove('selected'));document.getElementById('doorTypePanel').style.display='none';document.getElementById('doorLeafPanel').style.display='none';document.getElementById('editRecordId').value='';document.getElementById('occupancy').value='';resetBuildingAndRoom();updateProgress();
+}
+const MECH_MAP={'Push Bar':0,'Push Bar with vertical panic bolt':1,'Latch':2,'Knob':3,'Auto-Slide':4,'Manual-Slide':5,'Other':6,'N/A':7};
+const LEAF_MAP={'Swinging Type - Double Door':0,'Swinging Type - Single Door':1,'Horizontal Sliding Door - Double Door':2,'Horizontal Sliding Door - Single Door':3,'Vertical Sliding Door':4,'Door missing':5};
 
 function editRecord(id){
   const r=allRecords.find(x=>x.id===id);if(!r)return;
   clearForm();
-  document.getElementById('editRecordId').value=id;
-  document.getElementById('editBanner').style.display='flex';
-  document.getElementById('editBannerLabel').textContent=r.building+' Fl.'+r.floor+' — '+r.area;
-  document.getElementById('inspectTitle').textContent='แก้ไขรายการ';
-  document.getElementById('submitBtn').innerHTML='<i class="fa fa-floppy-disk"></i> บันทึกการแก้ไข';
-  const sv=(id,val)=>{const el=document.getElementById(id);if(el&&val!=null)el.value=val;};
-  sv('bu',r.bu);togglePRBSub();if(r.emergencyDoorNum)sv('emergencyDoorNum',r.emergencyDoorNum);
-  sv('building',r.building);sv('floor',r.floor);sv('area',r.area);sv('occupancy',r.occupancy||'');
-  sv('mechanism',r.mechanism);sv('releaseCondition',r.releaseCondition);sv('localLaw',r.localLaw);sv('rba',r.rba);sv('remark',r.remark);
-  if(r.doorType){document.getElementById('doorType').value=r.doorType;document.querySelectorAll('.dt-card').forEach(c=>{if(c.querySelector('.dt-name')?.textContent===r.doorType)c.classList.add('selected');});}
-  const leafMap={'Swinging Type - Double Door':0,'Swinging Type - Single Door':1,'Horizontal Sliding Door - Double Door':2,'Horizontal Sliding Door - Single Door':3,'Vertical Sliding Door':4,'Door missing':5};
-  if(r.doorLeaf!==undefined){document.getElementById('doorLeaf').value=r.doorLeaf;const cards=document.querySelectorAll('.dl-card');const idx=leafMap[r.doorLeaf];if(idx!==undefined&&cards[idx])cards[idx].classList.add('selected');}
-  ['singleMotion','egressSwing','selfClose','secAccess','fireReentry'].forEach(fid=>setToggleVal(fid,r[fid]||'No'));
-  updateProgress();
-  showPage('inspect',null,'bnInspect');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===1));
-  window.scrollTo(0,0);
+  document.getElementById('editRecordId').value=id;document.getElementById('editBanner').style.display='flex';document.getElementById('editBannerLabel').textContent=r.building+' — '+r.area;document.getElementById('inspectTitle').textContent='แก้ไขรายการ';document.getElementById('submitBtn').innerHTML='<i class="fa fa-floppy-disk"></i> บันทึกการแก้ไข';
+  const sv=(fid,val)=>{const el=document.getElementById(fid);if(el&&val!=null)el.value=val;};
+  if(r.bu==='PRB'){document.getElementById('bu').value='PRB';document.getElementById('buFull').value='PRB';setBuildingMode('prb');sv('building',r.building);if(r.building&&PRB_ROOMS[r.building]){const rooms=PRB_ROOMS[r.building];const roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">เลือก...</option>';rooms.forEach(rm=>{const o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel.appendChild(o);});roomSel.disabled=false;document.getElementById('roomHint').style.display='flex';document.getElementById('roomHintText').textContent=rooms.length+' ห้อง';sv('roomName',r.area);document.getElementById('prbSubWrap').classList.remove('sub-hidden');if(r.emergencyDoorNum)sv('emergencyDoorNum',r.emergencyDoorNum);}}
+  else if(r.bu==='BPI-HDD'||r.bu==='BPI-THO'){document.getElementById('bu').value='BPI';document.getElementById('buFull').value=r.bu;document.getElementById('bpiPillText').textContent=r.bu;document.getElementById('bpiSelectedPill').style.display='block';setBuildingMode('bpi',r.bu);sv('building',r.building);if(r.building&&BPI_ROOMS[r.bu]&&BPI_ROOMS[r.bu][r.building]){const rooms=BPI_ROOMS[r.bu][r.building];const roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">เลือก...</option>';rooms.forEach(rm=>{const o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel.appendChild(o);});roomSel.disabled=false;sv('roomName',r.area);}}
+  sv('floor',r.floor);if(r.occupancyType){sv('occupancyType',r.occupancyType);const desc=document.getElementById('occTypeDesc');if(OCC_TYPE_DESC[r.occupancyType]){desc.textContent=OCC_TYPE_DESC[r.occupancyType];desc.classList.add('show');}}
+  sv('occupancy',r.occupancy||'');sv('releaseCondition',r.releaseCondition);sv('localLaw',r.localLaw);sv('rba',r.rba);sv('remark',r.remark);
+  [['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(([f,p])=>setField(f,r[f]||'N/A',p));
+  if(r.doorType){document.getElementById('doorType').value=r.doorType;document.querySelectorAll('.dt-card').forEach(c=>{if(c.querySelector('.dt-name')&&c.querySelector('.dt-name').textContent===r.doorType)c.classList.add('selected');});}
+  if(r.doorLeaf!==undefined){document.getElementById('doorLeaf').value=r.doorLeaf;const cards=document.querySelectorAll('.dl-card');const idx=LEAF_MAP[r.doorLeaf];if(idx!==undefined&&cards[idx])cards[idx].classList.add('selected');}
+  if(r.mechanism!==undefined){document.getElementById('mechanism').value=r.mechanism;const mcards=document.querySelectorAll('.mc-card');const midx=MECH_MAP[r.mechanism];if(midx!==undefined&&mcards[midx])mcards[midx].classList.add('selected');}
+  updateProgress();showPage('inspect',null,'bnInspect');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===1));window.scrollTo(0,0);
 }
-
 function cancelEdit(){clearForm();document.getElementById('editBanner').style.display='none';document.getElementById('inspectTitle').textContent='Exit Route Compliance Survey';document.getElementById('submitBtn').innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';}
-
 function promptDelete(id,label){pendingDeleteId=id;document.getElementById('deleteRecordLabel').textContent=label;document.getElementById('deleteModal').classList.add('open');}
-function confirmDelete(){if(!pendingDeleteId)return;db.collection(COLLECTION).doc(pendingDeleteId).delete().then(()=>{showToast('ลบเรียบร้อย','error');pendingDeleteId=null;document.getElementById('deleteModal').classList.remove('open');}).catch(e=>{showToast('ลบไม่สำเร็จ: '+e.message,'error');document.getElementById('deleteModal').classList.remove('open');});}
+function confirmDelete(){if(!pendingDeleteId)return;db.collection(COLLECTION).doc(pendingDeleteId).delete().then(()=>{showToast('ลบเรียบร้อย','error');pendingDeleteId=null;document.getElementById('deleteModal').classList.remove('open');}).catch(e=>{showToast('ลบไม่สำเร็จ','error');document.getElementById('deleteModal').classList.remove('open');});}
 document.getElementById('deleteModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+document.getElementById('clearDataModal').addEventListener('click',function(e){if(e.target===this)closeClearModal();});
+document.getElementById('userModal').addEventListener('click',function(e){if(e.target===this)closeUserModal();});
 
+function eeTag(v){
+  if(v==='Yes')return '<span style="background:var(--success-bg);color:var(--success);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Yes</span>';
+  if(v==='No')return '<span style="background:var(--error-bg);color:var(--error);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">No</span>';
+  return '<span style="background:var(--surface-high);color:var(--outline);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">N/A</span>';
+}
 function renderDashboard(records){
   const today=new Date().toDateString();let complied=0,nonComplied=0,todayCount=0;
-  records.forEach(r=>{if(r.localLaw==='Complied'&&r.rba==='Complied')complied++;if(r.localLaw==='Non-Complied'||r.rba==='Non-Complied')nonComplied++;const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);if(ts.toDateString()===today)todayCount++;});
+  records.forEach(r=>{if(r.localLaw==='Complied'&&r.rba==='Complied')complied++;if(r.localLaw==='Non-Complied'||r.rba==='Non-Complied')nonComplied++;const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);if(ts.toDateString()===today)todayCount++;});
   document.getElementById('statTotal').textContent=records.length;document.getElementById('statComplied').textContent=complied;document.getElementById('statNonComplied').textContent=nonComplied;document.getElementById('statToday').textContent=todayCount;
   const list=document.getElementById('recentList');
-  if(!records.length){list.innerHTML='<div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:15px;font-weight:600">ยังไม่มีข้อมูล</p></div>';return;}
+  if(!records.length){list.innerHTML='<div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:14px;font-weight:700">ยังไม่มีข้อมูล</p></div>';return;}
   list.innerHTML=records.slice(0,10).map(r=>{
     const bc=r.localLaw==='Complied'&&r.rba==='Complied'?'complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'non-complied':'na');
     const bt=r.localLaw==='Complied'&&r.rba==='Complied'?'Complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'Non-Complied':'N/A');
-    const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
+    const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
     const ds=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'})+' '+ts.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
-    const occ=r.occupancy?`<span style="font-size:11px;background:var(--warning-bg);color:var(--warning);padding:2px 8px;border-radius:12px;margin-left:4px;font-weight:600"><i class="fa fa-users" style="font-size:9px"></i> ${r.occupancy}</span>`:'';
-    return `<div class="inspection-item"><div class="insp-icon"><i class="fa fa-door-closed"></i></div><div class="insp-info"><div class="insp-title">${r.building||'—'} Fl.${r.floor||'—'} — ${r.area||'—'}${occ}</div><div class="insp-sub">${r.bu||''} | ${r.doorType||''} | ${ds}</div></div><span class="badge ${bc}" style="margin-right:6px">${bt}</span><div class="item-actions"><button class="item-btn edit" onclick="editRecord('${r.id}')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete('${r.id}','${r.building||''} Fl.${r.floor||''} — ${r.area||''}')" title="ลบ"><i class="fa fa-trash"></i></button></div></div>`;
+    return '<div class="inspection-item"><div class="insp-icon"><i class="fa fa-door-closed"></i></div><div class="insp-info"><div class="insp-title">'+(r.building||'—')+' — '+(r.area||'—')+'</div><div class="insp-sub">'+(r.bu||'')+' | '+(r.inspector||'')+' | '+ds+'</div></div><span class="badge '+bc+'" style="margin-right:6px">'+bt+'</span><div class="item-actions"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></div>';
   }).join('');
 }
-
 function renderTable(records){
+  currentFilteredRecords=records;
   const tbody=document.getElementById('reportBody');
-  if(!records.length){tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:40px;color:var(--on-surface-variant)"><i class="fa fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}
+  if(!records.length){tbody.innerHTML='<tr><td colspan="14" style="text-align:center;padding:36px;color:var(--outline)"><i class="fa fa-inbox" style="font-size:26px;display:block;margin-bottom:7px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}
   tbody.innerHTML=records.map((r,i)=>{
     const llc=r.localLaw==='Complied'?'complied':(r.localLaw==='Non-Complied'?'non-complied':'na');
     const rbc=r.rba==='Complied'?'complied':(r.rba==='Non-Complied'?'non-complied':'na');
-    const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
+    const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
     const dt=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'});
-    return `<tr><td style="font-weight:700;color:var(--primary)">${i+1}</td><td style="font-size:12px">${dt}</td><td><strong>${r.bu||''}</strong></td><td>${r.building||''}</td><td style="text-align:center">${r.floor||''}</td><td>${r.area||''}</td><td style="text-align:center">${r.occupancy?`<span style="background:var(--warning-bg);color:var(--warning);padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">${r.occupancy} คน</span>`:'-'}</td><td style="font-size:12px">${r.doorType||''}</td><td><span class="badge ${llc}">${r.localLaw||'—'}</span></td><td><span class="badge ${rbc}">${r.rba||'—'}</span></td><td style="font-size:12px">${r.inspector||''}</td><td><div style="display:flex;gap:5px"><button class="item-btn edit" onclick="editRecord('${r.id}')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete('${r.id}','${r.building||''} Fl.${r.floor||''}')" title="ลบ"><i class="fa fa-trash"></i></button></div></td></tr>`;
+    return '<tr><td style="font-weight:800;color:var(--primary)">'+(i+1)+'</td><td style="font-size:11px">'+dt+'</td><td><strong>'+(r.bu||'')+'</strong></td><td>'+(r.building||'')+'</td><td>'+(r.floor||'')+'</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+(r.area||'')+'</td><td><span style="background:var(--primary-container);color:var(--primary);padding:2px 7px;border-radius:9px;font-size:10px;font-weight:700">'+(r.occupancyType||'-')+'</span></td><td>'+eeTag(r.emergencyExit||'N/A')+'</td><td style="text-align:center">'+(r.occupancy?r.occupancy+' คน':'-')+'</td><td style="font-size:11px">'+(r.doorType||'')+'</td><td><span class="badge '+llc+'">'+(r.localLaw||'—')+'</span></td><td><span class="badge '+rbc+'">'+(r.rba||'—')+'</span></td><td style="font-size:11px">'+(r.inspector||'')+'</td><td><div style="display:flex;gap:4px"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></td></tr>';
   }).join('');
 }
-
-function applyFilter(){const bu=document.getElementById('filterBU').value;const comp=document.getElementById('filterCompliance').value;const date=document.getElementById('filterDate').value;let f=allRecords;if(bu)f=f.filter(r=>r.bu===bu);if(comp)f=f.filter(r=>r.localLaw===comp||r.rba===comp);if(date)f=f.filter(r=>(r.createdAtISO||'').startsWith(date));renderTable(f);}
-
+function applyFilter(){
+  const bu=document.getElementById('filterBU').value;const comp=document.getElementById('filterCompliance').value;const date=document.getElementById('filterDate').value;
+  let f=allRecords;if(bu)f=f.filter(r=>r.bu===bu);if(comp)f=f.filter(r=>r.localLaw===comp||r.rba===comp);if(date)f=f.filter(r=>(r.createdAtISO||'').startsWith(date));
+  renderTable(f);
+}
 function exportCSV(){
   if(!allRecords.length){showToast('ไม่มีข้อมูล','error');return;}
-  const hdr=['ID','Date','BU','Building','Floor','Area','Occupancy','Door Type','Leaf Type','Mechanism','Single Motion','Egress Swing','Self Close','Sec Access','Fire Re-entry','Release Condition','Local Law','RBA','Remark','Inspector'];
-  const rows=allRecords.map(r=>{const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return[r.id,ts.toISOString(),r.bu,r.building,r.floor,r.area,r.occupancy||'',r.doorType,r.doorLeaf,r.mechanism,r.singleMotion,r.egressSwing,r.selfClose,r.secAccess,r.fireReentry,r.releaseCondition,r.localLaw,r.rba,r.remark,r.inspector];});
+  const hdr=['ID','Date','BU','Building','Floor','Area/Room','Occupancy Type','Emergency Exit','Occupancy','Door Type','Leaf','Mechanism','Single Motion','Egress Swing','Self Close','Sec Access','Fire Re-entry','Release','Local Law','RBA','Remark','Inspector'];
+  const rows=allRecords.map(r=>{const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return[r.id,ts.toISOString(),r.bu,r.building,r.floor,r.area,r.occupancyType||'',r.emergencyExit||'',r.occupancy||'',r.doorType,r.doorLeaf,r.mechanism,r.singleMotion,r.egressSwing,r.selfClose,r.secAccess,r.fireReentry,r.releaseCondition,r.localLaw,r.rba,r.remark,r.inspector];});
   const csv=[hdr,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SafeGuard_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
   showToast('Export '+allRecords.length+' records!','success');
 }
-
 function openLightbox(src,cap){document.getElementById('lightboxImg').src=src;document.getElementById('lightboxCap').textContent=cap||'';document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('open');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('lightbox').classList.remove('open');document.getElementById('deleteModal').classList.remove('open');}});
-
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){['lightbox','deleteModal','clearDataModal','userModal','bpiPopup'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});}});
 function showToast(msg,type){const wrap=document.getElementById('toastWrap');const t=document.createElement('div');t.className='toast'+(type?' '+type:'');t.textContent=msg;wrap.appendChild(t);setTimeout(()=>t.remove(),3000);}
 </script>
 </body>
