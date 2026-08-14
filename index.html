@@ -9,22 +9,20 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
   :root {
-    --primary:#0058be; --primary-dark:#004395; --primary-light:#2170e4;
-    --primary-container:#d8e2ff; --surface:#f9f9ff; --surface-card:#ffffff;
-    --surface-container:#ecedf7; --surface-high:#e6e7f2;
-    --on-surface:#191b23; --on-surface-variant:#424754;
-    --outline:#727785; --outline-variant:#c2c6d6;
-    --success:#1b7f4a; --success-bg:#d4f4e2;
-    --warning:#9b5f00; --warning-bg:#ffecd0;
-    --error:#ba1a1a; --error-bg:#ffdad6;
-    --radius-sm:8px; --radius-md:12px; --radius-lg:16px; --radius-full:9999px;
-    --shadow-sm:0 1px 4px rgba(0,0,0,.08); --shadow-md:0 2px 12px rgba(0,0,0,.10); --shadow-lg:0 4px 24px rgba(0,0,0,.13);
-    --nav-height:64px; --bottom-nav:64px;
+    --primary:#0058be;--primary-dark:#004395;--primary-light:#2170e4;
+    --primary-container:#d8e2ff;--surface:#f9f9ff;--surface-card:#ffffff;
+    --surface-container:#ecedf7;--surface-high:#e6e7f2;
+    --on-surface:#191b23;--on-surface-variant:#424754;
+    --outline:#727785;--outline-variant:#c2c6d6;
+    --success:#1b7f4a;--success-bg:#d4f4e2;
+    --warning:#9b5f00;--warning-bg:#ffecd0;
+    --error:#ba1a1a;--error-bg:#ffdad6;
+    --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-full:9999px;
+    --shadow-sm:0 1px 4px rgba(0,0,0,.08);--shadow-md:0 2px 12px rgba(0,0,0,.10);--shadow-lg:0 4px 24px rgba(0,0,0,.13);
+    --nav-height:64px;--bottom-nav:64px;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{font-family:'Segoe UI',Arial,sans-serif;background:var(--surface);color:var(--on-surface);min-height:100vh;overflow-x:hidden}
-
-  /* TOP NAV */
   .top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:#fff;border-bottom:1px solid var(--outline-variant);display:flex;align-items:center;justify-content:space-between;padding:0 20px;z-index:100;box-shadow:var(--shadow-sm)}
   .brand{font-size:20px;font-weight:800;color:var(--primary);line-height:1.2}
   .brand span{display:block;font-size:12px;font-weight:600;color:var(--on-surface-variant);letter-spacing:.05em}
@@ -36,37 +34,26 @@
   .icon-btn{width:40px;height:40px;border-radius:var(--radius-full);border:none;background:transparent;cursor:pointer;color:var(--on-surface-variant);display:flex;align-items:center;justify-content:center;font-size:18px}
   .icon-btn:hover{background:var(--surface-container)}
   .avatar{width:36px;height:36px;border-radius:var(--radius-full);background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;cursor:pointer;border:2px solid var(--outline-variant)}
-
-  /* MAIN */
   .main-content{margin-top:var(--nav-height);padding:20px 16px;padding-bottom:calc(var(--bottom-nav)+20px)}
   @media(min-width:768px){.main-content{padding:28px 32px;padding-bottom:40px;max-width:900px;margin-left:auto;margin-right:auto}}
-
-  /* BOTTOM NAV */
   .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav);background:#fff;border-top:1px solid var(--outline-variant);display:flex;align-items:center;justify-content:space-around;z-index:100;box-shadow:0 -2px 12px rgba(0,0,0,.07)}
   @media(min-width:768px){.bottom-nav{display:none}}
   .bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;cursor:pointer;flex:1}
   .bottom-nav-item i{font-size:20px;color:var(--on-surface-variant)}
   .bottom-nav-item span{font-size:11px;font-weight:600;color:var(--on-surface-variant)}
   .bottom-nav-item.active i,.bottom-nav-item.active span{color:var(--primary)}
-
-  .page{display:none}
-  .page.active{display:block}
-
-  /* STATUS BAR */
+  .page{display:none}.page.active{display:block}
+  .page-header{margin-bottom:20px}
+  .page-header h1{font-size:22px;font-weight:800}
+  .page-header p{font-size:13px;color:var(--on-surface-variant);margin-top:4px}
   .status-bar{background:linear-gradient(135deg,#1a3a5c,#0058be);border-radius:var(--radius-md);padding:10px 14px;display:flex;align-items:center;gap:10px;margin-bottom:20px}
   .status-dot{width:10px;height:10px;border-radius:50%;background:#00e5a0;animation:pulse-dot 2s infinite;flex-shrink:0}
   @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.7;transform:scale(1.3)}}
   .status-text{font-size:12px;font-weight:600;color:#fff;flex:1}
   .status-badge{background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:var(--radius-full)}
-
-  /* STATS */
-  .page-header{margin-bottom:20px}
-  .page-header h1{font-size:22px;font-weight:800}
-  .page-header p{font-size:13px;color:var(--on-surface-variant);margin-top:4px}
   .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
   @media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
-  .stat-card{background:var(--surface-card);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant);display:flex;flex-direction:column;gap:6px;transition:box-shadow .2s}
-  .stat-card:hover{box-shadow:var(--shadow-md)}
+  .stat-card{background:var(--surface-card);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant);display:flex;flex-direction:column;gap:6px}
   .stat-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:4px}
   .stat-val{font-size:28px;font-weight:800;line-height:1}
   .stat-lbl{font-size:11px;font-weight:600;color:var(--on-surface-variant);letter-spacing:.05em;text-transform:uppercase}
@@ -77,7 +64,7 @@
   .section-title{font-size:15px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
   .section-title::after{content:'';flex:1;height:1px;background:var(--outline-variant)}
   .inspection-list{display:flex;flex-direction:column;gap:10px}
-  .inspection-item{background:var(--surface-card);border-radius:var(--radius-lg);padding:14px 16px;border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s}
+  .inspection-item{background:var(--surface-card);border-radius:var(--radius-lg);padding:14px 16px;border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:12px;transition:border-color .15s}
   .inspection-item:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
   .insp-icon{width:42px;height:42px;border-radius:var(--radius-md);background:var(--primary-container);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
   .insp-info{flex:1;min-width:0}
@@ -89,17 +76,13 @@
   .badge.na{background:var(--surface-high);color:var(--outline)}
   .realtime-badge{display:inline-flex;align-items:center;gap:5px;background:var(--success-bg);color:var(--success);font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-full)}
   .realtime-badge .dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse-dot 1.8s infinite}
-
-  /* HOW TO USE CARD */
-  .howto-card{background:linear-gradient(135deg,rgba(0,88,190,.06),rgba(33,112,228,.04));border:1.5px solid rgba(0,88,190,.18);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px}
-  .howto-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
-  .howto-steps{display:flex;flex-direction:column;gap:10px}
-  .howto-step{display:flex;align-items:flex-start;gap:12px}
-  .step-badge{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:1px}
-  .step-content .sc-title{font-size:13px;font-weight:700;color:var(--on-surface)}
-  .step-content .sc-desc{font-size:12px;color:var(--on-surface-variant);margin-top:2px;line-height:1.5}
-  .howto-tip{background:var(--warning-bg);border:1px solid rgba(155,95,0,.2);border-radius:var(--radius-md);padding:10px 14px;margin-top:14px;font-size:12px;color:var(--warning);font-weight:600;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
-
+  /* ACTION BUTTONS on list items */
+  .item-actions{display:flex;gap:6px;flex-shrink:0}
+  .item-btn{width:32px;height:32px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;transition:all .15s}
+  .item-btn.edit:hover{background:var(--primary-container);border-color:var(--primary);color:var(--primary)}
+  .item-btn.del:hover{background:var(--error-bg);border-color:var(--error);color:var(--error)}
+  .item-btn.edit{color:var(--primary)}
+  .item-btn.del{color:var(--error)}
   /* FORM */
   .form-card{background:var(--surface-card);border-radius:var(--radius-lg);box-shadow:var(--shadow-md);border:1px solid var(--outline-variant);overflow:hidden;margin-bottom:16px}
   .form-section{padding:20px;border-bottom:1px solid var(--outline-variant)}
@@ -116,11 +99,10 @@
   .field-input,.field-select,.field-textarea{width:100%;padding:11px 14px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:14px;color:var(--on-surface);font-family:inherit;transition:border-color .15s,box-shadow .15s;outline:none;appearance:none}
   .field-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23727785' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:38px}
   .field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,88,190,.13)}
-  .field-textarea{min-height:120px;resize:vertical}
+  .field-textarea{min-height:100px;resize:vertical}
   .label-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
   .info-btn{background:none;border:1.5px solid var(--primary-container);color:var(--primary);font-size:12px;font-weight:700;padding:4px 12px;border-radius:var(--radius-full);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .15s;white-space:nowrap}
   .info-btn:hover{background:var(--primary-container)}
-
   /* REF PANEL */
   .ref-panel{margin-top:10px;border-radius:var(--radius-lg);border:2px solid rgba(0,88,190,.20);overflow:hidden;box-shadow:var(--shadow-lg);animation:slideDown .22s ease}
   @keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
@@ -134,7 +116,6 @@
   .ref-img-wrap:hover img{transform:scale(1.01)}
   .ref-img-zoom{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;display:flex;align-items:center;gap:5px;pointer-events:none}
   .ref-caption{font-size:11px;color:var(--on-surface-variant);margin-top:8px;font-style:italic;text-align:center;line-height:1.5}
-
   /* DOOR TYPE CARDS */
   .door-type-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
   @media(max-width:479px){.door-type-cards{grid-template-columns:1fr}}
@@ -150,20 +131,17 @@
   .dt-card.ead .dt-icon{background:#e8f5e9;color:#2e7d32}
   .dt-card.ed .dt-icon{background:#e3f2fd;color:#1565c0}
   .dt-card.edd .dt-icon{background:#fce4ec;color:#c62828}
-
-  /* DOOR LEAF CARDS */
-  .door-leaf-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+  /* DOOR LEAF — IMAGE CARDS (no icon, just image) */
+  .door-leaf-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:10px}
   @media(max-width:479px){.door-leaf-cards{grid-template-columns:1fr 1fr}}
-  .dl-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);padding:10px 8px;cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative}
-  .dl-card:hover{border-color:var(--primary);background:#f0f4ff;transform:translateY(-1px);box-shadow:var(--shadow-md)}
-  .dl-card.selected{border-color:var(--primary);background:var(--primary-container);box-shadow:0 0 0 3px rgba(0,88,190,.15)}
-  .dl-card .dl-icon{width:36px;height:36px;border-radius:var(--radius-md);background:#e3f2fd;color:var(--primary);display:flex;align-items:center;justify-content:center;margin:0 auto 6px;font-size:16px}
-  .dl-card .dl-name{font-size:10px;font-weight:800;letter-spacing:.02em;line-height:1.3}
-  .dl-card.selected .dl-name{color:var(--primary)}
-  .dl-card.selected .dl-icon{background:var(--primary);color:#fff}
-  .dl-card .dl-check{position:absolute;top:5px;right:7px;font-size:13px;color:var(--primary);display:none}
+  .dl-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative;overflow:hidden}
+  .dl-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md);transform:translateY(-1px)}
+  .dl-card.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,88,190,.18)}
+  .dl-card .dl-img{width:100%;height:80px;object-fit:cover;display:block;background:#f0f4ff}
+  .dl-card .dl-name{font-size:11px;font-weight:800;padding:7px 6px 8px;color:var(--on-surface);line-height:1.3;background:#fff}
+  .dl-card.selected .dl-name{color:var(--primary);background:var(--primary-container)}
+  .dl-card .dl-check{position:absolute;top:6px;right:6px;font-size:15px;color:var(--primary);background:#fff;border-radius:50%;display:none;line-height:1}
   .dl-card.selected .dl-check{display:block}
-
   /* TOGGLE */
   .toggle-card{background:#fff;border:1px solid var(--outline-variant);border-radius:var(--radius-lg);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow-sm)}
   .toggle-info{flex:1}
@@ -178,7 +156,15 @@
   .slider:before{position:absolute;content:'';height:20px;width:20px;left:3px;bottom:3px;background:white;transition:.25s;border-radius:50%;box-shadow:0 1px 4px rgba(0,0,0,.18)}
   input:checked+.slider{background:var(--primary)}
   input:checked+.slider:before{transform:translateX(22px)}
-
+  /* OCCUPANCY FIELD */
+  .occupancy-wrap{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--outline-variant);border-radius:var(--radius-md);padding:11px 14px;transition:border-color .15s,box-shadow .15s}
+  .occupancy-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(0,88,190,.13)}
+  .occupancy-icon{width:36px;height:36px;border-radius:var(--radius-md);background:var(--warning-bg);color:var(--warning);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+  .occupancy-input{flex:1;border:none;outline:none;font-size:22px;font-weight:800;color:var(--on-surface);font-family:inherit;background:transparent;width:80px;text-align:center}
+  .occupancy-unit{font-size:13px;font-weight:600;color:var(--on-surface-variant)}
+  .occ-btns{display:flex;flex-direction:column;gap:4px}
+  .occ-btn{width:28px;height:28px;border-radius:var(--radius-sm);border:1.5px solid var(--outline-variant);background:var(--surface-container);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--primary);transition:all .15s}
+  .occ-btn:hover{background:var(--primary-container);border-color:var(--primary)}
   /* EXPORT / ACTION */
   .export-section{padding:20px}
   .export-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
@@ -192,11 +178,13 @@
   .btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
   .btn-primary:disabled{background:var(--outline-variant);box-shadow:none;cursor:not-allowed;transform:none}
   .btn-secondary{width:100%;padding:14px;border-radius:var(--radius-full);border:1.5px solid var(--outline-variant);background:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s}
+  .btn-secondary:hover{background:var(--surface-container)}
   .progress-wrap{margin-bottom:20px}
   .progress-label{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--on-surface-variant);margin-bottom:6px}
   .progress-bar{height:5px;background:var(--surface-high);border-radius:var(--radius-full);overflow:hidden}
   .progress-fill{height:100%;background:linear-gradient(90deg,var(--primary),#2170e4);border-radius:var(--radius-full);transition:width .4s ease}
-
+  /* EDIT MODE BANNER */
+  .edit-banner{background:linear-gradient(135deg,#fff3e0,#ffe0b2);border:1.5px solid #ff9800;border-radius:var(--radius-md);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:#e65100}
   /* REPORTS */
   .filter-bar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
   .btn-filter{padding:11px 20px;border-radius:var(--radius-md);border:none;background:var(--primary);color:#fff;font-size:13px;font-weight:700;cursor:pointer}
@@ -212,12 +200,10 @@
   .btn-outline:hover{background:var(--surface-container);border-color:var(--primary);color:var(--primary)}
   .empty-state{text-align:center;padding:48px 20px;color:var(--on-surface-variant)}
   .empty-state i{font-size:48px;margin-bottom:14px;opacity:.35;display:block}
-
-  /* ABOUT PAGE */
+  /* ABOUT */
   .about-hero{background:linear-gradient(135deg,#004395,#0058be 60%,#2170e4);border-radius:var(--radius-lg);padding:28px 24px;margin-bottom:20px;box-shadow:var(--shadow-md)}
   .about-hero .ah-logo{font-size:28px;font-weight:800;color:#fff;line-height:1.2}
   .about-hero .ah-logo span{display:block;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);letter-spacing:.06em;margin-top:2px}
-  .about-hero .ah-org{font-size:12px;color:rgba(255,255,255,.6);margin-top:10px}
   .about-hero .ah-ver{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:var(--radius-full);margin-top:10px}
   .about-section{background:var(--surface-card);border-radius:var(--radius-lg);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden;margin-bottom:14px}
   .about-item{padding:16px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--outline-variant)}
@@ -225,19 +211,33 @@
   .about-icon{width:38px;height:38px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
   .about-text .at{font-size:14px;font-weight:700}
   .about-text .as{font-size:12px;color:var(--on-surface-variant);margin-top:2px}
-
+  /* HOW TO */
+  .howto-card{background:linear-gradient(135deg,rgba(0,88,190,.06),rgba(33,112,228,.04));border:1.5px solid rgba(0,88,190,.18);border-radius:var(--radius-lg);padding:20px;margin-bottom:20px}
+  .howto-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .howto-steps{display:flex;flex-direction:column;gap:10px}
+  .howto-step{display:flex;align-items:flex-start;gap:12px}
+  .step-badge{width:26px;height:26px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;margin-top:1px}
+  .step-content .sc-title{font-size:13px;font-weight:700;color:var(--on-surface)}
+  .step-content .sc-desc{font-size:12px;color:var(--on-surface-variant);margin-top:2px;line-height:1.5}
+  .howto-tip{background:var(--warning-bg);border:1px solid rgba(155,95,0,.2);border-radius:var(--radius-md);padding:10px 14px;margin-top:14px;font-size:12px;color:var(--warning);font-weight:600;display:flex;align-items:flex-start;gap:8px;line-height:1.5}
   /* TOAST */
   .toast-wrap{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
   @media(min-width:768px){.toast-wrap{bottom:24px}}
   .toast{padding:12px 20px;border-radius:var(--radius-lg);font-size:13px;font-weight:700;background:#1e2533;color:#fff;box-shadow:var(--shadow-lg);animation:toast-in .3s ease,toast-out .3s ease 2.5s forwards;max-width:340px;text-align:center;pointer-events:none}
-  .toast.success{background:var(--success)}
-  .toast.error{background:var(--error)}
-  .toast.warning{background:var(--warning)}
+  .toast.success{background:var(--success)}.toast.error{background:var(--error)}.toast.warning{background:var(--warning)}
   @keyframes toast-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
   @keyframes toast-out{to{opacity:0;transform:translateY(8px)}}
   .spinner{display:inline-block;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
-
+  /* MODAL */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
+  .modal-overlay.open{opacity:1;pointer-events:all}
+  .modal-box{background:#fff;border-radius:var(--radius-lg);max-width:360px;width:100%;padding:24px;box-shadow:var(--shadow-lg);transform:scale(.95);transition:transform .2s}
+  .modal-overlay.open .modal-box{transform:scale(1)}
+  .modal-title{font-size:17px;font-weight:800;margin-bottom:10px}
+  .modal-body{font-size:14px;color:var(--on-surface-variant);margin-bottom:20px;line-height:1.6}
+  .modal-actions{display:flex;gap:10px}
+  .modal-actions button{flex:1}
   /* LIGHTBOX */
   .lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:500;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;pointer-events:none;transition:opacity .2s}
   .lightbox.open{opacity:1;pointer-events:all}
@@ -245,7 +245,6 @@
   .lightbox-inner img{max-width:100%;max-height:88vh;border-radius:var(--radius-md);box-shadow:0 8px 40px rgba(0,0,0,.5);display:block}
   .lightbox-close{position:absolute;top:-14px;right:-14px;background:var(--primary);border:none;color:#fff;font-size:18px;cursor:pointer;border-radius:50%;width:36px;height:36px;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md)}
   .lightbox-caption{text-align:center;color:rgba(255,255,255,.75);font-size:12px;margin-top:10px;font-weight:600}
-
   .sub-hidden{display:none}
 </style>
 </head>
@@ -270,6 +269,7 @@
 
 <div class="toast-wrap" id="toastWrap"></div>
 
+<!-- LIGHTBOX -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <div class="lightbox-inner">
     <button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-xmark"></i></button>
@@ -278,14 +278,23 @@
   </div>
 </div>
 
+<!-- DELETE CONFIRM MODAL -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal-box">
+    <div class="modal-title"><i class="fa fa-trash" style="color:var(--error)"></i> ยืนยันการลบ</div>
+    <div class="modal-body">คุณต้องการลบรายการนี้ออกจากระบบ?<br><strong id="deleteRecordLabel" style="color:var(--on-surface);font-size:13px;display:block;margin-top:6px"></strong></div>
+    <div class="modal-actions">
+      <button class="btn-primary" style="background:var(--error);font-size:13px;padding:11px" onclick="confirmDelete()">ลบ</button>
+      <button class="btn-secondary" style="font-size:13px;padding:11px" onclick="document.getElementById('deleteModal').classList.remove('open')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
 <main class="main-content">
 
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <div class="page-header">
-      <h1>Dashboard</h1>
-      <p>Exit Route Compliance Survey — Overview &amp; Recent Activity</p>
-    </div>
+    <div class="page-header"><h1>Dashboard</h1><p>Exit Route Compliance Survey — Overview &amp; Recent Activity</p></div>
     <div class="status-bar">
       <div class="status-dot"></div>
       <span class="status-text" id="statusText">กำลังเชื่อมต่อระบบ...</span>
@@ -299,36 +308,34 @@
     </div>
     <div class="section-title"><i class="fa fa-list-check" style="color:var(--primary)"></i> Recent Inspections <span class="realtime-badge"><span class="dot"></span>Live</span></div>
     <div class="inspection-list" id="recentList">
-      <div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:15px;font-weight:600">ยังไม่มีข้อมูล</p><small style="font-size:13px;display:block;margin-top:6px">เริ่มบันทึกการตรวจสอบแรกของคุณที่เมนู Inspect</small></div>
+      <div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:15px;font-weight:600">ยังไม่มีข้อมูล</p><small style="font-size:13px;display:block;margin-top:6px">เริ่มบันทึกการตรวจสอบที่เมนู Inspect</small></div>
     </div>
   </div>
 
   <!-- INSPECT -->
   <div class="page" id="page-inspect">
-    <div class="page-header">
-      <h1>Exit Route Compliance Survey</h1>
-      <p>กรอกข้อมูลให้ครบทุกช่องที่มีเครื่องหมาย * เพื่อบันทึกการตรวจสอบ</p>
+    <div class="page-header"><h1 id="inspectTitle">Exit Route Compliance Survey</h1><p>กรอกข้อมูลให้ครบทุกช่องที่มีเครื่องหมาย * เพื่อบันทึกการตรวจสอบ</p></div>
+    <!-- Edit Mode Banner -->
+    <div class="edit-banner" id="editBanner" style="display:none">
+      <i class="fa fa-pen"></i>
+      <span>กำลังแก้ไขรายการ: <strong id="editBannerLabel"></strong></span>
+      <button type="button" onclick="cancelEdit()" style="margin-left:auto;background:none;border:1.5px solid #e65100;color:#e65100;padding:4px 12px;border-radius:var(--radius-full);font-size:11px;font-weight:700;cursor:pointer">ยกเลิกแก้ไข</button>
     </div>
     <div class="progress-wrap">
       <div class="progress-label"><span>Form Progress</span><span id="progressPct">0%</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     </div>
     <form id="inspectForm" onsubmit="submitInspection(event)">
+      <input type="hidden" id="editRecordId" value="">
       <!-- S1 -->
       <div class="form-card">
         <div class="form-section">
-          <div class="form-section-title">
-            <div class="section-num">1</div>
-            <div><h2>ข้อมูลสถานที่ (Location Information)</h2><p>Site, Building, Floor, Area &amp; Door details</p></div>
-          </div>
+          <div class="form-section-title"><div class="section-num">1</div><div><h2>ข้อมูลสถานที่ (Location Information)</h2><p>Site, Building, Floor, Area &amp; Door details</p></div></div>
           <div class="form-grid">
             <div class="field-group">
               <label class="field-label">Site (BU) *</label>
               <select class="field-select" id="bu" onchange="togglePRBSub()" required>
-                <option value="">Select BU...</option>
-                <option value="PRB">PRB</option>
-                <option value="BPI-THO">BPI-THO</option>
-                <option value="BPI-HDD">BPI-HDD</option>
+                <option value="">Select BU...</option><option>PRB</option><option>BPI-THO</option><option>BPI-HDD</option>
               </select>
             </div>
             <div class="field-group sub-hidden" id="prbSubWrap">
@@ -339,31 +346,39 @@
               <label class="field-label">อาคาร (Building) *</label>
               <select class="field-select" id="building" required>
                 <option value="">Select Building...</option>
-                <option>Phase#1</option><option>Phase#2</option><option>Phase#3</option>
-                <option>Phase#4</option><option>Phase#5</option><option>Support Building</option>
-                <option>Utility</option><option>Outside</option>
+                <option>Phase#1</option><option>Phase#2</option><option>Phase#3</option><option>Phase#4</option><option>Phase#5</option><option>Support Building</option><option>Utility</option><option>Outside</option>
               </select>
             </div>
             <div class="field-group">
               <label class="field-label">ชั้น (Floor) *</label>
               <select class="field-select" id="floor" required>
-                <option value="">Select Floor...</option>
-                <option>1</option><option>2</option><option>3</option>
+                <option value="">Select Floor...</option><option>1</option><option>2</option><option>3</option>
               </select>
             </div>
             <div class="field-group">
               <label class="field-label">พื้นที่/ห้อง (Area/Room) *</label>
               <select class="field-select" id="area" required>
                 <option value="">Select Area...</option>
-                <option>Production</option><option>Chemical room</option><option>Electrical room</option>
-                <option>Office</option><option>Clinic</option><option>Canteen</option>
-                <option>Multipurpose Hall</option><option>Laboratory room</option>
-                <option>Car park building</option><option>Mix</option><option>Other</option>
+                <option>Production</option><option>Chemical room</option><option>Electrical room</option><option>Office</option><option>Clinic</option><option>Canteen</option><option>Multipurpose Hall</option><option>Laboratory room</option><option>Car park building</option><option>Mix</option><option>Other</option>
               </select>
             </div>
             <div class="field-group col-span-2">
               <label class="field-label">หมายเลขประตู (Door Number) *</label>
               <input class="field-input" type="text" id="doorNumber" placeholder="Enter door designation code" required>
+            </div>
+            <!-- OCCUPANCY -->
+            <div class="field-group col-span-2">
+              <label class="field-label"><i class="fa fa-users" style="color:var(--warning);margin-right:6px"></i>จำนวนคนที่อยู่ในห้อง (Occupancy)</label>
+              <div class="occupancy-wrap">
+                <div class="occupancy-icon"><i class="fa fa-users"></i></div>
+                <input class="occupancy-input" type="number" id="occupancy" min="0" max="9999" placeholder="0" value="">
+                <span class="occupancy-unit">คน / persons</span>
+                <div class="occ-btns">
+                  <button type="button" class="occ-btn" onclick="changeOcc(1)"><i class="fa fa-plus"></i></button>
+                  <button type="button" class="occ-btn" onclick="changeOcc(-1)"><i class="fa fa-minus"></i></button>
+                </div>
+              </div>
+              <span style="font-size:11px;color:var(--on-surface-variant);margin-top:4px">จำนวนบุคคลที่อยู่ในพื้นที่ขณะตรวจสอบ (เว้นว่างได้)</span>
             </div>
           </div>
         </div>
@@ -371,10 +386,8 @@
       <!-- S2 -->
       <div class="form-card">
         <div class="form-section">
-          <div class="form-section-title">
-            <div class="section-num">2</div>
-            <div><h2>รายละเอียดประตู (Door Specifications)</h2><p>Door type, leaf, mechanism &amp; behavior</p></div>
-          </div>
+          <div class="form-section-title"><div class="section-num">2</div><div><h2>รายละเอียดประตู (Door Specifications)</h2><p>Door type, leaf, mechanism &amp; behavior</p></div></div>
+          <!-- DOOR TYPE -->
           <div class="field-group col-span-2" style="margin-bottom:14px">
             <div class="label-row">
               <label class="field-label">ประเภทประตู (Door Type) *</label>
@@ -392,27 +405,93 @@
               <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-map-location-dot"></i> 2D Layout — Means of Egress Reference</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorTypePanel')"><i class="fa fa-xmark"></i></button></div>
               <div class="ref-panel-body">
                 <div class="ref-img-wrap" onclick="openLightbox(IMGS.egress,'2D Layout — Means of Egress')"><img id="imgEgress" src="/api/placeholder/800/450" alt="Means of Egress"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Click to enlarge</div></div>
-                <p class="ref-caption">แผนผัง 2D เส้นทางหนีไฟ — เขียว=Exit Access Door · น้ำเงิน=Exit Door · แดง=Exit Discharge Door</p>
-                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px">
-                  <span style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">● EXIT ACCESS DOOR</span>
-                  <span style="background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">● EXIT DOOR</span>
-                  <span style="background:#fce4ec;color:#c62828;border:1px solid #f48fb1;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">● EXIT DISCHARGE</span>
-                </div>
+                <p class="ref-caption">เขียว=Exit Access Door · น้ำเงิน=Exit Door · แดง=Exit Discharge Door</p>
               </div>
             </div>
           </div>
+          <!-- DOOR LEAF — IMAGE ONLY (no icon cards) -->
           <div class="field-group col-span-2" style="margin-bottom:14px">
             <div class="label-row">
               <label class="field-label">ประเภทบานประตู (Door Leaf Type) *</label>
               <button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> ดูรูปตัวอย่าง</button>
             </div>
-            <div class="door-leaf-cards">
-              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Double Door',this)"><i class="fa fa-check-circle dl-check"></i><div class="dl-icon"><i class="fa fa-door-open"></i></div><div class="dl-name">Swinging Double</div></div>
-              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Single Door',this)"><i class="fa fa-check-circle dl-check"></i><div class="dl-icon"><i class="fa fa-door-closed"></i></div><div class="dl-name">Swinging Single</div></div>
-              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Double Door',this)"><i class="fa fa-check-circle dl-check"></i><div class="dl-icon"><i class="fa fa-arrows-left-right"></i></div><div class="dl-name">H. Sliding Double</div></div>
-              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Single Door',this)"><i class="fa fa-check-circle dl-check"></i><div class="dl-icon"><i class="fa fa-arrow-right"></i></div><div class="dl-name">H. Sliding Single</div></div>
-              <div class="dl-card" onclick="selectDoorLeaf('Vertical Sliding Door',this)"><i class="fa fa-check-circle dl-check"></i><div class="dl-icon"><i class="fa fa-arrow-up"></i></div><div class="dl-name">Vertical Sliding</div></div>
-              <div class="dl-card" onclick="selectDoorLeaf('Door missing',this)"><i class="fa fa-check-circle dl-check"></i><div class="dl-icon" style="background:#fce4ec;color:#c62828"><i class="fa fa-ban"></i></div><div class="dl-name">Door Missing</div></div>
+            <!-- IMAGE CARDS for door leaf — SVG illustrations -->
+            <div class="door-leaf-cards" id="doorLeafCards">
+              <!-- Swinging Double -->
+              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Double Door',this)">
+                <i class="fa fa-check-circle dl-check"></i>
+                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
+                  <rect x="15" y="8" width="38" height="64" rx="2" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
+                  <rect x="67" y="8" width="38" height="64" rx="2" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
+                  <circle cx="53" cy="40" r="3" fill="#1565c0"/><circle cx="67" cy="40" r="3" fill="#1565c0"/>
+                  <path d="M53 40 Q38 28 15 28" stroke="#1565c0" stroke-width="1" fill="none" stroke-dasharray="3,2" opacity=".6"/>
+                  <path d="M67 40 Q82 28 105 28" stroke="#1565c0" stroke-width="1" fill="none" stroke-dasharray="3,2" opacity=".6"/>
+                  <line x1="5" y1="8" x2="5" y2="72" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+                  <line x1="115" y1="8" x2="115" y2="72" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div class="dl-name">Swinging Double</div>
+              </div>
+              <!-- Swinging Single -->
+              <div class="dl-card" onclick="selectDoorLeaf('Swinging Type - Single Door',this)">
+                <i class="fa fa-check-circle dl-check"></i>
+                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
+                  <rect x="25" y="8" width="55" height="64" rx="2" fill="#bbdefb" stroke="#1565c0" stroke-width="1.5"/>
+                  <circle cx="76" cy="40" r="3" fill="#1565c0"/>
+                  <path d="M25 8 Q25 72 80 72" stroke="#1565c0" stroke-width="1" fill="none" stroke-dasharray="4,2" opacity=".7"/>
+                  <line x1="10" y1="8" x2="10" y2="72" stroke="#888" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+                <div class="dl-name">Swinging Single</div>
+              </div>
+              <!-- H. Sliding Double -->
+              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Double Door',this)">
+                <i class="fa fa-check-circle dl-check"></i>
+                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
+                  <rect x="5" y="12" width="110" height="4" rx="2" fill="#607d8b"/>
+                  <rect x="5" y="64" width="110" height="4" rx="2" fill="#607d8b"/>
+                  <rect x="8" y="16" width="48" height="48" rx="2" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5"/>
+                  <rect x="64" y="16" width="48" height="48" rx="2" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5"/>
+                  <path d="M14 40 L48 40M72 40 L106 40" stroke="#388e3c" stroke-width="1.2" stroke-dasharray="3,2"/>
+                  <polygon points="10,37 6,40 10,43" fill="#388e3c"/>
+                  <polygon points="110,37 114,40 110,43" fill="#388e3c"/>
+                </svg>
+                <div class="dl-name">H. Sliding Double</div>
+              </div>
+              <!-- H. Sliding Single -->
+              <div class="dl-card" onclick="selectDoorLeaf('Horizontal Sliding Door - Single Door',this)">
+                <i class="fa fa-check-circle dl-check"></i>
+                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#f0f7ff">
+                  <rect x="5" y="12" width="110" height="4" rx="2" fill="#607d8b"/>
+                  <rect x="5" y="64" width="110" height="4" rx="2" fill="#607d8b"/>
+                  <rect x="10" y="16" width="70" height="48" rx="2" fill="#c8e6c9" stroke="#388e3c" stroke-width="1.5"/>
+                  <path d="M18 40 L72 40" stroke="#388e3c" stroke-width="1.2" stroke-dasharray="3,2"/>
+                  <polygon points="10,37 6,40 10,43" fill="#388e3c"/>
+                </svg>
+                <div class="dl-name">H. Sliding Single</div>
+              </div>
+              <!-- Vertical Sliding -->
+              <div class="dl-card" onclick="selectDoorLeaf('Vertical Sliding Door',this)">
+                <i class="fa fa-check-circle dl-check"></i>
+                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#fff8f0">
+                  <rect x="12" y="2" width="4" height="76" rx="2" fill="#607d8b"/>
+                  <rect x="104" y="2" width="4" height="76" rx="2" fill="#607d8b"/>
+                  <rect x="16" y="32" width="88" height="44" rx="2" fill="#ffe0b2" stroke="#e65100" stroke-width="1.5"/>
+                  <path d="M60 24 L60 32" stroke="#e65100" stroke-width="1.5" stroke-dasharray="3,2"/>
+                  <polygon points="56,18 60,8 64,18" fill="#e65100"/>
+                  <line x1="25" y1="46" x2="95" y2="46" stroke="#e65100" stroke-width="1" stroke-dasharray="3,2"/>
+                </svg>
+                <div class="dl-name">Vertical Sliding</div>
+              </div>
+              <!-- Door Missing -->
+              <div class="dl-card" onclick="selectDoorLeaf('Door missing',this)">
+                <i class="fa fa-check-circle dl-check"></i>
+                <svg class="dl-img" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" style="height:80px;background:#fff5f5">
+                  <rect x="10" y="8" width="100" height="64" rx="3" fill="#ffcdd2" stroke="#e53935" stroke-width="2" stroke-dasharray="6,3"/>
+                  <line x1="20" y1="18" x2="100" y2="62" stroke="#e53935" stroke-width="2.5"/>
+                  <line x1="100" y1="18" x2="20" y2="62" stroke="#e53935" stroke-width="2.5"/>
+                  <text x="60" y="76" font-size="8" fill="#e53935" text-anchor="middle" font-weight="bold">MISSING</text>
+                </svg>
+                <div class="dl-name">Door Missing</div>
+              </div>
             </div>
             <select class="field-select" id="doorLeaf" required style="display:none">
               <option value="">Select Leaf Type...</option>
@@ -420,31 +499,22 @@
               <option>Horizontal Sliding Door - Double Door</option><option>Horizontal Sliding Door - Single Door</option>
               <option>Vertical Sliding Door</option><option>Door missing</option>
             </select>
+            <!-- REF PANEL for door leaf -->
             <div class="ref-panel" id="doorLeafPanel" style="display:none">
               <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-door-open"></i> ประเภทประตูและอุปกรณ์เปิดประตู</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-xmark"></i></button></div>
               <div class="ref-panel-body">
                 <div class="ref-img-wrap" onclick="openLightbox(IMGS.doorLeaf,'Door Types & Opening Devices')"><img id="imgDoorLeaf" src="/api/placeholder/813/327" alt="Door Types"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Click to enlarge</div></div>
                 <p class="ref-caption">ประเภทประตูและอุปกรณ์เปิดประตูทั้ง 7 ประเภท — คลิกรูปเพื่อขยาย</p>
-                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
-                  <span style="background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">① Push Bar</span>
-                  <span style="background:#f3e5f5;color:#6a1b9a;border:1px solid #ce93d8;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">② Panic Bolt</span>
-                  <span style="background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">③ Latch</span>
-                  <span style="background:#fff3e0;color:#e65100;border:1px solid #ffcc80;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">④ Knob</span>
-                  <span style="background:#e0f7fa;color:#006064;border:1px solid #80deea;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">⑤ Auto-Slide</span>
-                  <span style="background:#e8eaf6;color:#283593;border:1px solid #9fa8da;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">⑥ Manual-Slide</span>
-                  <span style="background:#f5f5f5;color:#424242;border:1px solid #bdbdbd;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700">⑦ Other</span>
-                </div>
               </div>
             </div>
           </div>
+          <!-- MECHANISM -->
           <div class="form-grid">
             <div class="field-group col-span-2">
               <label class="field-label">กลไกการปล่อย (Releasing Mechanism) *</label>
               <select class="field-select" id="mechanism" required>
                 <option value="">Select Mechanism...</option>
-                <option>Push Bar</option><option>Push Bar with vertical panic bolt</option>
-                <option>Latch</option><option>Knob</option><option>Auto-Slide</option>
-                <option>Manual-Slide</option><option>Other</option><option>N/A</option>
+                <option>Push Bar</option><option>Push Bar with vertical panic bolt</option><option>Latch</option><option>Knob</option><option>Auto-Slide</option><option>Manual-Slide</option><option>Other</option><option>N/A</option>
               </select>
             </div>
           </div>
@@ -458,10 +528,7 @@
       <!-- S3 -->
       <div class="form-card">
         <div class="form-section">
-          <div class="form-section-title">
-            <div class="section-num">3</div>
-            <div><h2>Safety &amp; Compliance</h2><p>Security access, local law &amp; RBA compliance status</p></div>
-          </div>
+          <div class="form-section-title"><div class="section-num">3</div><div><h2>Safety &amp; Compliance</h2><p>Security access, local law &amp; RBA compliance status</p></div></div>
           <div style="display:grid;gap:10px;margin-bottom:14px">
             <div class="toggle-card"><div class="toggle-info"><div class="tl">Security access control?</div><div class="ts">มีระบบควบคุมการเข้าออกด้านความปลอดภัย</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'secAccess')">N/A</button><label class="switch"><input type="checkbox" id="secAccess"><span class="slider"></span></label></div></div>
             <div class="toggle-card"><div class="toggle-info"><div class="tl">Can this door be used for external fire brigade re-entry?</div><div class="ts">ประตูนี้สามารถใช้สำหรับหน่วยดับเพลิงกลับเข้า</div></div><div class="toggle-row"><button type="button" class="na-btn" onclick="setNA(this,'fireReentry')">N/A</button><label class="switch"><input type="checkbox" id="fireReentry"><span class="slider"></span></label></div></div>
@@ -471,23 +538,19 @@
               <label class="field-label">Security access control released when...</label>
               <select class="field-select" id="releaseCondition">
                 <option value="">Select Condition...</option>
-                <option>A. When Building General alarm activated</option>
-                <option>B. When no power supplied</option>
-                <option>C. Both A &amp; B</option>
+                <option>A. When Building General alarm activated</option><option>B. When no power supplied</option><option>C. Both A &amp; B</option>
               </select>
             </div>
             <div class="field-group">
               <label class="field-label">Complied with Local Law *</label>
               <select class="field-select" id="localLaw" required>
-                <option value="">Select Status...</option>
-                <option>Complied</option><option>Non-Complied</option><option>N/A</option>
+                <option value="">Select Status...</option><option>Complied</option><option>Non-Complied</option><option>N/A</option>
               </select>
             </div>
             <div class="field-group">
               <label class="field-label">Complied with RBA *</label>
               <select class="field-select" id="rba" required>
-                <option value="">Select Status...</option>
-                <option>Complied</option><option>Non-Complied</option><option>N/A</option>
+                <option value="">Select Status...</option><option>Complied</option><option>Non-Complied</option><option>N/A</option>
               </select>
             </div>
             <div class="field-group col-span-2">
@@ -502,23 +565,23 @@
             <button type="button" class="export-btn" onclick="exportCSV()"><i class="fa fa-table" style="color:#1d7d4f"></i> Excel / CSV</button>
             <button type="button" class="export-btn" onclick="window.print()"><i class="fa fa-file-pdf" style="color:#e5002f"></i> PDF / Print</button>
           </div>
-          <p class="export-hint">ดาวน์โหลดข้อมูลการตรวจสอบทั้งหมดในรูปแบบไฟล์ที่ต้องการ</p>
+          <p class="export-hint">ดาวน์โหลดข้อมูลการตรวจสอบทั้งหมด</p>
         </div>
       </div>
       <div class="action-area">
         <button type="submit" class="btn-primary" id="submitBtn"><i class="fa fa-paper-plane"></i> Submit Inspection</button>
-        <button type="button" class="btn-secondary" onclick="clearForm()">Cancel</button>
+        <button type="button" class="btn-secondary" onclick="cancelEdit()">Cancel</button>
       </div>
     </form>
   </div>
 
   <!-- REPORTS -->
   <div class="page" id="page-reports">
-    <div class="page-header"><h1>Reports</h1><p>ดู กรอง และส่งออกข้อมูลการตรวจสอบทั้งหมด</p></div>
+    <div class="page-header"><h1>Reports</h1><p>ดู กรอง แก้ไข ลบ และส่งออกข้อมูลการตรวจสอบทั้งหมด</p></div>
     <div class="filter-bar">
-      <select class="field-select" id="filterBU" style="max-width:150px"><option value="">All BU</option><option>PRB</option><option>BPI-THO</option><option>BPI-HDD</option></select>
-      <select class="field-select" id="filterCompliance" style="max-width:160px"><option value="">All Status</option><option>Complied</option><option>Non-Complied</option><option>N/A</option></select>
-      <input class="field-input" type="date" id="filterDate" style="max-width:160px">
+      <select class="field-select" id="filterBU" style="max-width:140px"><option value="">All BU</option><option>PRB</option><option>BPI-THO</option><option>BPI-HDD</option></select>
+      <select class="field-select" id="filterCompliance" style="max-width:150px"><option value="">All Status</option><option>Complied</option><option>Non-Complied</option><option>N/A</option></select>
+      <input class="field-input" type="date" id="filterDate" style="max-width:155px">
       <button class="btn-filter" onclick="applyFilter()"><i class="fa fa-filter"></i> Filter</button>
     </div>
     <div class="report-actions">
@@ -528,83 +591,26 @@
     <div class="table-card">
       <div class="report-table-wrap">
         <table class="report-table">
-          <thead><tr><th>#</th><th>Date</th><th>BU</th><th>Building</th><th>Floor</th><th>Area</th><th>Door No.</th><th>Door Type</th><th>Local Law</th><th>RBA</th><th>Inspector</th><th>Del</th></tr></thead>
-          <tbody id="reportBody"><tr><td colspan="12" style="text-align:center;padding:40px;color:var(--on-surface-variant)"><i class="fa fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>กำลังโหลดข้อมูล...</td></tr></tbody>
+          <thead><tr><th>#</th><th>Date</th><th>BU</th><th>Building</th><th>Floor</th><th>Area</th><th>Door No.</th><th>Occupancy</th><th>Door Type</th><th>Local Law</th><th>RBA</th><th>Inspector</th><th>Actions</th></tr></thead>
+          <tbody id="reportBody"><tr><td colspan="13" style="text-align:center;padding:40px;color:var(--on-surface-variant)"><i class="fa fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>กำลังโหลดข้อมูล...</td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- HOW TO USE -->
+  <!-- HOW TO -->
   <div class="page" id="page-howto">
-    <div class="page-header">
-      <h1>วิธีใช้งาน</h1>
-      <p>คู่มือการใช้งาน SafeGuard Inspection System สำหรับผู้ตรวจสอบ</p>
-    </div>
+    <div class="page-header"><h1>วิธีใช้งาน</h1><p>คู่มือการใช้งาน SafeGuard Inspection System</p></div>
     <div class="howto-card">
-      <div class="howto-title"><i class="fa fa-circle-play" style="color:var(--primary)"></i> เริ่มต้นใช้งาน — 5 ขั้นตอน</div>
+      <div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน — 5 ขั้นตอน</div>
       <div class="howto-steps">
-        <div class="howto-step">
-          <div class="step-badge">1</div>
-          <div class="step-content">
-            <div class="sc-title">เปิดแอปและดู Dashboard</div>
-            <div class="sc-desc">หน้า Home จะแสดงสถิติการตรวจสอบทั้งหมดแบบ Real-time — จำนวนรวม, Complied, Non-Complied และจำนวนที่ตรวจวันนี้ พร้อมรายการล่าสุด 10 รายการ</div>
-          </div>
-        </div>
-        <div class="howto-step">
-          <div class="step-badge">2</div>
-          <div class="step-content">
-            <div class="sc-title">คลิก "Inspect" เพื่อเริ่มบันทึก</div>
-            <div class="sc-desc">กรอกข้อมูล 3 Section: <strong>① ข้อมูลสถานที่</strong> (BU, อาคาร, ชั้น, ห้อง, หมายเลขประตู) → <strong>② รายละเอียดประตู</strong> (ประเภท, บาน, กลไก) → <strong>③ Safety &amp; Compliance</strong> (Local Law, RBA)</div>
-          </div>
-        </div>
-        <div class="howto-step">
-          <div class="step-badge">3</div>
-          <div class="step-content">
-            <div class="sc-title">ดูรูปตัวอย่างประกอบการตรวจ</div>
-            <div class="sc-desc">คลิกปุ่ม <strong>"ดูรูปตัวอย่าง"</strong> ข้างหัวข้อ Door Type และ Door Leaf Type เพื่อดูแผนผัง 2D เส้นทางหนีไฟ และรูปประเภทประตูพร้อมอุปกรณ์ครบ 7 ประเภท — คลิกรูปเพื่อขยายเต็มจอ</div>
-          </div>
-        </div>
-        <div class="howto-step">
-          <div class="step-badge">4</div>
-          <div class="step-content">
-            <div class="sc-title">กด "Submit Inspection" เพื่อบันทึก</div>
-            <div class="sc-desc">ข้อมูลจะถูกบันทึกและซิงค์แบบ Real-time ทุกอุปกรณ์ทันที ไม่ต้องรอ ไม่ต้อง refresh — ข้อมูลจะปรากฏที่ Dashboard และ Reports ทุกเครื่องพร้อมกัน</div>
-          </div>
-        </div>
-        <div class="howto-step">
-          <div class="step-badge">5</div>
-          <div class="step-content">
-            <div class="sc-title">ดูรายงานและ Export ข้อมูล</div>
-            <div class="sc-desc">ไปที่เมนู <strong>Reports</strong> เพื่อดูข้อมูลทั้งหมด กรองตาม BU / สถานะ / วันที่ได้ คลิก <strong>Export CSV</strong> เพื่อดาวน์โหลดเป็น Excel หรือ <strong>Print</strong> เพื่อพิมพ์รายงาน</div>
-          </div>
-        </div>
+        <div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time — จำนวนรวม, Complied, Non-Complied และรายการล่าสุด</div></div></div>
+        <div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">คลิก Inspect เพื่อบันทึก</div><div class="sc-desc">กรอกข้อมูล 3 Section: ① ข้อมูลสถานที่ → ② รายละเอียดประตู → ③ Safety &amp; Compliance แล้วกด Submit</div></div></div>
+        <div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">กรอกจำนวนคนในห้อง</div><div class="sc-desc">Section 1 มีช่อง "จำนวนคนที่อยู่ในห้อง" กรอกเป็นตัวเลข หรือใช้ปุ่ม +/− ได้เลย</div></div></div>
+        <div class="howto-step"><div class="step-badge">4</div><div class="step-content"><div class="sc-title">แก้ไข/ลบรายการ</div><div class="sc-desc">ไปที่ Reports คลิกปุ่ม ✏️ เพื่อแก้ไข หรือ 🗑 เพื่อลบรายการใดๆ ได้ทันที หรือคลิกปุ่ม Edit ที่รายการใน Dashboard</div></div></div>
+        <div class="howto-step"><div class="step-badge">5</div><div class="step-content"><div class="sc-title">Export รายงาน</div><div class="sc-desc">Reports → Export CSV เพื่อดาวน์โหลดเป็น Excel หรือ Print เพื่อพิมพ์รายงาน</div></div></div>
       </div>
-      <div class="howto-tip"><i class="fa fa-lightbulb"></i><span>เคล็ดลับ: แอปนี้รองรับทุกอุปกรณ์ — PC, Tablet และสมาร์ทโฟน สามารถเปิดใช้งานพร้อมกันหลายเครื่อง ข้อมูลจะ sync อัตโนมัติทันที</span></div>
-    </div>
-
-    <!-- ICONS LEGEND -->
-    <div class="form-card" style="margin-bottom:16px">
-      <div class="form-section">
-        <div class="form-section-title"><div class="section-num"><i class="fa fa-circle-info" style="font-size:12px"></i></div><div><h2>ความหมายของสถานะ</h2><p>Badge สีต่างๆ ในระบบ</p></div></div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--success-bg);border-radius:var(--radius-md);border:1px solid rgba(27,127,74,.2)"><i class="fa fa-circle-check" style="color:var(--success);font-size:18px;flex-shrink:0"></i><div><div style="font-size:13px;font-weight:700;color:var(--success)">Complied</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">ประตูผ่านการตรวจสอบ — สอดคล้องกับ Local Law และ RBA ทั้งหมด</div></div></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--error-bg);border-radius:var(--radius-md);border:1px solid rgba(186,26,26,.2)"><i class="fa fa-circle-xmark" style="color:var(--error);font-size:18px;flex-shrink:0"></i><div><div style="font-size:13px;font-weight:700;color:var(--error)">Non-Complied</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">ประตูไม่ผ่านการตรวจสอบ — ต้องดำเนินการแก้ไข</div></div></div>
-          <div style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--surface-high);border-radius:var(--radius-md);border:1px solid var(--outline-variant)"><i class="fa fa-minus-circle" style="color:var(--outline);font-size:18px;flex-shrink:0"></i><div><div style="font-size:13px;font-weight:700;color:var(--outline)">N/A</div><div style="font-size:12px;color:var(--on-surface-variant);margin-top:2px">ไม่สามารถประเมินได้ หรือไม่เกี่ยวข้องกับประตูนี้</div></div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TOGGLE GUIDE -->
-    <div class="form-card">
-      <div class="form-section">
-        <div class="form-section-title"><div class="section-num"><i class="fa fa-toggle-on" style="font-size:12px"></i></div><div><h2>วิธีใช้ Toggle Switch</h2><p>สวิตช์ใน Section 2 และ 3</p></div></div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div style="padding:10px 14px;background:var(--surface-container);border-radius:var(--radius-md);font-size:13px;line-height:1.6"><i class="fa fa-toggle-on" style="color:var(--primary);margin-right:8px"></i><strong>เปิด (สีน้ำเงิน)</strong> = ใช่ / Yes — มีคุณสมบัตินี้</div>
-          <div style="padding:10px 14px;background:var(--surface-container);border-radius:var(--radius-md);font-size:13px;line-height:1.6"><i class="fa fa-toggle-off" style="color:var(--outline);margin-right:8px"></i><strong>ปิด (สีเทา)</strong> = ไม่ / No — ไม่มีคุณสมบัตินี้</div>
-          <div style="padding:10px 14px;background:var(--surface-container);border-radius:var(--radius-md);font-size:13px;line-height:1.6"><i class="fa fa-ban" style="color:var(--warning);margin-right:8px"></i><strong>N/A</strong> = ไม่สามารถประเมินได้ หรือไม่เกี่ยวข้อง — คลิกปุ่ม N/A แล้ว Toggle จะถูก disable อัตโนมัติ</div>
-        </div>
-      </div>
+      <div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์ทันที — เปิดพร้อมกันหลายเครื่องได้</span></div>
     </div>
   </div>
 
@@ -613,26 +619,13 @@
     <div class="page-header"><h1>About</h1><p>ข้อมูลระบบและองค์กร</p></div>
     <div class="about-hero">
       <div class="ah-logo">SafeGuard <span>INSPECTION SYSTEM</span></div>
-      <div class="ah-ver"><i class="fa fa-tag"></i> Version 4.0 — Cloud Sync Edition</div>
-      <div class="ah-org" style="margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div>
+      <div class="ah-ver"><i class="fa fa-tag"></i> Version 4.1 — Cloud Sync + Occupancy</div>
+      <div style="font-size:12px;color:rgba(255,255,255,.6);margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div>
     </div>
     <div class="about-section">
-      <div class="about-item">
-        <div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div>
-        <div class="about-text"><div class="at">Saksri Kaewaudon</div><div class="as">Coordinator 4 — Security | รายงานต่อ Sunpit Tanoobun</div></div>
-      </div>
-      <div class="about-item">
-        <div class="about-icon" style="background:var(--success-bg);color:var(--success)"><i class="fa fa-building"></i></div>
-        <div class="about-text"><div class="at">Organization</div><div class="as">WD Storage Technologies (Thailand) Ltd. — MFM Security · APAC</div></div>
-      </div>
-      <div class="about-item">
-        <div class="about-icon" style="background:var(--warning-bg);color:var(--warning)"><i class="fa fa-shield-halved"></i></div>
-        <div class="about-text"><div class="at">Compliance Standards</div><div class="as">Thai Local Fire Safety Law · RBA (Responsible Business Alliance)</div></div>
-      </div>
-      <div class="about-item">
-        <div class="about-icon" style="background:var(--surface-high);color:var(--outline)"><i class="fa fa-clock-rotate-left"></i></div>
-        <div class="about-text"><div class="at">Data Sync</div><div class="as">Real-time cloud sync — ข้อมูลอัปเดตทุกอุปกรณ์ทันที</div></div>
-      </div>
+      <div class="about-item"><div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div><div class="about-text"><div class="at">Saksri Kaewaudon</div><div class="as">Coordinator 4 — Security | รายงานต่อ Sunpit Tanoobun</div></div></div>
+      <div class="about-item"><div class="about-icon" style="background:var(--success-bg);color:var(--success)"><i class="fa fa-building"></i></div><div class="about-text"><div class="at">Organization</div><div class="as">WD Storage Technologies (Thailand) Ltd. — MFM Security · APAC</div></div></div>
+      <div class="about-item"><div class="about-icon" style="background:var(--warning-bg);color:var(--warning)"><i class="fa fa-shield-halved"></i></div><div class="about-text"><div class="at">Compliance Standards</div><div class="as">Thai Local Fire Safety Law · RBA (Responsible Business Alliance)</div></div></div>
     </div>
   </div>
 
@@ -648,17 +641,16 @@
 
 <script>
 // ============================================================
-// FIREBASE — EMBEDDED PERMANENTLY
+// FIREBASE — EMBEDDED
 // ============================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyBKP6uR6QhlLyRjfJiP-EjeaBC33Mpix8Y",
-  authDomain: "smart-logistics-system-v1.firebaseapp.com",
-  projectId: "smart-logistics-system-v1",
-  storageBucket: "smart-logistics-system-v1.firebasestorage.app",
-  messagingSenderId: "255204464932",
-  appId: "1:255204464932:web:d52f72e9d12b33c3017bb1"
+  apiKey:"AIzaSyBKP6uR6QhlLyRjfJiP-EjeaBC33Mpix8Y",
+  authDomain:"smart-logistics-system-v1.firebaseapp.com",
+  projectId:"smart-logistics-system-v1",
+  storageBucket:"smart-logistics-system-v1.firebasestorage.app",
+  messagingSenderId:"255204464932",
+  appId:"1:255204464932:web:d52f72e9d12b33c3017bb1"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const COLLECTION = "inspections";
@@ -667,10 +659,10 @@ const COLLECTION = "inspections";
 // REFERENCE IMAGES
 // ============================================================
 const IMGS = {
-  egress: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',
-  doorLeaf: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'
+  egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',
+  doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'
 };
-window.addEventListener('load', () => {
+window.addEventListener('load',()=>{
   document.getElementById('imgEgress').src = IMGS.egress;
   document.getElementById('imgDoorLeaf').src = IMGS.doorLeaf;
 });
@@ -680,40 +672,38 @@ window.addEventListener('load', () => {
 // ============================================================
 let allRecords = [];
 const naStates = {};
+let pendingDeleteId = null;
+let editMode = false;
 
 // ============================================================
-// FIRESTORE REALTIME LISTENER
+// FIRESTORE REALTIME
 // ============================================================
 document.getElementById('statusText').textContent = 'กำลังเชื่อมต่อระบบ...';
-db.collection(COLLECTION)
-  .orderBy('createdAt', 'desc')
-  .onSnapshot(snap => {
-    allRecords = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    document.getElementById('statusText').textContent = 'ระบบพร้อมใช้งาน — ข้อมูล Sync แบบ Real-time';
-    document.getElementById('liveCount').textContent = allRecords.length + ' records';
-    renderDashboard(allRecords);
-    if(document.getElementById('page-reports').classList.contains('active')) renderTable(allRecords);
-  }, err => {
-    document.getElementById('statusText').textContent = 'เชื่อมต่อไม่สำเร็จ: ' + err.message;
-    console.error('Firestore error:', err);
-  });
+db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(snap=>{
+  allRecords = snap.docs.map(d=>({id:d.id,...d.data()}));
+  document.getElementById('statusText').textContent = 'ระบบพร้อมใช้งาน — ข้อมูล Sync แบบ Real-time';
+  document.getElementById('liveCount').textContent = allRecords.length+' records';
+  renderDashboard(allRecords);
+  if(document.getElementById('page-reports').classList.contains('active')) renderTable(allRecords);
+},err=>{
+  document.getElementById('statusText').textContent = 'เชื่อมต่อไม่สำเร็จ';
+});
 
 // ============================================================
 // NAVIGATION
 // ============================================================
-const pages = ['home','inspect','reports','howto','about'];
-const bnMap = {home:'bnHome',inspect:'bnInspect',reports:'bnReports',howto:'bnHowto',about:'bnAbout'};
-const desktopBtns = document.querySelectorAll('.nav-desktop-links .nav-link-btn');
-
-function showPage(name, desktopBtn, bnId) {
-  pages.forEach(p => document.getElementById('page-'+p).classList.remove('active'));
+const pages=['home','inspect','reports','howto','about'];
+const bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',howto:'bnHowto',about:'bnAbout'};
+const desktopBtns=document.querySelectorAll('.nav-desktop-links .nav-link-btn');
+function showPage(name,desktopBtn,bnId){
+  pages.forEach(p=>document.getElementById('page-'+p).classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
-  const bnEl = document.getElementById(bnId || bnMap[name]);
-  if(bnEl) bnEl.classList.add('active');
-  desktopBtns.forEach(el => el.classList.remove('active'));
-  if(desktopBtn) desktopBtn.classList.add('active');
-  if(name === 'reports') renderTable(allRecords);
+  document.querySelectorAll('.bottom-nav-item').forEach(el=>el.classList.remove('active'));
+  const bnEl=document.getElementById(bnId||bnMap[name]);
+  if(bnEl)bnEl.classList.add('active');
+  desktopBtns.forEach(el=>el.classList.remove('active'));
+  if(desktopBtn)desktopBtn.classList.add('active');
+  if(name==='reports')renderTable(allRecords);
   window.scrollTo(0,0);
 }
 
@@ -721,43 +711,53 @@ function showPage(name, desktopBtn, bnId) {
 // FORM HELPERS
 // ============================================================
 (function(){
-  const sel = document.getElementById('emergencyDoorNum');
+  const sel=document.getElementById('emergencyDoorNum');
   for(let i=1;i<=300;i++){const o=document.createElement('option');o.value=i;o.textContent=i;sel.appendChild(o);}
 })();
-
-function togglePRBSub() {
-  document.getElementById('prbSubWrap').style.display = document.getElementById('bu').value==='PRB'?'block':'none';
+function togglePRBSub(){
+  document.getElementById('prbSubWrap').style.display=document.getElementById('bu').value==='PRB'?'block':'none';
   updateProgress();
 }
-function togglePanel(id) {
-  const p=document.getElementById(id); p.style.display=p.style.display==='none'?'block':'none';
-}
-function selectDoorType(val,card) {
+function togglePanel(id){const p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none';}
+function selectDoorType(val,card){
   document.querySelectorAll('.dt-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
   document.getElementById('doorType').value=val;
   document.getElementById('doorTypePanel').style.display='none';
   updateProgress();
 }
-function selectDoorLeaf(val,card) {
+function selectDoorLeaf(val,card){
   document.querySelectorAll('.dl-card').forEach(c=>c.classList.remove('selected'));
   card.classList.add('selected');
   document.getElementById('doorLeaf').value=val;
   document.getElementById('doorLeafPanel').style.display='none';
   updateProgress();
 }
-function setNA(btn,fieldId) {
+function setNA(btn,fieldId){
   btn.classList.toggle('active');
   const chk=document.getElementById(fieldId);
   if(btn.classList.contains('active')){chk.disabled=true;chk.checked=false;naStates[fieldId]=true;}
   else{chk.disabled=false;delete naStates[fieldId];}
 }
-function getToggleVal(id) {
-  if(naStates[id]) return 'N/A';
-  return document.getElementById(id).checked?'Yes':'No';
+function getToggleVal(id){if(naStates[id])return 'N/A';return document.getElementById(id).checked?'Yes':'No';}
+function setToggleVal(id,val){
+  const chk=document.getElementById(id);
+  const naBtns=document.querySelectorAll(`[onclick="setNA(this,'${id}')"]`);
+  if(val==='N/A'){
+    naStates[id]=true;chk.disabled=true;chk.checked=false;
+    naBtns.forEach(b=>b.classList.add('active'));
+  } else {
+    delete naStates[id];chk.disabled=false;chk.checked=val==='Yes';
+    naBtns.forEach(b=>b.classList.remove('active'));
+  }
+}
+function changeOcc(delta){
+  const inp=document.getElementById('occupancy');
+  const v=parseInt(inp.value)||0;
+  inp.value=Math.max(0,v+delta);
 }
 const reqFields=['bu','building','floor','area','doorNumber','doorType','doorLeaf','mechanism','localLaw','rba'];
-function updateProgress() {
+function updateProgress(){
   let filled=0;
   reqFields.forEach(id=>{const el=document.getElementById(id);if(el&&el.value&&el.value.trim()!=='')filled++;});
   const pct=Math.round((filled/reqFields.length)*100);
@@ -767,9 +767,9 @@ function updateProgress() {
 reqFields.forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',updateProgress);});
 
 // ============================================================
-// SUBMIT TO FIRESTORE
+// SUBMIT (new or edit)
 // ============================================================
-function submitInspection(e) {
+function submitInspection(e){
   e.preventDefault();
   const btn=document.getElementById('submitBtn');
   btn.disabled=true;
@@ -781,6 +781,7 @@ function submitInspection(e) {
     floor:document.getElementById('floor').value,
     area:document.getElementById('area').value,
     doorNumber:document.getElementById('doorNumber').value,
+    occupancy:document.getElementById('occupancy').value||'',
     doorType:document.getElementById('doorType').value,
     doorLeaf:document.getElementById('doorLeaf').value,
     mechanism:document.getElementById('mechanism').value,
@@ -793,27 +794,23 @@ function submitInspection(e) {
     localLaw:document.getElementById('localLaw').value,
     rba:document.getElementById('rba').value,
     remark:document.getElementById('remark').value,
-    inspector:'Saksri K.',
-    createdAt:firebase.firestore.FieldValue.serverTimestamp(),
-    createdAtISO:new Date().toISOString()
+    inspector:'Saksri K.'
   };
-  db.collection(COLLECTION).add(doc)
-    .then(()=>{
-      showToast('บันทึกเรียบร้อย!','success');
-      btn.disabled=false;
-      btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';
-      clearForm();
-      showPage('home',null,'bnHome');
-      desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===0));
-    })
-    .catch(err=>{
-      showToast('เกิดข้อผิดพลาด: '+err.message,'error');
-      btn.disabled=false;
-      btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';
-    });
+  const recId=document.getElementById('editRecordId').value;
+  if(recId){
+    // UPDATE
+    db.collection(COLLECTION).doc(recId).update({...doc,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAtISO:new Date().toISOString()})
+      .then(()=>{showToast('แก้ไขเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';cancelEdit();showPage('reports',null,'bnReports');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===2));})
+      .catch(err=>{showToast('แก้ไขไม่สำเร็จ: '+err.message,'error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
+  } else {
+    // ADD NEW
+    db.collection(COLLECTION).add({...doc,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdAtISO:new Date().toISOString()})
+      .then(()=>{showToast('บันทึกเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';clearForm();showPage('home',null,'bnHome');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===0));})
+      .catch(err=>{showToast('บันทึกไม่สำเร็จ: '+err.message,'error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
+  }
 }
 
-function clearForm() {
+function clearForm(){
   document.getElementById('inspectForm').reset();
   Object.keys(naStates).forEach(k=>delete naStates[k]);
   document.querySelectorAll('.na-btn').forEach(b=>b.classList.remove('active'));
@@ -822,13 +819,81 @@ function clearForm() {
   document.querySelectorAll('.dt-card,.dl-card').forEach(c=>c.classList.remove('selected'));
   document.getElementById('doorTypePanel').style.display='none';
   document.getElementById('doorLeafPanel').style.display='none';
+  document.getElementById('editRecordId').value='';
+  document.getElementById('occupancy').value='';
   updateProgress();
 }
 
 // ============================================================
+// EDIT
+// ============================================================
+function editRecord(id){
+  const r=allRecords.find(x=>x.id===id);
+  if(!r)return;
+  editMode=true;
+  clearForm();
+  document.getElementById('editRecordId').value=id;
+  document.getElementById('editBanner').style.display='flex';
+  document.getElementById('editBannerLabel').textContent='Door '+r.doorNumber+' — '+r.building+' Fl.'+r.floor;
+  document.getElementById('inspectTitle').textContent='แก้ไขรายการ';
+  document.getElementById('submitBtn').innerHTML='<i class="fa fa-floppy-disk"></i> บันทึกการแก้ไข';
+  // Fill fields
+  const setVal=(id,val)=>{const el=document.getElementById(id);if(el&&val!==undefined&&val!==null)el.value=val;};
+  setVal('bu',r.bu);togglePRBSub();
+  if(r.emergencyDoorNum) setVal('emergencyDoorNum',r.emergencyDoorNum);
+  setVal('building',r.building);setVal('floor',r.floor);setVal('area',r.area);
+  setVal('doorNumber',r.doorNumber);setVal('occupancy',r.occupancy||'');
+  setVal('mechanism',r.mechanism);setVal('releaseCondition',r.releaseCondition);
+  setVal('localLaw',r.localLaw);setVal('rba',r.rba);setVal('remark',r.remark);
+  // Door type card
+  if(r.doorType){
+    document.getElementById('doorType').value=r.doorType;
+    document.querySelectorAll('.dt-card').forEach(c=>{if(c.dataset.val===r.doorType||c.querySelector('.dt-name')?.textContent===r.doorType)c.classList.add('selected');});
+  }
+  // Door leaf card
+  const leafMap={'Swinging Type - Double Door':0,'Swinging Type - Single Door':1,'Horizontal Sliding Door - Double Door':2,'Horizontal Sliding Door - Single Door':3,'Vertical Sliding Door':4,'Door missing':5};
+  if(r.doorLeaf!==undefined){
+    document.getElementById('doorLeaf').value=r.doorLeaf;
+    const cards=document.querySelectorAll('.dl-card');
+    const idx=leafMap[r.doorLeaf];
+    if(idx!==undefined&&cards[idx])cards[idx].classList.add('selected');
+  }
+  // Toggles
+  ['singleMotion','egressSwing','selfClose','secAccess','fireReentry'].forEach(fid=>setToggleVal(fid,r[fid]||'No'));
+  updateProgress();
+  showPage('inspect',null,'bnInspect');
+  desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===1));
+  window.scrollTo(0,0);
+}
+
+function cancelEdit(){
+  editMode=false;
+  clearForm();
+  document.getElementById('editBanner').style.display='none';
+  document.getElementById('inspectTitle').textContent='Exit Route Compliance Survey';
+  document.getElementById('submitBtn').innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';
+}
+
+// ============================================================
+// DELETE
+// ============================================================
+function promptDelete(id,label){
+  pendingDeleteId=id;
+  document.getElementById('deleteRecordLabel').textContent=label;
+  document.getElementById('deleteModal').classList.add('open');
+}
+function confirmDelete(){
+  if(!pendingDeleteId)return;
+  db.collection(COLLECTION).doc(pendingDeleteId).delete()
+    .then(()=>{showToast('ลบเรียบร้อย','error');pendingDeleteId=null;document.getElementById('deleteModal').classList.remove('open');})
+    .catch(e=>{showToast('ลบไม่สำเร็จ: '+e.message,'error');document.getElementById('deleteModal').classList.remove('open');});
+}
+document.getElementById('deleteModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
+
+// ============================================================
 // DASHBOARD
 // ============================================================
-function renderDashboard(records) {
+function renderDashboard(records){
   const today=new Date().toDateString();
   let complied=0,nonComplied=0,todayCount=0;
   records.forEach(r=>{
@@ -842,31 +907,62 @@ function renderDashboard(records) {
   document.getElementById('statNonComplied').textContent=nonComplied;
   document.getElementById('statToday').textContent=todayCount;
   const list=document.getElementById('recentList');
-  if(!records.length){list.innerHTML='<div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:15px;font-weight:600">ยังไม่มีข้อมูล</p><small style="font-size:13px;display:block;margin-top:6px">เริ่มบันทึกการตรวจสอบที่เมนู Inspect</small></div>';return;}
+  if(!records.length){list.innerHTML='<div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:15px;font-weight:600">ยังไม่มีข้อมูล</p></div>';return;}
   list.innerHTML=records.slice(0,10).map(r=>{
     const bc=r.localLaw==='Complied'&&r.rba==='Complied'?'complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'non-complied':'na');
     const bt=r.localLaw==='Complied'&&r.rba==='Complied'?'Complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'Non-Complied':'N/A');
     const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
     const ds=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'})+' '+ts.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
-    return `<div class="inspection-item"><div class="insp-icon"><i class="fa fa-door-closed"></i></div><div class="insp-info"><div class="insp-title">Door ${r.doorNumber||'—'} — ${r.building||'—'} Fl.${r.floor||'—'}</div><div class="insp-sub">${r.bu||''} | ${r.area||''} | ${r.doorType||''} | ${ds}</div></div><span class="badge ${bc}">${bt}</span></div>`;
+    const occ=r.occupancy?`<span style="font-size:11px;background:var(--warning-bg);color:var(--warning);padding:2px 8px;border-radius:12px;margin-left:4px;font-weight:600"><i class="fa fa-users" style="font-size:9px"></i> ${r.occupancy}</span>`:'';
+    return `<div class="inspection-item">
+      <div class="insp-icon"><i class="fa fa-door-closed"></i></div>
+      <div class="insp-info">
+        <div class="insp-title">Door ${r.doorNumber||'—'} — ${r.building||'—'} Fl.${r.floor||'—'}${occ}</div>
+        <div class="insp-sub">${r.bu||''} | ${r.area||''} | ${r.doorType||''} | ${ds}</div>
+      </div>
+      <span class="badge ${bc}" style="margin-right:6px">${bt}</span>
+      <div class="item-actions">
+        <button class="item-btn edit" onclick="editRecord('${r.id}')" title="แก้ไข"><i class="fa fa-pen"></i></button>
+        <button class="item-btn del" onclick="promptDelete('${r.id}','Door ${r.doorNumber||''} — ${r.building||''}')" title="ลบ"><i class="fa fa-trash"></i></button>
+      </div>
+    </div>`;
   }).join('');
 }
 
 // ============================================================
-// REPORTS
+// REPORTS TABLE
 // ============================================================
-function renderTable(records) {
+function renderTable(records){
   const tbody=document.getElementById('reportBody');
-  if(!records.length){tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:40px;color:var(--on-surface-variant)"><i class="fa fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}
+  if(!records.length){tbody.innerHTML='<tr><td colspan="13" style="text-align:center;padding:40px;color:var(--on-surface-variant)"><i class="fa fa-inbox" style="font-size:28px;display:block;margin-bottom:8px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}
   tbody.innerHTML=records.map((r,i)=>{
     const llc=r.localLaw==='Complied'?'complied':(r.localLaw==='Non-Complied'?'non-complied':'na');
     const rbc=r.rba==='Complied'?'complied':(r.rba==='Non-Complied'?'non-complied':'na');
     const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
     const dt=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'});
-    return `<tr><td style="font-weight:700;color:var(--primary)">${i+1}</td><td style="font-size:12px">${dt}</td><td><strong>${r.bu||''}</strong></td><td>${r.building||''}</td><td style="text-align:center">${r.floor||''}</td><td>${r.area||''}</td><td><strong>${r.doorNumber||''}</strong></td><td style="font-size:12px">${r.doorType||''}</td><td><span class="badge ${llc}">${r.localLaw||'—'}</span></td><td><span class="badge ${rbc}">${r.rba||'—'}</span></td><td style="font-size:12px">${r.inspector||''}</td><td><button style="background:none;border:none;color:var(--error);cursor:pointer;font-size:13px" onclick="deleteRecord('${r.id}')"><i class="fa fa-trash"></i></button></td></tr>`;
+    return `<tr>
+      <td style="font-weight:700;color:var(--primary)">${i+1}</td>
+      <td style="font-size:12px">${dt}</td>
+      <td><strong>${r.bu||''}</strong></td>
+      <td>${r.building||''}</td>
+      <td style="text-align:center">${r.floor||''}</td>
+      <td>${r.area||''}</td>
+      <td><strong>${r.doorNumber||''}</strong></td>
+      <td style="text-align:center">${r.occupancy?`<span style="background:var(--warning-bg);color:var(--warning);padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700">${r.occupancy} คน</span>`:'-'}</td>
+      <td style="font-size:12px">${r.doorType||''}</td>
+      <td><span class="badge ${llc}">${r.localLaw||'—'}</span></td>
+      <td><span class="badge ${rbc}">${r.rba||'—'}</span></td>
+      <td style="font-size:12px">${r.inspector||''}</td>
+      <td>
+        <div style="display:flex;gap:5px">
+          <button class="item-btn edit" onclick="editRecord('${r.id}')" title="แก้ไข"><i class="fa fa-pen"></i></button>
+          <button class="item-btn del" onclick="promptDelete('${r.id}','Door ${r.doorNumber||''} — ${r.building||''}')" title="ลบ"><i class="fa fa-trash"></i></button>
+        </div>
+      </td>
+    </tr>`;
   }).join('');
 }
-function applyFilter() {
+function applyFilter(){
   const bu=document.getElementById('filterBU').value;
   const comp=document.getElementById('filterCompliance').value;
   const date=document.getElementById('filterDate').value;
@@ -876,43 +972,30 @@ function applyFilter() {
   if(date)f=f.filter(r=>(r.createdAtISO||'').startsWith(date));
   renderTable(f);
 }
-function deleteRecord(id) {
-  if(!confirm('ลบรายการนี้จากระบบ?'))return;
-  db.collection(COLLECTION).doc(id).delete()
-    .then(()=>showToast('ลบเรียบร้อย','error'))
-    .catch(e=>showToast('ลบไม่สำเร็จ: '+e.message,'error'));
-}
 
 // ============================================================
 // EXPORT CSV
 // ============================================================
-function exportCSV() {
-  if(!allRecords.length){showToast('ไม่มีข้อมูลสำหรับ Export','error');return;}
-  const hdr=['ID','Date','BU','Building','Floor','Area','Door No.','Door Type','Leaf Type','Mechanism','Single Motion','Egress Swing','Self Close','Sec Access','Fire Re-entry','Release Condition','Local Law','RBA','Remark','Inspector'];
+function exportCSV(){
+  if(!allRecords.length){showToast('ไม่มีข้อมูล','error');return;}
+  const hdr=['ID','Date','BU','Building','Floor','Area','Door No.','Occupancy','Door Type','Leaf Type','Mechanism','Single Motion','Egress Swing','Self Close','Sec Access','Fire Re-entry','Release Condition','Local Law','RBA','Remark','Inspector'];
   const rows=allRecords.map(r=>{
     const ts=r.createdAt?.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
-    return[r.id,ts.toISOString(),r.bu,r.building,r.floor,r.area,r.doorNumber,r.doorType,r.doorLeaf,r.mechanism,r.singleMotion,r.egressSwing,r.selfClose,r.secAccess,r.fireReentry,r.releaseCondition,r.localLaw,r.rba,r.remark,r.inspector];
+    return[r.id,ts.toISOString(),r.bu,r.building,r.floor,r.area,r.doorNumber,r.occupancy||'',r.doorType,r.doorLeaf,r.mechanism,r.singleMotion,r.egressSwing,r.selfClose,r.secAccess,r.fireReentry,r.releaseCondition,r.localLaw,r.rba,r.remark,r.inspector];
   });
   const csv=[hdr,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
   const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');a.href=url;a.download='SafeGuard_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  showToast('Export '+allRecords.length+' records เรียบร้อย!','success');
+  showToast('Export '+allRecords.length+' records!','success');
 }
 
 // ============================================================
 // LIGHTBOX
 // ============================================================
-function openLightbox(src,cap){
-  document.getElementById('lightboxImg').src=src;
-  document.getElementById('lightboxCap').textContent=cap||'';
-  document.getElementById('lightbox').classList.add('open');
-}
-function closeLightbox(e){
-  if(!e||e.target===document.getElementById('lightbox'))
-    document.getElementById('lightbox').classList.remove('open');
-}
-document.addEventListener('keydown',e=>{if(e.key==='Escape')document.getElementById('lightbox').classList.remove('open');});
+function openLightbox(src,cap){document.getElementById('lightboxImg').src=src;document.getElementById('lightboxCap').textContent=cap||'';document.getElementById('lightbox').classList.add('open');}
+function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.getElementById('lightbox').classList.remove('open');document.getElementById('deleteModal').classList.remove('open');}});
 
 // ============================================================
 // TOAST
