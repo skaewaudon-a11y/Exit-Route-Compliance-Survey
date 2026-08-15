@@ -290,6 +290,10 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .ynna-btn.yes.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(34,102,255,.3)}
 .ynna-btn.no.active{background:var(--error);border-color:var(--error);color:#fff}
 .ynna-btn.na.active{background:var(--surface-high);border-color:var(--outline);color:var(--on-surface-variant)}
+/* ══ Re-confirm button ══ */
+.ynna-btn.reconfirm{min-width:82px;font-size:10px;color:var(--warning);border-color:rgba(138,82,0,.3);background:#fff}
+.ynna-btn.reconfirm:hover{background:var(--warning-bg);border-color:var(--warning)}
+.ynna-btn.reconfirm.active{background:var(--warning);border-color:var(--warning);color:#fff;box-shadow:0 2px 8px rgba(138,82,0,.3)}
 .occupancy-wrap{display:flex;align-items:center;gap:12px;background:#fff;border:1.5px solid var(--outline-variant);border-radius:var(--radius-md);padding:10px 13px;transition:border-color .15s,box-shadow .15s}
 .occupancy-wrap:focus-within{border-color:var(--primary);box-shadow:0 0 0 3px rgba(34,102,255,.1)}
 .occupancy-icon{width:34px;height:34px;border-radius:var(--radius-md);background:var(--warning-bg);color:var(--warning);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
@@ -708,7 +712,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
         <div class="form-section">
           <div class="form-section-title"><div class="section-num">2</div><div><h2>รายละเอียดประตู (Door Specifications)</h2><p>Type, leaf, mechanism &amp; behavior</p></div></div>
           <div class="field-group col-span-2" style="margin-bottom:14px">
-            <div class="label-row"><label class="field-label">ประเภทประตู (Door Type) *</label><button type="button" class="info-btn" onclick="togglePanel('doorTypePanel')"><i class="fa fa-image"></i> ดูรูป</button></div>
+            <div class="label-row"><label class="field-label">ประเภทประตู (Door Type) *</label><button type="button" class="info-btn" onclick="togglePanel('doorTypePanel')"><i class="fa fa-image"></i> กดเพื่อดูรูปตัวอย่าง</button></div>
             <div class="door-type-cards">
               <div class="dt-card ead" onclick="selectDoorType('EXIT ACCESS DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon"><i class="fa fa-door-open"></i></div><div class="dt-name">EXIT ACCESS DOOR</div><div class="dt-desc">Occupied → Corridor</div></div>
               <div class="dt-card ed" onclick="selectDoorType('EXIT DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:rgba(34,102,255,.1);color:var(--wd-blue)"><i class="fa fa-sign-out-alt"></i></div><div class="dt-name">EXIT DOOR</div><div class="dt-desc">Corridor → Stair</div></div>
@@ -733,7 +737,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
             <select class="field-select" id="doorLeaf" required style="display:none"><option value="">Select...</option><option>Swinging Type - Double Door</option><option>Swinging Type - Single Door</option><option>Horizontal Sliding Door - Double Door</option><option>Horizontal Sliding Door - Single Door</option><option>Vertical Sliding Door</option><option>Door missing</option></select>
           </div>
           <div class="field-group col-span-2" style="margin-bottom:14px">
-            <div class="label-row"><label class="field-label">กลไกการเปิดประตู (Mechanism) *</label><button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> ดูรูป</button></div>
+            <div class="label-row"><label class="field-label">กลไกการเปิดประตู (Mechanism) *</label><button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> กดเพื่อดูรูปตัวอย่าง</button></div>
             <div class="mech-cards">
               <div class="mc-card" onclick="selectMechanism('Push Bar',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="8" y="10" width="84" height="52" rx="4" fill="#e3f2fd" stroke="#2266FF" stroke-width="1.5"/><rect x="20" y="33" width="60" height="8" rx="4" fill="#2266FF"/><text x="50" y="56" text-anchor="middle" font-size="8" fill="#2266FF" font-family="Arial" font-weight="700">PUSH BAR</text></svg><div class="mc-name">Push Bar</div></div>
               <div class="mc-card" onclick="selectMechanism('Push Bar with vertical panic bolt',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="8" y="10" width="84" height="52" rx="4" fill="#e3f2fd" stroke="#2266FF" stroke-width="1.5"/><rect x="20" y="33" width="60" height="7" rx="3.5" fill="#2266FF"/><rect x="45" y="10" width="6" height="52" rx="3" fill="#1976d2" opacity=".5"/></svg><div class="mc-name">Push Bar+Bolt</div></div>
@@ -761,31 +765,55 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
         </div>
       </div>
 
-      <!-- ════ S3 : FIXED — all 3 selects have proper </select> closing tags ════ -->
+      <!-- S3 -->
       <div class="form-card">
         <div class="form-section">
           <div class="form-section-title"><div class="section-num">3</div><div><h2>Safety &amp; Compliance</h2><p>Security access, local law &amp; RBA compliance status</p></div></div>
           <div style="display:grid;gap:9px;margin-bottom:14px">
-            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูติดตั้งระบบควบคุมการเข้าออก (Access Control) หรือไม่ (Does the door install "Security access control?)</div><div class="ys">มีระบบควบคุมการเข้า-ออก?</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="saYes" onclick="setField('secAccess','Yes','sa')">Yes</button><button type="button" class="ynna-btn no" id="saNo" onclick="setField('secAccess','No','sa')">No</button><button type="button" class="ynna-btn na active" id="saNA" onclick="setField('secAccess','N/A','sa')">N/A</button></div></div>
+
+            <!-- secAccess — FIXED: unique IDs, correct onclick, proper </button> closing tags -->
+            <div class="ynna-card">
+              <div class="ynna-info">
+                <div class="yl">ประตูติดตั้งระบบควบคุมการเข้าออก (Access Control) หรือไม่ (Does the door install "Security access control?)</div>
+                <div class="ys">มีระบบควบคุมการเข้า-ออก?</div>
+              </div>
+              <div class="ynna-btns">
+                <button type="button" class="ynna-btn yes" id="saYes" onclick="setField('secAccess','Yes','sa')">Yes</button>
+                <button type="button" class="ynna-btn no" id="saNo" onclick="setField('secAccess','No','sa')">No</button>
+                <button type="button" class="ynna-btn na active" id="saNA" onclick="setField('secAccess','N/A','sa')">N/A</button>
+                <button type="button" class="ynna-btn reconfirm" id="saRC" onclick="setField('secAccess','Re-confirm','sa')">Re-confirm</button>
+              </div>
+            </div>
             <input type="hidden" id="secAccess" value="N/A">
-            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูนี้ใช้สำหรับหน่วยดับเพลิงกลับเข้าอาคารได้หรือไม่? (Can this door be used for external fire brigade re-entry?)</div><div class="ys">ประตูหนีไฟถูกออกแบบให้คน หนีออก (Egress) ได้ง่าย แต่ในเหตุเพลิงไหม้ เจ้าหน้าที่ดับเพลิงอาจต้อง เข้ามาภายในอาคาร (Re-entry)</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="frYes" onclick="setField('fireReentry','Yes','fr')">Yes</button><button type="button" class="ynna-btn no" id="frNo" onclick="setField('fireReentry','No','fr')">No</button><button type="button" class="ynna-btn na active" id="frNA" onclick="setField('fireReentry','N/A','fr')">N/A</button></div></div>
+
+            <!-- fireReentry — FIXED: unique IDs, correct onclick, proper </button> closing tags -->
+            <div class="ynna-card">
+              <div class="ynna-info">
+                <div class="yl">ประตูนี้ใช้สำหรับหน่วยดับเพลิงกลับเข้าอาคารได้หรือไม่? (Can this door be used for external fire brigade re-entry?)</div>
+                <div class="ys">ประตูหนีไฟถูกออกแบบให้คน หนีออก (Egress) ได้ง่าย แต่ในเหตุเพลิงไหม้ เจ้าหน้าที่ดับเพลิงอาจต้อง เข้ามาภายในอาคาร (Re-entry)</div>
+              </div>
+              <div class="ynna-btns">
+                <button type="button" class="ynna-btn yes" id="frYes" onclick="setField('fireReentry','Yes','fr')">Yes</button>
+                <button type="button" class="ynna-btn no" id="frNo" onclick="setField('fireReentry','No','fr')">No</button>
+                <button type="button" class="ynna-btn na active" id="frNA" onclick="setField('fireReentry','N/A','fr')">N/A</button>
+                <button type="button" class="ynna-btn reconfirm" id="frRC" onclick="setField('fireReentry','Re-confirm','fr')">Re-confirm</button>
+              </div>
+            </div>
             <input type="hidden" id="fireReentry" value="N/A">
+
           </div>
           <div class="form-grid">
-
-            <!-- ✅ FIX 1: releaseCondition — เพิ่ม </select> -->
             <div class="field-group">
               <label class="field-label">ระบบควบคุมการเข้าออกจะปลดล็อกเมื่อ...(Security access control system...)</label>
               <select class="field-select" id="releaseCondition">
                 <option value="">Select...</option>
                 <option value="A">A. When Building General Alarm Activated (เมื่อระบบสัญญาณเตือนภัยของอาคารทำงาน)</option>
                 <option value="B">B. When No Power Supplied (เมื่อไฟฟ้าดับหรือไม่มีแหล่งจ่ายไฟ)</option>
-                <option value="C">C. When Door Release Button is Pressed (เมื่อกดปุ่มปลดล็อกประตู)</option>
-                <option value="D">D. Both A &amp; C (ทั้งข้อ A และข้อ C)</option>
+                <option value="C">C. No Support (ไม่รองรับ)</option>
+                <option value="D">D. Both A &amp; B (ทั้งข้อ A และข้อ B)</option>
+                <option value="E">E. Re confirm (รอการยืนยันผล / ต้องตรวจสอบเพิ่มเติม)</option>
               </select>
             </div>
-
-            <!-- ✅ FIX 2: localLaw — เพิ่ม </select> -->
             <div class="field-group">
               <label class="field-label">สอดคล้องตามกฎหมาย (Complied with Local Law)</label>
               <select class="field-select" id="localLaw" required>
@@ -796,8 +824,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
                 <option value="N/A">N/A (ไม่เกี่ยวข้อง)</option>
               </select>
             </div>
-
-            <!-- ✅ FIX 3: rba — เพิ่ม </select> -->
             <div class="field-group">
               <label class="field-label">สอดคล้องตามมาตรฐาน RBA (Complied with RBA)</label>
               <select class="field-select" id="rba" required>
@@ -808,7 +834,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
                 <option value="N/A">N/A (ไม่เกี่ยวข้อง)</option>
               </select>
             </div>
-
             <div class="field-group col-span-2">
               <label class="field-label">หมายเหตุ (Remark)</label>
               <textarea class="field-textarea" id="remark" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
@@ -919,9 +944,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 </nav>
 
 <script>
-/* ════════════════════════════════════════
-   DATA — ไม่เปลี่ยนแปลง (ตรงจาก v7_Completed)
-════════════════════════════════════════ */
 const PRB_ROOMS={
   'admin':['Emer Office engineering (New)','Emer Office 3','Emer Canteen OP10@17','Emer Loading Canteen OP11@17','Emer Office 4','Emer Office 5'],
   'Phase # 1':['Emer Mainentrance','Emer Reading Room','Electrical Room (MR 1)','TIE TR2 Room','Machine Room 1','Emer Corridor 1','Emer Corridor 2','AHU Room 1','Emer Corridor 3','SUB2','Transfomer Yard2 (SUB2)','Emer Main Corridor 1','Emer Link Bridge','Emer final 1','Emer final 2','Emer Part Stock','Emer Cleaning','Emer Part Stock 1','Emer Cnnecting R','Emer Cnnecting L','Emer Relax Room'],
@@ -937,9 +959,6 @@ const OCC_TYPE_DESC={'Office':'สำนักงาน — พื้นที�
 const IMGS={egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'};
 window.addEventListener('load',()=>{document.getElementById('imgEgress').src=IMGS.egress;document.getElementById('imgDoorLeaf').src=IMGS.doorLeaf;});
 
-/* ════════════════════════════════════════
-   FIREBASE — ไม่เปลี่ยนแปลง (ตรงจาก v7_Completed)
-════════════════════════════════════════ */
 const firebaseConfig={apiKey:"AIzaSyBKP6uR6QhlLyRjfJiP-EjeaBC33Mpix8Y",authDomain:"smart-logistics-system-v1.firebaseapp.com",projectId:"smart-logistics-system-v1",storageBucket:"smart-logistics-system-v1.firebasestorage.app",messagingSenderId:"255204464932",appId:"1:255204464932:web:d52f72e9d12b33c3017bb1"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
@@ -948,7 +967,6 @@ const USERS_COLLECTION='sg_users';
 let allRecords=[],currentFilteredRecords=[];
 let pendingDeleteId=null;
 let clearMode='all';
-
 let currentUser=null;
 let editingUserId=null;
 
@@ -1197,11 +1215,14 @@ async function confirmClearData(){
 })();
 ensureDefaultAdmin();
 
+/* ════ setField — UPDATED: handles optional RC (Re-confirm) button ════ */
 function setField(fid,val,pfx){
   document.getElementById(fid).value=val;
   document.getElementById(pfx+'Yes').classList.toggle('active',val==='Yes');
   document.getElementById(pfx+'No').classList.toggle('active',val==='No');
   document.getElementById(pfx+'NA').classList.toggle('active',val==='N/A');
+  const rcEl=document.getElementById(pfx+'RC');
+  if(rcEl)rcEl.classList.toggle('active',val==='Re-confirm');
 }
 function getField(fid){return document.getElementById(fid).value||'N/A';}
 function resetAllFields(){[['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(([f,p])=>setField(f,'N/A',p));}
