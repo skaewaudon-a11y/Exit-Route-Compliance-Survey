@@ -9,160 +9,60 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
-:root {
-  --wd-black:#00161F;--wd-navy:#002232;--wd-navy2:#002E42;
-  --wd-blue:#2266FF;--wd-blue-dark:#003399;--wd-teal:#00E5D1;
-  --wd-grad:linear-gradient(135deg,#003087 0%,#2266FF 55%,#00E5D1 100%);
-  --wd-grad-h:linear-gradient(90deg,#2266FF 0%,#00E5D1 100%);
-  --primary:#2266FF;--primary-dark:#003399;
-  --primary-container:rgba(34,102,255,.13);
-  --teal:#00E5D1;--teal-dim:rgba(0,229,209,.12);
-  --surface:#f0f4f8;--surface-card:#ffffff;
-  --surface-container:#e8eef5;--surface-high:#dce6f0;
-  --on-surface:#00161F;--on-surface-variant:#1a3a50;
-  --outline:#4a6b80;--outline-variant:#b8cdd8;
-  --success:#00875A;--success-bg:#d4f7ec;
-  --warning:#8a5200;--warning-bg:#fff0cc;
-  --error:#c0001a;--error-bg:#ffdad9;
-  --radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;
-  --shadow-sm:0 1px 4px rgba(0,22,31,.08);
-  --shadow-md:0 4px 16px rgba(0,22,31,.12);
-  --shadow-lg:0 8px 32px rgba(0,22,31,.18);
-  --nav-height:64px;--bottom-nav:64px;
-}
+:root{--wd-black:#00161F;--wd-navy:#002232;--wd-navy2:#002E42;--wd-blue:#2266FF;--wd-blue-dark:#003399;--wd-teal:#00E5D1;--wd-grad:linear-gradient(135deg,#003087 0%,#2266FF 55%,#00E5D1 100%);--wd-grad-h:linear-gradient(90deg,#2266FF 0%,#00E5D1 100%);--primary:#2266FF;--primary-dark:#003399;--primary-container:rgba(34,102,255,.13);--teal:#00E5D1;--teal-dim:rgba(0,229,209,.12);--surface:#f0f4f8;--surface-card:#ffffff;--surface-container:#e8eef5;--surface-high:#dce6f0;--on-surface:#00161F;--on-surface-variant:#1a3a50;--outline:#4a6b80;--outline-variant:#b8cdd8;--success:#00875A;--success-bg:#d4f7ec;--warning:#8a5200;--warning-bg:#fff0cc;--error:#c0001a;--error-bg:#ffdad9;--radius-sm:8px;--radius-md:12px;--radius-lg:16px;--radius-xl:20px;--radius-full:9999px;--shadow-sm:0 1px 4px rgba(0,22,31,.08);--shadow-md:0 4px 16px rgba(0,22,31,.12);--shadow-lg:0 8px 32px rgba(0,22,31,.18);--nav-height:64px;--bottom-nav:64px}
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--on-surface);min-height:100vh;overflow-x:hidden}
-
-/* ══════════════════════════ LOGIN SCREEN ══════════════════════════ */
-#loginScreen{
-  position:fixed;inset:0;z-index:9999;
-  background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 50%,var(--wd-navy2) 100%);
-  display:flex;align-items:center;justify-content:center;padding:20px
-}
+#loginScreen{position:fixed;inset:0;z-index:9999;background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 50%,var(--wd-navy2) 100%);display:flex;align-items:center;justify-content:center;padding:20px}
 #loginScreen.hidden{display:none}
-.login-card{
-  background:rgba(255,255,255,.04);backdrop-filter:blur(20px);
-  border:1px solid rgba(0,229,209,.2);border-radius:24px;
-  padding:40px 36px;width:100%;max-width:420px;
-  box-shadow:0 24px 64px rgba(0,0,0,.4)
-}
+.login-card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(0,229,209,.2);border-radius:24px;padding:40px 36px;width:100%;max-width:420px;box-shadow:0 24px 64px rgba(0,0,0,.4)}
 .login-logo{text-align:center;margin-bottom:32px}
-.login-logo-mark{
-  width:64px;height:64px;border-radius:18px;
-  background:var(--wd-grad-h);
-  display:flex;align-items:center;justify-content:center;
-  margin:0 auto 14px;font-size:26px;color:#fff;
-  box-shadow:0 8px 24px rgba(34,102,255,.45)
-}
+.login-logo-mark{width:64px;height:64px;border-radius:18px;background:var(--wd-grad-h);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;font-size:26px;color:#fff;box-shadow:0 8px 24px rgba(34,102,255,.45)}
 .login-logo-title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.3px}
 .login-logo-sub{font-size:11px;font-weight:600;color:rgba(0,229,209,.8);letter-spacing:.1em;text-transform:uppercase;margin-top:3px}
 .login-label{font-size:12px;font-weight:700;color:rgba(255,255,255,.7);margin-bottom:6px;letter-spacing:.03em;display:block}
 .login-input-wrap{position:relative;margin-bottom:16px}
-.login-input{
-  width:100%;padding:13px 16px;padding-right:44px;
-  background:rgba(255,255,255,.08);border:1.5px solid rgba(0,229,209,.2);
-  border-radius:var(--radius-md);color:#fff;font-size:14px;font-family:inherit;
-  outline:none;transition:border-color .15s,box-shadow .15s
-}
+.login-input{width:100%;padding:13px 16px;padding-right:44px;background:rgba(255,255,255,.08);border:1.5px solid rgba(0,229,209,.2);border-radius:var(--radius-md);color:#fff;font-size:14px;font-family:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
 .login-input::placeholder{color:rgba(255,255,255,.35)}
 .login-input:focus{border-color:var(--wd-teal);box-shadow:0 0 0 3px rgba(0,229,209,.12)}
-.login-input-icon{
-  position:absolute;right:14px;top:50%;transform:translateY(-50%);
-  color:rgba(255,255,255,.4);font-size:15px;cursor:pointer;
-  transition:color .15s;user-select:none
-}
+.login-input-icon{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.4);font-size:15px;cursor:pointer;transition:color .15s;user-select:none}
 .login-input-icon:hover{color:var(--wd-teal)}
-.login-error{
-  background:rgba(192,0,26,.15);border:1px solid rgba(192,0,26,.35);
-  border-radius:var(--radius-md);padding:10px 14px;
-  font-size:12px;font-weight:600;color:#ff6b6b;
-  margin-bottom:16px;display:none;align-items:center;gap:8px
-}
+.login-error{background:rgba(192,0,26,.15);border:1px solid rgba(192,0,26,.35);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;font-weight:600;color:#ff6b6b;margin-bottom:16px;display:none;align-items:center;gap:8px}
 .login-error.show{display:flex}
-.btn-login{
-  width:100%;padding:14px;border-radius:var(--radius-full);border:none;
-  background:var(--wd-grad-h);color:#fff;font-size:14px;font-weight:700;
-  cursor:pointer;transition:all .18s;box-shadow:0 4px 16px rgba(34,102,255,.4);
-  font-family:inherit;letter-spacing:.03em;margin-top:4px
-}
+.btn-login{width:100%;padding:14px;border-radius:var(--radius-full);border:none;background:var(--wd-grad-h);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:0 4px 16px rgba(34,102,255,.4);font-family:inherit;letter-spacing:.03em;margin-top:4px}
 .btn-login:hover{opacity:.9;transform:translateY(-1px)}
 .btn-login:disabled{opacity:.6;cursor:not-allowed;transform:none}
 .login-footer{text-align:center;margin-top:20px;font-size:11px;color:rgba(255,255,255,.3);line-height:1.6}
-
-/* ══════════════════════════ TOP NAV ══════════════════════════ */
-.top-nav{
-  position:fixed;top:0;left:0;right:0;height:var(--nav-height);
-  background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 60%,var(--wd-navy2) 100%);
-  border-bottom:2px solid rgba(0,229,209,.35);
-  display:flex;align-items:center;justify-content:space-between;padding:0 16px;
-  z-index:100;box-shadow:0 4px 24px rgba(0,22,31,.35)
-}
+.top-nav{position:fixed;top:0;left:0;right:0;height:var(--nav-height);background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 60%,var(--wd-navy2) 100%);border-bottom:2px solid rgba(0,229,209,.35);display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:100;box-shadow:0 4px 24px rgba(0,22,31,.35)}
 .brand{font-size:17px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
 .brand-dot{width:8px;height:8px;border-radius:50%;background:var(--wd-grad-h);flex-shrink:0}
 .brand-text span{display:block;font-size:10px;font-weight:600;color:rgba(0,229,209,.8);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
 .nav-desktop-links{display:none;gap:2px}
 @media(min-width:768px){.nav-desktop-links{display:flex}}
-.nav-link-btn{
-  padding:7px 14px;border-radius:var(--radius-full);border:none;
-  background:transparent;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);
-  cursor:pointer;transition:all .18s;font-family:inherit;letter-spacing:.02em
-}
+.nav-link-btn{padding:7px 14px;border-radius:var(--radius-full);border:none;background:transparent;font-size:12px;font-weight:600;color:rgba(255,255,255,.6);cursor:pointer;transition:all .18s;font-family:inherit;letter-spacing:.02em}
 .nav-link-btn.active{background:rgba(0,229,209,.15);color:var(--wd-teal);border:1px solid rgba(0,229,209,.3)}
 .nav-link-btn:hover:not(.active){background:rgba(255,255,255,.09);color:#fff}
 .nav-right{display:flex;align-items:center;gap:6px}
-.icon-btn{
-  width:36px;height:36px;border-radius:var(--radius-full);border:none;
-  background:rgba(255,255,255,.08);cursor:pointer;color:rgba(255,255,255,.65);
-  display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s
-}
+.icon-btn{width:36px;height:36px;border-radius:var(--radius-full);border:none;background:rgba(255,255,255,.08);cursor:pointer;color:rgba(255,255,255,.65);display:flex;align-items:center;justify-content:center;font-size:15px;transition:all .15s}
 .icon-btn:hover{background:rgba(0,229,209,.18);color:var(--wd-teal)}
-.user-chip{
-  display:flex;align-items:center;gap:8px;cursor:pointer;
-  background:rgba(255,255,255,.06);border:1px solid rgba(0,229,209,.2);
-  border-radius:var(--radius-full);padding:4px 12px 4px 4px;
-  transition:all .15s
-}
+.user-chip{display:flex;align-items:center;gap:8px;cursor:pointer;background:rgba(255,255,255,.06);border:1px solid rgba(0,229,209,.2);border-radius:var(--radius-full);padding:4px 12px 4px 4px;transition:all .15s}
 .user-chip:hover{background:rgba(0,229,209,.1);border-color:rgba(0,229,209,.4)}
-.user-avatar{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--wd-grad-h);color:#00161F;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:800;font-size:10px;flex-shrink:0;letter-spacing:.03em
-}
+.user-avatar{width:28px;height:28px;border-radius:50%;background:var(--wd-grad-h);color:#00161F;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;flex-shrink:0;letter-spacing:.03em}
 .user-name-nav{font-size:11px;font-weight:700;color:#fff;white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis}
 .user-role-nav{font-size:9px;font-weight:600;color:rgba(0,229,209,.75);display:block;line-height:1}
-.user-dropdown{
-  position:fixed;top:calc(var(--nav-height) + 8px);right:12px;
-  background:var(--wd-navy);border:1px solid rgba(0,229,209,.2);
-  border-radius:var(--radius-lg);min-width:200px;
-  box-shadow:var(--shadow-lg);z-index:200;overflow:hidden;
-  opacity:0;pointer-events:none;transform:translateY(-8px);
-  transition:opacity .18s,transform .18s
-}
+.user-dropdown{position:fixed;top:calc(var(--nav-height) + 8px);right:12px;background:var(--wd-navy);border:1px solid rgba(0,229,209,.2);border-radius:var(--radius-lg);min-width:200px;box-shadow:var(--shadow-lg);z-index:200;overflow:hidden;opacity:0;pointer-events:none;transform:translateY(-8px);transition:opacity .18s,transform .18s}
 .user-dropdown.open{opacity:1;pointer-events:all;transform:translateY(0)}
 .ud-header{padding:14px 16px;border-bottom:1px solid rgba(0,229,209,.12)}
 .ud-name{font-size:13px;font-weight:800;color:#fff}
 .ud-role{font-size:10px;color:rgba(0,229,209,.8);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
-.ud-item{
-  display:flex;align-items:center;gap:10px;padding:11px 16px;
-  font-size:12px;font-weight:600;color:rgba(255,255,255,.75);
-  cursor:pointer;transition:all .15s;border:none;background:none;
-  width:100%;text-align:left;font-family:inherit
-}
+.ud-item{display:flex;align-items:center;gap:10px;padding:11px 16px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);cursor:pointer;transition:all .15s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
 .ud-item:hover{background:rgba(0,229,209,.1);color:#fff}
 .ud-item i{width:16px;text-align:center;font-size:13px}
 .ud-item.danger{color:rgba(255,100,100,.8)}
 .ud-item.danger:hover{background:rgba(192,0,26,.15);color:#ff6b6b}
 .ud-divider{height:1px;background:rgba(0,229,209,.1);margin:4px 0}
 .main-content{margin-top:var(--nav-height);padding:24px 16px;padding-bottom:calc(var(--bottom-nav)+24px)}
-@media(min-width:768px){.main-content{padding:32px 32px;padding-bottom:48px;max-width:920px;margin-left:auto;margin-right:auto}}
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav);
-  background:linear-gradient(180deg,var(--wd-navy) 0%,var(--wd-black) 100%);
-  border-top:1px solid rgba(0,229,209,.2);
-  display:flex;align-items:center;justify-content:space-around;
-  z-index:100;box-shadow:0 -4px 20px rgba(0,22,31,.3)
-}
+@media(min-width:768px){.main-content{padding:32px 32px;padding-bottom:48px;max-width:980px;margin-left:auto;margin-right:auto}}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav);background:linear-gradient(180deg,var(--wd-navy) 0%,var(--wd-black) 100%);border-top:1px solid rgba(0,229,209,.2);display:flex;align-items:center;justify-content:space-around;z-index:100;box-shadow:0 -4px 20px rgba(0,22,31,.3)}
 @media(min-width:768px){.bottom-nav{display:none}}
 .bottom-nav-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 10px;cursor:pointer;flex:1}
 .bottom-nav-item i{font-size:17px;color:rgba(255,255,255,.4)}
@@ -172,18 +72,15 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .page-header{margin-bottom:22px}
 .page-header h1{font-size:22px;font-weight:800;color:var(--wd-black);letter-spacing:-.4px}
 .page-header p{font-size:13px;color:var(--outline);margin-top:4px}
-.status-bar{
-  background:linear-gradient(135deg,var(--wd-black),var(--wd-navy) 60%,var(--wd-navy2));
-  border-radius:var(--radius-lg);padding:12px 16px;
-  display:flex;align-items:center;gap:10px;margin-bottom:20px;
-  border:1px solid rgba(0,229,209,.2);box-shadow:var(--shadow-md)
-}
+.status-bar{background:linear-gradient(135deg,var(--wd-black),var(--wd-navy) 60%,var(--wd-navy2));border-radius:var(--radius-lg);padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px;border:1px solid rgba(0,229,209,.2);box-shadow:var(--shadow-md)}
 .status-dot{width:9px;height:9px;border-radius:50%;background:var(--wd-teal);animation:pulse-dot 2s infinite;flex-shrink:0}
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.4)}}
 .status-text{font-size:12px;font-weight:600;color:#fff;flex:1}
 .status-badge{background:rgba(0,229,209,.15);color:var(--wd-teal);font-size:11px;font-weight:700;padding:3px 11px;border-radius:var(--radius-full);border:1px solid rgba(0,229,209,.3)}
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
 @media(min-width:480px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stats-grid-ext{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:22px}
+@media(min-width:600px){.stats-grid-ext{grid-template-columns:repeat(4,1fr)}}
 .stat-card{background:var(--surface-card);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant);display:flex;flex-direction:column;gap:6px;transition:box-shadow .18s,transform .18s}
 .stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
 .stat-icon{width:36px;height:36px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:4px}
@@ -193,6 +90,10 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .stat-card.green .stat-icon{background:var(--success-bg);color:var(--success)}.stat-card.green .stat-val{color:var(--success)}
 .stat-card.warn .stat-icon{background:var(--warning-bg);color:var(--warning)}.stat-card.warn .stat-val{color:var(--warning)}
 .stat-card.red .stat-icon{background:var(--error-bg);color:var(--error)}.stat-card.red .stat-val{color:var(--error)}
+.stat-card.purple .stat-icon{background:rgba(100,35,255,.1);color:#6423FF}.stat-card.purple .stat-val{color:#6423FF}
+.stat-card.teal .stat-icon{background:rgba(0,229,209,.12);color:#007B6E}.stat-card.teal .stat-val{color:#007B6E}
+.stat-card.orange .stat-icon{background:rgba(252,169,26,.15);color:#c07800}.stat-card.orange .stat-val{color:#c07800}
+.stat-card.gray .stat-icon{background:var(--surface-high);color:var(--outline)}.stat-card.gray .stat-val{color:var(--outline)}
 .section-title{font-size:12px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--wd-blue-dark);letter-spacing:.05em;text-transform:uppercase}
 .section-title::after{content:'';flex:1;height:1.5px;background:linear-gradient(90deg,var(--outline-variant),transparent)}
 .inspection-list{display:flex;flex-direction:column;gap:8px}
@@ -213,6 +114,30 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .item-btn.edit{color:var(--primary)}.item-btn.del{color:var(--error)}
 .item-btn.edit:hover{background:var(--primary-container);border-color:var(--primary)}
 .item-btn.del:hover{background:var(--error-bg);border-color:var(--error)}
+.charts-grid{display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:22px}
+@media(min-width:640px){.charts-grid{grid-template-columns:1fr 1fr}}
+@media(min-width:900px){.charts-grid{grid-template-columns:1fr 1fr 1fr}}
+.chart-card{background:var(--surface-card);border-radius:var(--radius-lg);padding:18px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant)}
+.chart-title{font-size:12px;font-weight:700;color:var(--wd-blue-dark);letter-spacing:.05em;text-transform:uppercase;margin-bottom:4px;display:flex;align-items:center;gap:7px}
+.chart-title i{color:var(--primary);font-size:13px}
+.chart-sub{font-size:10px;color:var(--outline);margin-bottom:14px}
+.donut-wrap{position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.donut-center{position:absolute;text-align:center;pointer-events:none}
+.donut-center-val{font-size:26px;font-weight:800;color:var(--wd-black);line-height:1}
+.donut-center-lbl{font-size:9px;font-weight:700;color:var(--outline);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.legend-row{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:600;color:var(--on-surface-variant);padding:3px 0}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.legend-val{margin-left:auto;font-weight:800;font-size:12px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.bar-label{font-size:11px;font-weight:600;color:var(--on-surface-variant);width:90px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:14px;background:var(--surface-high);border-radius:var(--radius-full);overflow:hidden}
+.bar-fill{height:100%;border-radius:var(--radius-full);transition:width .6s ease}
+.bar-count{font-size:11px;font-weight:800;color:var(--wd-black);width:26px;text-align:right;flex-shrink:0}
+.compliance-rate-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0}
+.rate-num{font-size:48px;font-weight:800;line-height:1;background:var(--wd-grad-h);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.rate-lbl{font-size:11px;font-weight:700;color:var(--outline);letter-spacing:.06em;text-transform:uppercase;margin-top:4px}
+.progress-mini{height:8px;background:var(--surface-high);border-radius:var(--radius-full);overflow:hidden;margin-top:12px}
+.progress-mini-fill{height:100%;background:var(--wd-grad-h);border-radius:var(--radius-full);transition:width .8s ease}
 .form-card{background:var(--surface-card);border-radius:var(--radius-xl);box-shadow:var(--shadow-md);border:1px solid var(--outline-variant);overflow:hidden;margin-bottom:16px;position:relative}
 .form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--wd-grad-h);border-radius:var(--radius-xl) var(--radius-xl) 0 0}
 .form-section{padding:22px;border-bottom:1px solid var(--outline-variant)}
@@ -245,7 +170,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .ref-img-wrap img{width:100%;height:auto;display:block;transition:transform .2s}
 .ref-img-wrap:hover img{transform:scale(1.01)}
 .ref-img-zoom{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:10px;font-weight:700;padding:4px 9px;border-radius:18px;display:flex;align-items:center;gap:4px;pointer-events:none}
-.ref-caption{font-size:11px;color:var(--outline);margin-top:7px;font-style:italic;text-align:center;line-height:1.5}
 .door-type-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
 @media(max-width:479px){.door-type-cards{grid-template-columns:1fr}}
 .dt-card{border:2px solid var(--outline-variant);border-radius:var(--radius-md);padding:12px 10px;cursor:pointer;transition:all .18s;background:#fff;text-align:center;position:relative}
@@ -290,7 +214,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .ynna-btn.yes.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(34,102,255,.3)}
 .ynna-btn.no.active{background:var(--error);border-color:var(--error);color:#fff}
 .ynna-btn.na.active{background:var(--surface-high);border-color:var(--outline);color:var(--on-surface-variant)}
-/* ══ Re-confirm button ══ */
 .ynna-btn.reconfirm{min-width:82px;font-size:10px;color:var(--warning);border-color:rgba(138,82,0,.3);background:#fff}
 .ynna-btn.reconfirm:hover{background:var(--warning-bg);border-color:var(--warning)}
 .ynna-btn.reconfirm.active{background:var(--warning);border-color:var(--warning);color:#fff;box-shadow:0 2px 8px rgba(138,82,0,.3)}
@@ -308,7 +231,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .export-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
 .export-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:var(--radius-lg);border:1.5px solid var(--outline-variant);background:#fff;font-size:13px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:var(--shadow-sm);font-family:inherit}
 .export-btn:hover{background:var(--surface-container);border-color:var(--primary);color:var(--primary)}
-.export-hint{font-size:11px;color:var(--outline);margin-top:9px;font-style:italic}
 .action-area{display:flex;flex-direction:column;gap:10px;margin-top:16px}
 .btn-primary{width:100%;padding:14px;border-radius:var(--radius-full);border:none;background:var(--wd-grad-h);color:#fff;font-size:14px;font-weight:700;cursor:pointer;transition:all .18s;box-shadow:0 4px 16px rgba(34,102,255,.35);font-family:inherit;letter-spacing:.02em}
 .btn-primary:hover{opacity:.9;transform:translateY(-1px)}
@@ -420,6 +342,19 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .occ-type-desc{font-size:11px;color:var(--on-surface-variant);margin-top:3px;padding:6px 10px;background:rgba(34,102,255,.05);border-radius:var(--radius-sm);border-left:3px solid var(--primary);display:none;line-height:1.5}
 .occ-type-desc.show{display:block}
 .sub-hidden{display:none}
+.room-select-wrap{display:flex;flex-direction:column;gap:6px}
+.room-custom-toggle{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;padding:5px 0;width:fit-content;background:none;border:none;font-family:inherit;transition:opacity .15s}
+.room-custom-toggle:hover{opacity:.75}
+.room-custom-box{display:none;background:rgba(34,102,255,.04);border:1.5px dashed rgba(34,102,255,.35);border-radius:var(--radius-md);padding:12px 14px;margin-top:2px;animation:slideDown .2s ease}
+.room-custom-box.show{display:block}
+.room-custom-box .rc-label{font-size:11px;font-weight:700;color:var(--primary);margin-bottom:7px;display:flex;align-items:center;gap:6px}
+.room-custom-input-row{display:flex;gap:8px}
+.room-custom-input-row .field-input{flex:1}
+.btn-room-add{padding:0 16px;height:40px;border-radius:var(--radius-md);border:none;background:var(--wd-grad-h);color:#fff;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:inherit;transition:opacity .15s;flex-shrink:0}
+.btn-room-add:hover{opacity:.88}
+.custom-room-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(34,102,255,.1);border:1px solid rgba(34,102,255,.25);color:var(--primary);font-size:11px;font-weight:700;padding:4px 10px;border-radius:var(--radius-full);margin-top:8px;margin-right:4px}
+.custom-room-tag button{background:none;border:none;color:var(--primary);cursor:pointer;font-size:11px;padding:0;line-height:1;opacity:.6}
+.custom-room-tag button:hover{opacity:1}
 .about-hero{background:linear-gradient(135deg,var(--wd-black) 0%,var(--wd-navy) 50%,var(--wd-navy2) 100%);border-radius:var(--radius-lg);padding:28px 24px;margin-bottom:20px;box-shadow:var(--shadow-md);border:1px solid rgba(0,229,209,.2)}
 .about-hero .ah-logo{font-size:24px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.3px}
 .about-hero .ah-logo span{display:block;font-size:11px;font-weight:600;color:rgba(0,229,209,.8);letter-spacing:.08em;margin-top:2px;text-transform:uppercase}
@@ -456,7 +391,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 </head>
 <body>
 
-<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<!-- LOGIN -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">
@@ -467,17 +402,11 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
     <div class="login-error" id="loginError"><i class="fa fa-circle-exclamation"></i><span id="loginErrorMsg">Username หรือ Password ไม่ถูกต้อง</span></div>
     <div class="field-group" style="margin-bottom:16px">
       <label class="login-label">Username</label>
-      <div class="login-input-wrap">
-        <input class="login-input" type="text" id="loginUser" placeholder="กรอก Username" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()">
-        <span class="login-input-icon"><i class="fa fa-user"></i></span>
-      </div>
+      <div class="login-input-wrap"><input class="login-input" type="text" id="loginUser" placeholder="กรอก Username" autocomplete="username" onkeydown="if(event.key==='Enter')doLogin()"><span class="login-input-icon"><i class="fa fa-user"></i></span></div>
     </div>
     <div class="field-group" style="margin-bottom:20px">
       <label class="login-label">Password</label>
-      <div class="login-input-wrap">
-        <input class="login-input" type="password" id="loginPass" placeholder="กรอก Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
-        <span class="login-input-icon" onclick="toggleLoginPass()" id="loginPassIcon"><i class="fa fa-eye"></i></span>
-      </div>
+      <div class="login-input-wrap"><input class="login-input" type="password" id="loginPass" placeholder="กรอก Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"><span class="login-input-icon" onclick="toggleLoginPass()" id="loginPassIcon"><i class="fa fa-eye"></i></span></div>
     </div>
     <button class="btn-login" id="loginBtn" onclick="doLogin()"><i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ</button>
     <div class="login-footer">Western Digital Storage Technologies (Thailand) Ltd.<br>MFM Security · REO — Authorized Personnel Only</div>
@@ -485,97 +414,19 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 </div>
 
 <div class="toast-wrap" id="toastWrap"></div>
-<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
-  <div class="lightbox-inner">
-    <button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-xmark"></i></button>
-    <img id="lightboxImg" src="" alt="">
-    <div class="lightbox-caption" id="lightboxCap"></div>
-  </div>
-</div>
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)"><div class="lightbox-inner"><button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-xmark"></i></button><img id="lightboxImg" src="" alt=""><div class="lightbox-caption" id="lightboxCap"></div></div></div>
 
-<!-- ══════════════ DELETE RECORD MODAL ══════════════ -->
-<div class="modal-overlay" id="deleteModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-header-icon"><i class="fa fa-trash"></i></div>
-      <div><div class="modal-title">ยืนยันการลบรายการ</div><div class="modal-subtitle">การดำเนินการนี้ไม่สามารถย้อนกลับได้</div></div>
-    </div>
-    <div class="modal-body"><p>คุณต้องการลบรายการนี้ออกจากระบบ?</p><div class="modal-warning-box"><i class="fa fa-triangle-exclamation"></i><span id="deleteRecordLabel"></span></div></div>
-    <div class="modal-footer">
-      <button class="modal-btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('open')">ยกเลิก</button>
-      <button class="modal-btn-danger" onclick="confirmDelete()"><i class="fa fa-trash"></i> ลบรายการ</button>
-    </div>
-  </div>
-</div>
+<!-- MODALS -->
+<div class="modal-overlay" id="deleteModal"><div class="modal-box"><div class="modal-header"><div class="modal-header-icon"><i class="fa fa-trash"></i></div><div><div class="modal-title">ยืนยันการลบรายการ</div><div class="modal-subtitle">การดำเนินการนี้ไม่สามารถย้อนกลับได้</div></div></div><div class="modal-body"><p>คุณต้องการลบรายการนี้ออกจากระบบ?</p><div class="modal-warning-box"><i class="fa fa-triangle-exclamation"></i><span id="deleteRecordLabel"></span></div></div><div class="modal-footer"><button class="modal-btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('open')">ยกเลิก</button><button class="modal-btn-danger" onclick="confirmDelete()"><i class="fa fa-trash"></i> ลบรายการ</button></div></div></div>
+<div class="modal-overlay" id="clearDataModal"><div class="modal-box"><div class="modal-header"><div class="modal-header-icon"><i class="fa fa-triangle-exclamation"></i></div><div><div class="modal-title">ล้างข้อมูลทั้งหมด</div><div class="modal-subtitle" id="clearDataSubtitle">ข้อมูลจะถูกลบออกจากระบบถาวร</div></div></div><div class="modal-body"><p id="clearDataMsg">การดำเนินการนี้จะลบข้อมูลการตรวจสอบทั้งหมดออกจากฐานข้อมูลโดยถาวร</p><div class="clear-steps"><div class="clear-step"><i class="fa fa-database"></i><span>ลบ records ทั้งหมดออกจากฐานข้อมูล</span></div><div class="clear-step"><i class="fa fa-chart-bar"></i><span>Dashboard จะรีเซ็ตเป็น 0</span></div><div class="clear-step"><i class="fa fa-file-excel"></i><span>ไม่สามารถ Export ข้อมูลเดิมได้อีก</span></div></div><p style="margin-top:14px;font-size:12px;font-weight:700;color:var(--on-surface)">พิมพ์ <strong style="color:var(--error)">"CONFIRM"</strong> เพื่อยืนยัน:</p><input class="confirm-type-input" type="text" id="clearConfirmInput" placeholder='พิมพ์ "CONFIRM" ที่นี่' oninput="onClearConfirmInput()"></div><div class="modal-footer"><button class="modal-btn-cancel" onclick="closeClearModal()">ยกเลิก</button><button class="modal-btn-danger" id="clearConfirmBtn" disabled onclick="confirmClearData()"><i class="fa fa-trash"></i> ล้างข้อมูล</button></div></div></div>
+<div class="modal-overlay" id="userModal"><div class="modal-box" style="max-width:480px"><div class="modal-header"><div class="modal-header-icon"><i class="fa fa-user-plus"></i></div><div><div class="modal-title" id="userModalTitle">เพิ่ม User ใหม่</div><div class="modal-subtitle">กรอกข้อมูลผู้ใช้งานระบบ</div></div></div><div class="modal-body"><div class="user-form-grid"><div class="field-group"><label class="field-label">ชื่อ-นามสกุล *</label><input class="field-input" type="text" id="uFullName" placeholder="Firstname Lastname"></div><div class="field-group"><label class="field-label">Username *</label><input class="field-input" type="text" id="uUsername" placeholder="username" autocomplete="off"></div><div class="field-group"><label class="field-label">Password *</label><div class="pass-input-wrap"><input class="field-input" type="password" id="uPassword" placeholder="Password" autocomplete="new-password"><button type="button" class="pass-toggle" onclick="togglePassField('uPassword',this)"><i class="fa fa-eye"></i></button></div></div><div class="field-group"><label class="field-label">Role *</label><select class="field-select" id="uRole"><option value="admin">Admin</option><option value="user" selected>User</option><option value="viewer">Viewer</option></select></div><div class="field-group col-span-2" style="grid-column:1/-1"><label class="field-label">แผนก / ตำแหน่ง</label><input class="field-input" type="text" id="uDept" placeholder="เช่น Security Department"></div></div><div id="userFormError" style="display:none;background:var(--error-bg);border:1px solid rgba(192,0,26,.25);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;font-weight:600;color:var(--error);margin-top:12px"></div></div><div class="modal-footer"><button class="modal-btn-cancel" onclick="closeUserModal()">ยกเลิก</button><button class="modal-btn-confirm" onclick="saveUser()"><i class="fa fa-floppy-disk"></i> บันทึก</button></div></div></div>
 
-<!-- ══════════════ CLEAR DATA MODAL ══════════════ -->
-<div class="modal-overlay" id="clearDataModal">
-  <div class="modal-box">
-    <div class="modal-header">
-      <div class="modal-header-icon"><i class="fa fa-triangle-exclamation"></i></div>
-      <div><div class="modal-title">ล้างข้อมูลทั้งหมด</div><div class="modal-subtitle" id="clearDataSubtitle">ข้อมูลจะถูกลบออกจากระบบถาวร</div></div>
-    </div>
-    <div class="modal-body">
-      <p id="clearDataMsg">การดำเนินการนี้จะลบข้อมูลการตรวจสอบทั้งหมดออกจากฐานข้อมูลโดยถาวร ไม่สามารถกู้คืนได้</p>
-      <div class="clear-steps">
-        <div class="clear-step"><i class="fa fa-database"></i><span>ลบ records ทั้งหมดในออกจากฐานข้อมูล JS</span></div>
-        <div class="clear-step"><i class="fa fa-chart-bar"></i><span>Dashboard จะรีเซ็ตเป็น 0</span></div>
-        <div class="clear-step"><i class="fa fa-file-excel"></i><span>ไม่สามารถ Export ข้อมูลเดิมได้อีก</span></div>
-      </div>
-      <p style="margin-top:14px;font-size:12px;font-weight:700;color:var(--on-surface)">พิมพ์ <strong style="color:var(--error)">"CONFIRM"</strong> เพื่อยืนยัน:</p>
-      <input class="confirm-type-input" type="text" id="clearConfirmInput" placeholder='พิมพ์ "CONFIRM" ที่นี่' oninput="onClearConfirmInput()">
-    </div>
-    <div class="modal-footer">
-      <button class="modal-btn-cancel" onclick="closeClearModal()">ยกเลิก</button>
-      <button class="modal-btn-danger" id="clearConfirmBtn" disabled onclick="confirmClearData()"><i class="fa fa-trash"></i> ล้างข้อมูล</button>
-    </div>
-  </div>
-</div>
+<!-- BPI POPUP -->
+<div class="bpi-popup-overlay" id="bpiPopup"><div class="bpi-popup-box"><div class="bpi-popup-header"><div class="bpi-popup-header-text"><h3><i class="fa fa-building"></i> เลือก BPI Site</h3><p>กรุณาเลือก Site ของ BPI</p></div><button class="bpi-popup-close" onclick="closeBpiPopup()"><i class="fa fa-xmark"></i></button></div><div class="bpi-popup-body"><div class="bpi-option-card hdd" onclick="selectBpiSub('BPI-HDD')"><div class="bpi-icon"><i class="fa fa-hard-drive"></i></div><div class="bpi-name">HDD</div><div class="bpi-sub-count">114 rooms · 4 Buildings</div></div><div class="bpi-option-card tho" onclick="selectBpiSub('BPI-THO')"><div class="bpi-icon"><i class="fa fa-industry"></i></div><div class="bpi-name">THO</div><div class="bpi-sub-count">113 rooms · 6 Buildings</div></div></div></div></div>
 
-<!-- ══════════════ USER FORM MODAL ══════════════ -->
-<div class="modal-overlay" id="userModal">
-  <div class="modal-box" style="max-width:480px">
-    <div class="modal-header">
-      <div class="modal-header-icon"><i class="fa fa-user-plus"></i></div>
-      <div><div class="modal-title" id="userModalTitle">เพิ่ม User ใหม่</div><div class="modal-subtitle">กรอกข้อมูลผู้ใช้งานระบบ</div></div>
-    </div>
-    <div class="modal-body">
-      <div class="user-form-grid">
-        <div class="field-group"><label class="field-label">ชื่อ-นามสกุล *</label><input class="field-input" type="text" id="uFullName" placeholder="Firstname Lastname"></div>
-        <div class="field-group"><label class="field-label">Username *</label><input class="field-input" type="text" id="uUsername" placeholder="username" autocomplete="off"></div>
-        <div class="field-group"><label class="field-label">Password *</label><div class="pass-input-wrap"><input class="field-input" type="password" id="uPassword" placeholder="Password" autocomplete="new-password"><button type="button" class="pass-toggle" onclick="togglePassField('uPassword',this)"><i class="fa fa-eye"></i></button></div></div>
-        <div class="field-group"><label class="field-label">Role *</label><select class="field-select" id="uRole"><option value="admin">Admin — เข้าถึงทุกฟีเจอร์</option><option value="user" selected>User — บันทึก/แก้ไข</option><option value="viewer">Viewer — ดูข้อมูลเท่านั้น</option></select></div>
-        <div class="field-group col-span-2" style="grid-column:1/-1"><label class="field-label">แผนก / ตำแหน่ง</label><input class="field-input" type="text" id="uDept" placeholder="เช่น Security Department, Coordinator"></div>
-      </div>
-      <div id="userFormError" style="display:none;background:var(--error-bg);border:1px solid rgba(192,0,26,.25);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;font-weight:600;color:var(--error);margin-top:12px"></div>
-    </div>
-    <div class="modal-footer">
-      <button class="modal-btn-cancel" onclick="closeUserModal()">ยกเลิก</button>
-      <button class="modal-btn-confirm" onclick="saveUser()"><i class="fa fa-floppy-disk"></i> บันทึก</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ BPI POPUP ══════════════ -->
-<div class="bpi-popup-overlay" id="bpiPopup">
-  <div class="bpi-popup-box">
-    <div class="bpi-popup-header">
-      <div class="bpi-popup-header-text"><h3><i class="fa fa-building"></i> เลือก BPI Site</h3><p>กรุณาเลือก Site ของ BPI</p></div>
-      <button class="bpi-popup-close" onclick="closeBpiPopup()"><i class="fa fa-xmark"></i></button>
-    </div>
-    <div class="bpi-popup-body">
-      <div class="bpi-option-card hdd" onclick="selectBpiSub('BPI-HDD')"><div class="bpi-icon"><i class="fa fa-hard-drive"></i></div><div class="bpi-name">HDD</div><div class="bpi-sub-count">4 Buildings</div></div>
-      <div class="bpi-option-card tho" onclick="selectBpiSub('BPI-THO')"><div class="bpi-icon"><i class="fa fa-industry"></i></div><div class="bpi-name">THO</div><div class="bpi-sub-count">6 Buildings</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════ TOP NAV ══════════════ -->
+<!-- TOP NAV -->
 <header class="top-nav" id="topNav" style="display:none">
-  <div class="brand">
-    <div class="brand-dot"></div>
-    <div class="brand-text">SafeGuard<span>INSPECTION SYSTEM</span></div>
-  </div>
+  <div class="brand"><div class="brand-dot"></div><div class="brand-text">SafeGuard<span>INSPECTION SYSTEM</span></div></div>
   <div style="display:flex;align-items:center;gap:6px">
     <nav class="nav-desktop-links">
       <button class="nav-link-btn active" onclick="showPage('home',this)">Home</button>
@@ -586,16 +437,11 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
       <button class="nav-link-btn" onclick="showPage('about',this)">About</button>
     </nav>
     <div class="nav-right">
-      <button class="icon-btn" title="แจ้งเตือน"><i class="fa fa-bell"></i></button>
-      <div class="user-chip" id="userChip" onclick="toggleUserDropdown()">
-        <div class="user-avatar" id="navAvatar">SK</div>
-        <div><div class="user-name-nav" id="navUserName">Loading...</div><span class="user-role-nav" id="navUserRole">USER</span></div>
-      </div>
+      <button class="icon-btn"><i class="fa fa-bell"></i></button>
+      <div class="user-chip" id="userChip" onclick="toggleUserDropdown()"><div class="user-avatar" id="navAvatar">SK</div><div><div class="user-name-nav" id="navUserName">Loading...</div><span class="user-role-nav" id="navUserRole">USER</span></div></div>
     </div>
   </div>
 </header>
-
-<!-- ══════════════ USER DROPDOWN ══════════════ -->
 <div class="user-dropdown" id="userDropdown">
   <div class="ud-header"><div class="ud-name" id="ddUserName">—</div><div class="ud-role" id="ddUserRole">—</div></div>
   <button class="ud-item" onclick="showPage('settings',null,'bnSettings');toggleUserDropdown()"><i class="fa fa-gear"></i> ตั้งค่าระบบ</button>
@@ -604,18 +450,63 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
   <button class="ud-item danger" onclick="doLogout()"><i class="fa fa-right-from-bracket"></i> ออกจากระบบ</button>
 </div>
 
-<!-- ══════════════ MAIN ══════════════ -->
+<!-- MAIN -->
 <main class="main-content" id="appMain" style="display:none">
-
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <div class="page-header"><h1>Dashboard</h1><p>Exit Route Compliance Survey — Overview &amp; Recent Activity</p></div>
+    <div class="page-header"><h1>Dashboard</h1><p>Exit Route Compliance Survey — Overview &amp; Analytics</p></div>
     <div class="status-bar"><div class="status-dot"></div><span class="status-text" id="statusText">กำลังเชื่อมต่อระบบ...</span><span class="status-badge" id="liveCount">0 records</span></div>
     <div class="stats-grid">
-      <div class="stat-card blue"><div class="stat-icon"><i class="fa fa-door-open"></i></div><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Total</div></div>
+      <div class="stat-card blue"><div class="stat-icon"><i class="fa fa-door-open"></i></div><div class="stat-val" id="statTotal">0</div><div class="stat-lbl">Total Records</div></div>
       <div class="stat-card green"><div class="stat-icon"><i class="fa fa-circle-check"></i></div><div class="stat-val" id="statComplied">0</div><div class="stat-lbl">Complied</div></div>
       <div class="stat-card red"><div class="stat-icon"><i class="fa fa-circle-xmark"></i></div><div class="stat-val" id="statNonComplied">0</div><div class="stat-lbl">Non-Complied</div></div>
       <div class="stat-card warn"><div class="stat-icon"><i class="fa fa-clock"></i></div><div class="stat-val" id="statToday">0</div><div class="stat-lbl">Today</div></div>
+    </div>
+    <div class="stats-grid-ext">
+      <div class="stat-card purple"><div class="stat-icon"><i class="fa fa-rotate"></i></div><div class="stat-val" id="statReconfirm">0</div><div class="stat-lbl">Re-confirm</div></div>
+      <div class="stat-card gray"><div class="stat-icon"><i class="fa fa-minus-circle"></i></div><div class="stat-val" id="statNA">0</div><div class="stat-lbl">N/A</div></div>
+      <div class="stat-card teal"><div class="stat-icon"><i class="fa fa-building"></i></div><div class="stat-val" id="statBuildings">0</div><div class="stat-lbl">Buildings</div></div>
+      <div class="stat-card orange"><div class="stat-icon"><i class="fa fa-percent"></i></div><div class="stat-val" id="statRate">0%</div><div class="stat-lbl">Complied Rate</div></div>
+    </div>
+    <div class="charts-grid">
+      <div class="chart-card">
+        <div class="chart-title"><i class="fa fa-chart-pie"></i> Local Law</div>
+        <div class="chart-sub">สัดส่วน Local Law Compliance</div>
+        <div class="donut-wrap" style="height:160px">
+          <svg id="donutSvg" viewBox="0 0 160 160" width="160" height="160" style="transform:rotate(-90deg)">
+            <circle cx="80" cy="80" r="60" fill="none" stroke="#dce6f0" stroke-width="22"/>
+            <circle id="donutComplied" cx="80" cy="80" r="60" fill="none" stroke="#00875A" stroke-width="22" stroke-dasharray="0 377" stroke-linecap="round" style="transition:stroke-dasharray .8s ease"/>
+            <circle id="donutNonComplied" cx="80" cy="80" r="60" fill="none" stroke="#c0001a" stroke-width="22" stroke-dasharray="0 377" stroke-linecap="round" style="transition:stroke-dasharray .8s ease"/>
+            <circle id="donutReconfirm" cx="80" cy="80" r="60" fill="none" stroke="#8a5200" stroke-width="22" stroke-dasharray="0 377" stroke-linecap="round" style="transition:stroke-dasharray .8s ease"/>
+          </svg>
+          <div class="donut-center"><div class="donut-center-val" id="donutCenterVal">0</div><div class="donut-center-lbl">Total</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
+          <div class="legend-row"><span class="legend-dot" style="background:#00875A"></span><span>Complied</span><span class="legend-val" style="color:#00875A" id="lgComplied">0</span></div>
+          <div class="legend-row"><span class="legend-dot" style="background:#c0001a"></span><span>Non-Complied</span><span class="legend-val" style="color:#c0001a" id="lgNonComplied">0</span></div>
+          <div class="legend-row"><span class="legend-dot" style="background:#8a5200"></span><span>Re-confirm</span><span class="legend-val" style="color:#8a5200" id="lgReconfirm">0</span></div>
+          <div class="legend-row"><span class="legend-dot" style="background:#b8cdd8"></span><span>N/A</span><span class="legend-val" style="color:#4a6b80" id="lgNA">0</span></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><i class="fa fa-chart-bar"></i> By BU</div>
+        <div class="chart-sub">จำนวนการตรวจตาม Site</div>
+        <div id="buBarChart" style="margin-top:8px"></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--outline-variant)">
+          <div class="chart-title" style="margin-bottom:8px"><i class="fa fa-door-open"></i> Door Type</div>
+          <div id="doorTypeBarChart"></div>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title"><i class="fa fa-building"></i> Top Buildings</div>
+        <div class="chart-sub">อาคารที่มีการตรวจมากที่สุด (Top 5)</div>
+        <div id="buildingBarChart" style="margin-top:8px"></div>
+        <div style="margin-top:16px;padding-top:12px;border-top:1px solid var(--outline-variant)">
+          <div class="chart-title" style="margin-bottom:6px"><i class="fa fa-shield-check"></i> RBA Rate</div>
+          <div class="compliance-rate-ring"><div class="rate-num" id="rbaRateNum">0%</div><div class="rate-lbl">RBA Complied</div></div>
+          <div class="progress-mini"><div class="progress-mini-fill" id="rbaRateFill" style="width:0%"></div></div>
+        </div>
+      </div>
     </div>
     <div class="section-title"><i class="fa fa-list-check" style="color:var(--primary)"></i> Recent Inspections <span class="realtime-badge"><span class="dot"></span>Live</span></div>
     <div class="inspection-list" id="recentList"><div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:14px;font-weight:700">ยังไม่มีข้อมูล</p></div></div>
@@ -623,106 +514,64 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 
   <!-- INSPECT -->
   <div class="page" id="page-inspect">
-    <div class="page-header"><h1 id="inspectTitle">Exit Route Compliance Survey</h1><p>กรอกข้อมูลให้ครบทุกช่องที่มีเครื่องหมาย * เพื่อบันทึก</p></div>
-    <div class="edit-banner" id="editBanner" style="display:none">
-      <i class="fa fa-pen"></i>
-      <span>กำลังแก้ไข: <strong id="editBannerLabel"></strong></span>
-      <button type="button" onclick="cancelEdit()" style="margin-left:auto;background:none;border:1.5px solid #f5a623;color:#7a4800;padding:4px 11px;border-radius:var(--radius-full);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">ยกเลิก</button>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-label"><span>Form Progress</span><span id="progressPct">0%</span></div>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    </div>
+    <div class="page-header"><h1 id="inspectTitle">Exit Route Compliance Survey</h1><p>กรอกข้อมูลให้ครบทุกช่องที่มีเครื่องหมาย *</p></div>
+    <div class="edit-banner" id="editBanner" style="display:none"><i class="fa fa-pen"></i><span>กำลังแก้ไข: <strong id="editBannerLabel"></strong></span><button type="button" onclick="cancelEdit()" style="margin-left:auto;background:none;border:1.5px solid #f5a623;color:#7a4800;padding:4px 11px;border-radius:var(--radius-full);font-size:10px;font-weight:700;cursor:pointer;font-family:inherit">ยกเลิก</button></div>
+    <div class="progress-wrap"><div class="progress-label"><span>Form Progress</span><span id="progressPct">0%</span></div><div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div></div>
     <form id="inspectForm" onsubmit="submitInspection(event)">
       <input type="hidden" id="editRecordId" value="">
-
-      <!-- S1 -->
       <div class="form-card">
         <div class="form-section">
           <div class="form-section-title"><div class="section-num">1</div><div><h2>ข้อมูลสถานที่ (Location Information)</h2><p>Site, Building, Floor &amp; Area</p></div></div>
           <div class="form-grid">
             <div class="field-group">
               <label class="field-label">Site (BU) *</label>
-              <select class="field-select" id="bu" onchange="handleBUChange()" required>
-                <option value="">Select BU...</option>
-                <option value="PRB">PRB</option>
-                <option value="BPI">BPI</option>
-              </select>
+              <select class="field-select" id="bu" onchange="handleBUChange()" required><option value="">Select BU...</option><option value="PRB">PRB</option><option value="BPI">BPI</option></select>
               <input type="hidden" id="buFull" value="">
               <div id="bpiSelectedPill" style="display:none"><div class="bu-display-pill"><i class="fa fa-building"></i><span id="bpiPillText"></span><button type="button" onclick="clearBpiSub()" title="เปลี่ยน"><i class="fa fa-xmark"></i></button></div></div>
             </div>
-            <div class="field-group">
-              <label class="field-label">อาคาร (Building) *</label>
-              <select class="field-select" id="building" onchange="onBuildingChange()" required><option value="">Select Building...</option></select>
-            </div>
+            <div class="field-group"><label class="field-label">อาคาร (Building) *</label><select class="field-select" id="building" onchange="onBuildingChange()" required><option value="">Select Building...</option></select></div>
             <div class="field-group">
               <label class="field-label">Select Floor *</label>
-              <select class="field-select" id="floor" required>
-                <option value="">Select Floor...</option>
-                <option>ชั้น 1 (First Floor)</option><option>ชั้น 2 (Second Floor)</option>
-                <option>ชั้น 3 (Third Floor)</option><option>ชั้นดาดฟ้า (Rooftop)</option><option>อื่นๆ (Other)</option>
-              </select>
+              <select class="field-select" id="floor" required><option value="">Select Floor...</option><option>ชั้น 1 (First Floor)</option><option>ชั้น 2 (Second Floor)</option><option>ชั้น 3 (Third Floor)</option><option>ชั้นดาดฟ้า (Rooftop)</option><option>อื่นๆ (Other)</option></select>
             </div>
             <div class="field-group" id="roomNameWrap" style="display:none">
               <label class="field-label">ชื่อห้อง (Room Name) *</label>
-              <select class="field-select" id="roomName" onchange="updateProgress()"><option value="">-- เลือก Building ก่อน --</option></select>
-              <div class="room-hint" id="roomHint" style="display:none"><i class="fa fa-door-open" style="font-size:9px;color:var(--primary)"></i><span id="roomHintText"></span></div>
-            </div>
-            <div class="field-group sub-hidden" id="prbSubWrap">
-              <label class="field-label"><i class="fa fa-hashtag" style="color:var(--primary);margin-right:5px"></i>Emergency Door Number</label>
-              <select class="field-select" id="emergencyDoorNum"></select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">Occupancy Type *</label>
-              <select class="field-select" id="occupancyType" onchange="onOccTypeChange()" required>
-                <option value="">Select Occupancy Type...</option>
-                <option value="Office">Office — สำนักงาน</option>
-                <option value="Production">Production — การผลิต</option>
-                <option value="Chemical room">Chemical room — ห้องสารเคมี</option>
-                <option value="Electrical room">Electrical room — ห้องไฟฟ้า</option>
-                <option value="Clinic">Clinic — คลินิก</option>
-                <option value="Canteen">Canteen — โรงอาหาร</option>
-                <option value="Multipurpose Hall">Multipurpose Hall</option>
-                <option value="Laboratory room">Laboratory room</option>
-                <option value="Car park building">Car park building</option>
-                <option value="Mix">Mix — หลายประเภท</option>
-                <option value="Other">Other</option>
-              </select>
-              <div class="occ-type-desc" id="occTypeDesc"></div>
-            </div>
-            <div class="field-group">
-              <label class="field-label">จำนวนคน (Occupancy)</label>
-              <div class="occupancy-wrap">
-                <div class="occupancy-icon"><i class="fa fa-users"></i></div>
-                <input class="occupancy-input" type="number" id="occupancy" min="0" max="9999" placeholder="0" value="">
-                <span class="occupancy-unit">คน</span>
-                <div class="occ-btns"><button type="button" class="occ-btn" onclick="changeOcc(1)"><i class="fa fa-plus"></i></button><button type="button" class="occ-btn" onclick="changeOcc(-1)"><i class="fa fa-minus"></i></button></div>
+              <div class="room-select-wrap">
+                <select class="field-select" id="roomName" onchange="onRoomNameChange()"><option value="">-- เลือก Building ก่อน --</option></select>
+                <div class="room-hint" id="roomHint" style="display:none"><i class="fa fa-door-open" style="font-size:9px;color:var(--primary)"></i><span id="roomHintText"></span></div>
+                <button type="button" class="room-custom-toggle" id="roomCustomToggle" onclick="toggleRoomCustomBox()" style="display:none"><i class="fa fa-plus-circle"></i> ไม่พบชื่อห้อง? เพิ่มเอง</button>
+                <div class="room-custom-box" id="roomCustomBox">
+                  <div class="rc-label"><i class="fa fa-pen-to-square"></i> พิมพ์ชื่อห้องที่ต้องการเพิ่ม</div>
+                  <div class="room-custom-input-row"><input class="field-input" type="text" id="roomCustomInput" placeholder="เช่น Storage Room A, Lab 3B, ..." onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomRoom();}"><button type="button" class="btn-room-add" onclick="addCustomRoom()"><i class="fa fa-plus"></i> เพิ่ม</button></div>
+                  <div id="customRoomTags"></div>
+                  <div style="font-size:10px;color:var(--outline);margin-top:8px;line-height:1.5"><i class="fa fa-circle-info" style="color:var(--primary)"></i> ชื่อห้องที่เพิ่มจะปรากฎใน dropdown ด้านบนและถูกบันทึกพร้อมข้อมูลการตรวจสอบ</div>
+                </div>
               </div>
             </div>
+            <div class="field-group sub-hidden" id="prbSubWrap"><label class="field-label"><i class="fa fa-hashtag" style="color:var(--primary);margin-right:5px"></i>Emergency Door Number</label><select class="field-select" id="emergencyDoorNum"></select></div>
+            <div class="field-group">
+              <label class="field-label">Occupancy Type *</label>
+              <select class="field-select" id="occupancyType" onchange="onOccTypeChange()" required><option value="">Select Occupancy Type...</option><option value="Office">Office — สำนักงาน</option><option value="Production">Production — การผลิต</option><option value="Chemical room">Chemical room — ห้องสารเคมี</option><option value="Electrical room">Electrical room — ห้องไฟฟ้า</option><option value="Clinic">Clinic — คลินิก</option><option value="Canteen">Canteen — โรงอาหาร</option><option value="Multipurpose Hall">Multipurpose Hall</option><option value="Laboratory room">Laboratory room</option><option value="Car park building">Car park building</option><option value="Mix">Mix — หลายประเภท</option><option value="Other">Other</option></select>
+              <div class="occ-type-desc" id="occTypeDesc"></div>
+            </div>
+            <div class="field-group"><label class="field-label">จำนวนคน (Occupancy)</label><div class="occupancy-wrap"><div class="occupancy-icon"><i class="fa fa-users"></i></div><input class="occupancy-input" type="number" id="occupancy" min="0" max="9999" placeholder="0" value=""><span class="occupancy-unit">คน</span><div class="occ-btns"><button type="button" class="occ-btn" onclick="changeOcc(1)"><i class="fa fa-plus"></i></button><button type="button" class="occ-btn" onclick="changeOcc(-1)"><i class="fa fa-minus"></i></button></div></div></div>
           </div>
-          <div style="margin-top:14px">
-            <div class="ynna-card"><div class="ynna-info"><div class="yl">มีทางออกฉุกเฉิน? (Emergency Exit?)</div><div class="ys">Yes / No / N/A</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="eeYes" onclick="setField('emergencyExit','Yes','ee')">Yes</button><button type="button" class="ynna-btn no" id="eeNo" onclick="setField('emergencyExit','No','ee')">No</button><button type="button" class="ynna-btn na active" id="eeNA" onclick="setField('emergencyExit','N/A','ee')">N/A</button></div></div>
-          </div>
+          <div style="margin-top:14px"><div class="ynna-card"><div class="ynna-info"><div class="yl">มีทางออกฉุกเฉิน? (Emergency Exit?)</div><div class="ys">Yes / No / N/A</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="eeYes" onclick="setField('emergencyExit','Yes','ee')">Yes</button><button type="button" class="ynna-btn no" id="eeNo" onclick="setField('emergencyExit','No','ee')">No</button><button type="button" class="ynna-btn na active" id="eeNA" onclick="setField('emergencyExit','N/A','ee')">N/A</button></div></div></div>
           <input type="hidden" id="emergencyExit" value="N/A">
         </div>
       </div>
-
-      <!-- S2 -->
       <div class="form-card">
         <div class="form-section">
           <div class="form-section-title"><div class="section-num">2</div><div><h2>รายละเอียดประตู (Door Specifications)</h2><p>Type, leaf, mechanism &amp; behavior</p></div></div>
           <div class="field-group col-span-2" style="margin-bottom:14px">
-            <div class="label-row"><label class="field-label">ประเภทประตู (Door Type) *</label><button type="button" class="info-btn" onclick="togglePanel('doorTypePanel')"><i class="fa fa-image"></i> กดเพื่อดูรูปตัวอย่าง</button></div>
+            <div class="label-row"><label class="field-label">ประเภทประตู (Door Type) *</label><button type="button" class="info-btn" onclick="togglePanel('doorTypePanel')"><i class="fa fa-image"></i> ดูรูปตัวอย่าง</button></div>
             <div class="door-type-cards">
               <div class="dt-card ead" onclick="selectDoorType('EXIT ACCESS DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon"><i class="fa fa-door-open"></i></div><div class="dt-name">EXIT ACCESS DOOR</div><div class="dt-desc">Occupied → Corridor</div></div>
               <div class="dt-card ed" onclick="selectDoorType('EXIT DOOR',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:rgba(34,102,255,.1);color:var(--wd-blue)"><i class="fa fa-sign-out-alt"></i></div><div class="dt-name">EXIT DOOR</div><div class="dt-desc">Corridor → Stair</div></div>
               <div class="dt-card edd" onclick="selectDoorType('EXIT DISCHARGE DOORS',this)"><i class="fa fa-check-circle dt-check"></i><div class="dt-icon" style="background:#fff0e6;color:#c04000"><i class="fa fa-person-running"></i></div><div class="dt-name">EXIT DISCHARGE</div><div class="dt-desc">Stair → Outside</div></div>
             </div>
             <select class="field-select" id="doorType" required style="display:none"><option value="">Select...</option><option>EXIT ACCESS DOOR</option><option>EXIT DOOR</option><option>EXIT DISCHARGE DOORS</option></select>
-            <div class="ref-panel" id="doorTypePanel" style="display:none">
-              <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-map-location-dot"></i> 2D Layout Reference</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorTypePanel')"><i class="fa fa-xmark"></i></button></div>
-              <div class="ref-panel-body"><div class="ref-img-wrap" onclick="openLightbox(IMGS.egress,'2D Layout')"><img id="imgEgress" src="/api/placeholder/800/450" alt="Egress"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Enlarge</div></div></div>
-            </div>
+            <div class="ref-panel" id="doorTypePanel" style="display:none"><div class="ref-panel-header"><div class="rph-title"><i class="fa fa-map-location-dot"></i> 2D Layout Reference</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorTypePanel')"><i class="fa fa-xmark"></i></button></div><div class="ref-panel-body"><div class="ref-img-wrap" onclick="openLightbox(IMGS.egress,'2D Layout')"><img id="imgEgress" src="/api/placeholder/800/450" alt="Egress"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Enlarge</div></div></div></div>
           </div>
           <div class="field-group col-span-2" style="margin-bottom:14px">
             <label class="field-label">ประเภทบาน (Door Leaf) *</label>
@@ -737,25 +586,22 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
             <select class="field-select" id="doorLeaf" required style="display:none"><option value="">Select...</option><option>Swinging Type - Double Door</option><option>Swinging Type - Single Door</option><option>Horizontal Sliding Door - Double Door</option><option>Horizontal Sliding Door - Single Door</option><option>Vertical Sliding Door</option><option>Door missing</option></select>
           </div>
           <div class="field-group col-span-2" style="margin-bottom:14px">
-            <div class="label-row"><label class="field-label">กลไกการเปิดประตู (Mechanism) *</label><button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> กดเพื่อดูรูปตัวอย่าง</button></div>
+            <div class="label-row"><label class="field-label">กลไกการเปิดประตู (Mechanism) *</label><button type="button" class="info-btn" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-image"></i> ดูรูปตัวอย่าง</button></div>
             <div class="mech-cards">
               <div class="mc-card" onclick="selectMechanism('Push Bar',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="8" y="10" width="84" height="52" rx="4" fill="#e3f2fd" stroke="#2266FF" stroke-width="1.5"/><rect x="20" y="33" width="60" height="8" rx="4" fill="#2266FF"/><text x="50" y="56" text-anchor="middle" font-size="8" fill="#2266FF" font-family="Arial" font-weight="700">PUSH BAR</text></svg><div class="mc-name">Push Bar</div></div>
               <div class="mc-card" onclick="selectMechanism('Push Bar with vertical panic bolt',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="8" y="10" width="84" height="52" rx="4" fill="#e3f2fd" stroke="#2266FF" stroke-width="1.5"/><rect x="20" y="33" width="60" height="7" rx="3.5" fill="#2266FF"/><rect x="45" y="10" width="6" height="52" rx="3" fill="#1976d2" opacity=".5"/></svg><div class="mc-name">Push Bar+Bolt</div></div>
-              <div class="mc-card" onclick="selectMechanism('Latch',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="10" y="10" width="56" height="52" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/><rect x="56" y="33" width="18" height="6" rx="3" fill="#2e7d32"/><circle cx="75" cy="36" r="4" fill="#4caf50"/><text x="38" y="56" text-anchor="middle" font-size="9" fill="#2e7d32" font-family="Arial" font-weight="700">LATCH</text></svg><div class="mc-name">Latch</div></div>
-              <div class="mc-card" onclick="selectMechanism('Knob',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#fff8f0"><rect x="10" y="10" width="56" height="52" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/><circle cx="70" cy="36" r="14" fill="#fff" stroke="#e65100" stroke-width="1.8"/><circle cx="70" cy="36" r="8" fill="#ff8a65"/><text x="38" y="56" text-anchor="middle" font-size="9" fill="#e65100" font-family="Arial" font-weight="700">KNOB</text></svg><div class="mc-name">Knob</div></div>
-              <div class="mc-card" onclick="selectMechanism('Auto-Slide',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f3e5f5"><rect x="5" y="14" width="90" height="6" rx="3" fill="#7b1fa2" opacity=".4"/><rect x="5" y="52" width="90" height="6" rx="3" fill="#7b1fa2" opacity=".4"/><rect x="10" y="20" width="38" height="32" rx="3" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/><rect x="52" y="20" width="38" height="32" rx="3" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/><text x="50" y="68" text-anchor="middle" font-size="7" fill="#7b1fa2" font-family="Arial" font-weight="700">AUTO SLIDE</text></svg><div class="mc-name">Auto-Slide</div></div>
+              <div class="mc-card" onclick="selectMechanism('Latch',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f0f5ff"><rect x="10" y="10" width="56" height="52" rx="4" fill="#e8f5e9" stroke="#2e7d32" stroke-width="1.5"/><rect x="56" y="33" width="18" height="6" rx="3" fill="#2e7d32"/><circle cx="75" cy="36" r="4" fill="#4caf50"/></svg><div class="mc-name">Latch</div></div>
+              <div class="mc-card" onclick="selectMechanism('Knob',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#fff8f0"><rect x="10" y="10" width="56" height="52" rx="4" fill="#fff3e0" stroke="#e65100" stroke-width="1.5"/><circle cx="70" cy="36" r="14" fill="#fff" stroke="#e65100" stroke-width="1.8"/><circle cx="70" cy="36" r="8" fill="#ff8a65"/></svg><div class="mc-name">Knob</div></div>
+              <div class="mc-card" onclick="selectMechanism('Auto-Slide',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f3e5f5"><rect x="5" y="14" width="90" height="6" rx="3" fill="#7b1fa2" opacity=".4"/><rect x="5" y="52" width="90" height="6" rx="3" fill="#7b1fa2" opacity=".4"/><rect x="10" y="20" width="38" height="32" rx="3" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/><rect x="52" y="20" width="38" height="32" rx="3" fill="#f3e5f5" stroke="#7b1fa2" stroke-width="1.5"/></svg><div class="mc-name">Auto-Slide</div></div>
               <div class="mc-card" onclick="selectMechanism('Manual-Slide',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#fce4ec"><rect x="5" y="14" width="90" height="6" rx="3" fill="#880e4f" opacity=".4"/><rect x="5" y="52" width="90" height="6" rx="3" fill="#880e4f" opacity=".4"/><rect x="10" y="20" width="38" height="32" rx="3" fill="#fce4ec" stroke="#c2185b" stroke-width="1.5"/><rect x="52" y="20" width="38" height="32" rx="3" fill="#fce4ec" stroke="#c2185b" stroke-width="1.5"/><rect x="43" y="30" width="14" height="12" rx="3" fill="#c2185b"/></svg><div class="mc-name">Manual-Slide</div></div>
               <div class="mc-card" onclick="selectMechanism('Other',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#e8eaf6"><rect x="15" y="12" width="70" height="48" rx="8" fill="#e8eaf6" stroke="#3949ab" stroke-width="1.5"/><text x="50" y="34" text-anchor="middle" font-size="20" fill="#3949ab" font-family="Arial" font-weight="900">?</text></svg><div class="mc-name">Other</div></div>
               <div class="mc-card" onclick="selectMechanism('N/A',this)"><i class="fa fa-check-circle mc-check"></i><svg class="mc-img" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg" style="background:#f5f5f5"><rect x="15" y="12" width="70" height="48" rx="8" fill="#eeeeee" stroke="#9e9e9e" stroke-width="1.5" stroke-dasharray="5,3"/><text x="50" y="40" text-anchor="middle" font-size="16" fill="#757575" font-family="Arial" font-weight="900">N/A</text></svg><div class="mc-name">N/A</div></div>
             </div>
             <select class="field-select" id="mechanism" required style="display:none"><option value="">Select...</option><option>Push Bar</option><option>Push Bar with vertical panic bolt</option><option>Latch</option><option>Knob</option><option>Auto-Slide</option><option>Manual-Slide</option><option>Other</option><option>N/A</option></select>
-            <div class="ref-panel" id="doorLeafPanel" style="display:none">
-              <div class="ref-panel-header"><div class="rph-title"><i class="fa fa-door-open"></i> Door Types &amp; Mechanisms</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-xmark"></i></button></div>
-              <div class="ref-panel-body"><div class="ref-img-wrap" onclick="openLightbox(IMGS.doorLeaf,'Door Types')"><img id="imgDoorLeaf" src="/api/placeholder/813/327" alt="Door Types"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Enlarge</div></div></div>
-            </div>
+            <div class="ref-panel" id="doorLeafPanel" style="display:none"><div class="ref-panel-header"><div class="rph-title"><i class="fa fa-door-open"></i> Door Types &amp; Mechanisms</div><button class="ref-panel-close" type="button" onclick="togglePanel('doorLeafPanel')"><i class="fa fa-xmark"></i></button></div><div class="ref-panel-body"><div class="ref-img-wrap" onclick="openLightbox(IMGS.doorLeaf,'Door Types')"><img id="imgDoorLeaf" src="/api/placeholder/813/327" alt="Door Types"><div class="ref-img-zoom"><i class="fa fa-magnifying-glass-plus"></i> Enlarge</div></div></div></div>
           </div>
           <div style="display:grid;gap:9px;margin-top:4px">
-            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูเปิดด้วยการกระทำเดียว? (Single motion?)</div><div class="ys">การที่ผู้ใช้งานสามารถปลดล็อกและเปิดประตูเพื่อออกจากพื้นที่ได้ด้วยการเคลื่อนไหวเพียงอย่างเดียว โดยไม่ต้องทำหลายขั้นตอนต่อเนื่องกัน</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="smYes" onclick="setField('singleMotion','Yes','sm')">Yes</button><button type="button" class="ynna-btn no" id="smNo" onclick="setField('singleMotion','No','sm')">No</button><button type="button" class="ynna-btn na active" id="smNA" onclick="setField('singleMotion','N/A','sm')">N/A</button></div></div>
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูเปิดด้วยการกระทำเดียว? (Single motion?)</div><div class="ys">ปลดล็อกและเปิดด้วยการเคลื่อนไหวเพียงอย่างเดียว</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="smYes" onclick="setField('singleMotion','Yes','sm')">Yes</button><button type="button" class="ynna-btn no" id="smNo" onclick="setField('singleMotion','No','sm')">No</button><button type="button" class="ynna-btn na active" id="smNA" onclick="setField('singleMotion','N/A','sm')">N/A</button></div></div>
             <input type="hidden" id="singleMotion" value="N/A">
             <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูเปิดในทิศทางหนีออก? (Egress direction?)</div><div class="ys">ทิศทางสอดคล้องกับเส้นทางหนีไฟ</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="esYes" onclick="setField('egressSwing','Yes','es')">Yes</button><button type="button" class="ynna-btn no" id="esNo" onclick="setField('egressSwing','No','es')">No</button><button type="button" class="ynna-btn na active" id="esNA" onclick="setField('egressSwing','N/A','es')">N/A</button></div></div>
             <input type="hidden" id="egressSwing" value="N/A">
@@ -764,177 +610,62 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
           </div>
         </div>
       </div>
-
-      <!-- S3 -->
       <div class="form-card">
         <div class="form-section">
-          <div class="form-section-title"><div class="section-num">3</div><div><h2>Safety &amp; Compliance</h2><p>Security access, local law &amp; RBA compliance status</p></div></div>
+          <div class="form-section-title"><div class="section-num">3</div><div><h2>Safety &amp; Compliance</h2><p>Security access, local law &amp; RBA</p></div></div>
           <div style="display:grid;gap:9px;margin-bottom:14px">
-
-            <!-- secAccess — FIXED: unique IDs, correct onclick, proper </button> closing tags -->
-            <div class="ynna-card">
-              <div class="ynna-info">
-                <div class="yl">ประตูติดตั้งระบบควบคุมการเข้าออก (Access Control) หรือไม่ (Does the door install "Security access control?)</div>
-                <div class="ys">มีระบบควบคุมการเข้า-ออก?</div>
-              </div>
-              <div class="ynna-btns">
-                <button type="button" class="ynna-btn yes" id="saYes" onclick="setField('secAccess','Yes','sa')">Yes</button>
-                <button type="button" class="ynna-btn no" id="saNo" onclick="setField('secAccess','No','sa')">No</button>
-                <button type="button" class="ynna-btn na active" id="saNA" onclick="setField('secAccess','N/A','sa')">N/A</button>
-                <button type="button" class="ynna-btn reconfirm" id="saRC" onclick="setField('secAccess','Re-confirm','sa')">Re-confirm</button>
-              </div>
-            </div>
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูติดตั้งระบบควบคุมการเข้าออก (Access Control)?</div><div class="ys">มีระบบควบคุมการเข้า-ออก?</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="saYes" onclick="setField('secAccess','Yes','sa')">Yes</button><button type="button" class="ynna-btn no" id="saNo" onclick="setField('secAccess','No','sa')">No</button><button type="button" class="ynna-btn na active" id="saNA" onclick="setField('secAccess','N/A','sa')">N/A</button><button type="button" class="ynna-btn reconfirm" id="saRC" onclick="setField('secAccess','Re-confirm','sa')">Re-confirm</button></div></div>
             <input type="hidden" id="secAccess" value="N/A">
-
-            <!-- fireReentry — FIXED: unique IDs, correct onclick, proper </button> closing tags -->
-            <div class="ynna-card">
-              <div class="ynna-info">
-                <div class="yl">ประตูนี้ใช้สำหรับหน่วยดับเพลิงกลับเข้าอาคารได้หรือไม่? (Can this door be used for external fire brigade re-entry?)</div>
-                <div class="ys">ประตูหนีไฟถูกออกแบบให้คน หนีออก (Egress) ได้ง่าย แต่ในเหตุเพลิงไหม้ เจ้าหน้าที่ดับเพลิงอาจต้อง เข้ามาภายในอาคาร (Re-entry)</div>
-              </div>
-              <div class="ynna-btns">
-                <button type="button" class="ynna-btn yes" id="frYes" onclick="setField('fireReentry','Yes','fr')">Yes</button>
-                <button type="button" class="ynna-btn no" id="frNo" onclick="setField('fireReentry','No','fr')">No</button>
-                <button type="button" class="ynna-btn na active" id="frNA" onclick="setField('fireReentry','N/A','fr')">N/A</button>
-                <button type="button" class="ynna-btn reconfirm" id="frRC" onclick="setField('fireReentry','Re-confirm','fr')">Re-confirm</button>
-              </div>
-            </div>
+            <div class="ynna-card"><div class="ynna-info"><div class="yl">ประตูนี้ใช้สำหรับหน่วยดับเพลิงกลับเข้าอาคารได้หรือไม่?</div><div class="ys">Fire brigade re-entry</div></div><div class="ynna-btns"><button type="button" class="ynna-btn yes" id="frYes" onclick="setField('fireReentry','Yes','fr')">Yes</button><button type="button" class="ynna-btn no" id="frNo" onclick="setField('fireReentry','No','fr')">No</button><button type="button" class="ynna-btn na active" id="frNA" onclick="setField('fireReentry','N/A','fr')">N/A</button><button type="button" class="ynna-btn reconfirm" id="frRC" onclick="setField('fireReentry','Re-confirm','fr')">Re-confirm</button></div></div>
             <input type="hidden" id="fireReentry" value="N/A">
-
           </div>
           <div class="form-grid">
-            <div class="field-group">
-              <label class="field-label">ระบบควบคุมการเข้าออกจะปลดล็อกเมื่อ...(Security access control system...)</label>
-              <select class="field-select" id="releaseCondition">
-                <option value="">Select...</option>
-                <option value="A">A. When Building General Alarm Activated (เมื่อระบบสัญญาณเตือนภัยของอาคารทำงาน)</option>
-                <option value="B">B. When No Power Supplied (เมื่อไฟฟ้าดับหรือไม่มีแหล่งจ่ายไฟ)</option>
-                <option value="C">C. No Support (ไม่รองรับ)</option>
-                <option value="D">D. Both A &amp; B (ทั้งข้อ A และข้อ B)</option>
-                <option value="E">E. Re confirm (รอการยืนยันผล / ต้องตรวจสอบเพิ่มเติม)</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">สอดคล้องตามกฎหมาย (Complied with Local Law)</label>
-              <select class="field-select" id="localLaw" required>
-                <option value="">Select...</option>
-                <option value="Complied">Complied (สอดคล้องตามข้อกำหนด)</option>
-                <option value="Non-Complied">Non-Complied (ไม่สอดคล้องตามข้อกำหนด)</option>
-                <option value="Re-confirm">Re-confirm (รอการยืนยันผล / ต้องตรวจสอบเพิ่มเติม)</option>
-                <option value="N/A">N/A (ไม่เกี่ยวข้อง)</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label class="field-label">สอดคล้องตามมาตรฐาน RBA (Complied with RBA)</label>
-              <select class="field-select" id="rba" required>
-                <option value="">Select...</option>
-                <option value="Complied">Complied (สอดคล้องตามข้อกำหนด)</option>
-                <option value="Non-Complied">Non-Complied (ไม่สอดคล้องตามข้อกำหนด)</option>
-                <option value="Re-confirm">Re-confirm (รอการยืนยันผล / ต้องตรวจสอบเพิ่มเติม)</option>
-                <option value="N/A">N/A (ไม่เกี่ยวข้อง)</option>
-              </select>
-            </div>
-            <div class="field-group col-span-2">
-              <label class="field-label">หมายเหตุ (Remark)</label>
-              <textarea class="field-textarea" id="remark" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea>
-            </div>
+            <div class="field-group"><label class="field-label">ระบบควบคุมการเข้าออกจะปลดล็อกเมื่อ...</label><select class="field-select" id="releaseCondition"><option value="">Select...</option><option value="A">A. When Building General Alarm Activated</option><option value="B">B. When No Power Supplied</option><option value="C">C. No Support</option><option value="D">D. Both A &amp; B</option><option value="E">E. Re confirm</option></select></div>
+            <div class="field-group"><label class="field-label">Complied with Local Law *</label><select class="field-select" id="localLaw" required><option value="">Select...</option><option value="Complied">Complied</option><option value="Non-Complied">Non-Complied</option><option value="Re-confirm">Re-confirm</option><option value="N/A">N/A</option></select></div>
+            <div class="field-group"><label class="field-label">Complied with RBA *</label><select class="field-select" id="rba" required><option value="">Select...</option><option value="Complied">Complied</option><option value="Non-Complied">Non-Complied</option><option value="Re-confirm">Re-confirm</option><option value="N/A">N/A</option></select></div>
+            <div class="field-group col-span-2"><label class="field-label">หมายเหตุ (Remark)</label><textarea class="field-textarea" id="remark" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea></div>
           </div>
         </div>
         <div class="export-section">
           <div class="export-title"><i class="fa fa-file-export"></i> Export Data</div>
-          <div class="export-grid">
-            <button type="button" class="export-btn" onclick="exportCSV()"><i class="fa fa-table" style="color:#1d7d4f"></i> Excel / CSV</button>
-            <button type="button" class="export-btn" onclick="window.print()"><i class="fa fa-file-pdf" style="color:#c0001a"></i> PDF / Print</button>
-          </div>
+          <div class="export-grid"><button type="button" class="export-btn" onclick="exportCSV()"><i class="fa fa-table" style="color:#1d7d4f"></i> Excel / CSV</button><button type="button" class="export-btn" onclick="window.print()"><i class="fa fa-file-pdf" style="color:#c0001a"></i> PDF / Print</button></div>
         </div>
       </div>
-
-      <div class="action-area">
-        <button type="submit" class="btn-primary" id="submitBtn"><i class="fa fa-paper-plane"></i> Submit Inspection</button>
-        <button type="button" class="btn-secondary" onclick="cancelEdit()">Cancel</button>
-      </div>
+      <div class="action-area"><button type="submit" class="btn-primary" id="submitBtn"><i class="fa fa-paper-plane"></i> Submit Inspection</button><button type="button" class="btn-secondary" onclick="cancelEdit()">Cancel</button></div>
     </form>
   </div>
 
   <!-- REPORTS -->
   <div class="page" id="page-reports">
     <div class="page-header"><h1>Reports</h1><p>ดู กรอง แก้ไข ลบ และส่งออกข้อมูล</p></div>
-    <div class="filter-bar">
-      <select class="field-select" id="filterBU" style="max-width:150px"><option value="">All BU</option><option value="PRB">PRB</option><option value="BPI-HDD">BPI-HDD</option><option value="BPI-THO">BPI-THO</option></select>
-      <select class="field-select" id="filterCompliance" style="max-width:140px"><option value="">All Status</option><option>Complied</option><option>Non-Complied</option><option>N/A</option></select>
-      <input class="field-input" type="date" id="filterDate" style="max-width:150px">
-      <button class="btn-filter" onclick="applyFilter()"><i class="fa fa-filter"></i> Filter</button>
-    </div>
-    <div class="report-actions">
-      <button class="btn-outline" onclick="exportCSV()"><i class="fa fa-download"></i> Export CSV</button>
-      <button class="btn-outline" onclick="window.print()"><i class="fa fa-print"></i> Print</button>
-      <button class="btn-outline danger" onclick="openClearModal('filtered')" id="clearFilteredBtn"><i class="fa fa-trash"></i> ล้างที่กรอง</button>
-      <button class="btn-outline danger" onclick="openClearModal('all')"><i class="fa fa-trash-can"></i> ล้างทั้งหมด</button>
-    </div>
-    <div class="table-card">
-      <div class="report-table-wrap">
-        <table class="report-table">
-          <thead><tr><th>#</th><th>Date</th><th>BU</th><th>Building</th><th>Floor</th><th>Area/Room</th><th>Occ.Type</th><th>Emg.Exit</th><th>Occ.</th><th>Door Type</th><th>Local Law</th><th>RBA</th><th>Inspector</th><th>Actions</th></tr></thead>
-          <tbody id="reportBody"><tr><td colspan="14" style="text-align:center;padding:36px;color:var(--outline)"><i class="fa fa-inbox" style="font-size:26px;display:block;margin-bottom:7px;opacity:.3"></i>กำลังโหลด...</td></tr></tbody>
-        </table>
-      </div>
-    </div>
+    <div class="filter-bar"><select class="field-select" id="filterBU" style="max-width:150px"><option value="">All BU</option><option value="PRB">PRB</option><option value="BPI-HDD">BPI-HDD</option><option value="BPI-THO">BPI-THO</option></select><select class="field-select" id="filterCompliance" style="max-width:140px"><option value="">All Status</option><option>Complied</option><option>Non-Complied</option><option>N/A</option></select><input class="field-input" type="date" id="filterDate" style="max-width:150px"><button class="btn-filter" onclick="applyFilter()"><i class="fa fa-filter"></i> Filter</button></div>
+    <div class="report-actions"><button class="btn-outline" onclick="exportCSV()"><i class="fa fa-download"></i> Export CSV</button><button class="btn-outline" onclick="window.print()"><i class="fa fa-print"></i> Print</button><button class="btn-outline danger" onclick="openClearModal('filtered')"><i class="fa fa-trash"></i> ล้างที่กรอง</button><button class="btn-outline danger" onclick="openClearModal('all')"><i class="fa fa-trash-can"></i> ล้างทั้งหมด</button></div>
+    <div class="table-card"><div class="report-table-wrap"><table class="report-table"><thead><tr><th>#</th><th>Date</th><th>BU</th><th>Building</th><th>Floor</th><th>Area/Room</th><th>Occ.Type</th><th>Emg.Exit</th><th>Occ.</th><th>Door Type</th><th>Local Law</th><th>RBA</th><th>Inspector</th><th>Actions</th></tr></thead><tbody id="reportBody"><tr><td colspan="14" style="text-align:center;padding:36px;color:var(--outline)">กำลังโหลด...</td></tr></tbody></table></div></div>
   </div>
 
   <!-- SETTINGS -->
   <div class="page" id="page-settings">
     <div class="page-header"><h1>Settings</h1><p>จัดการผู้ใช้งาน สิทธิ์การเข้าถึง และตั้งค่าระบบ</p></div>
-    <div class="settings-section">
-      <div class="settings-section-header"><div><h2><i class="fa fa-users-gear"></i> User Management</h2><p>เพิ่ม แก้ไข และจัดการสิทธิ์ผู้ใช้งานระบบ</p></div><button class="btn-add-user" onclick="openAddUser()"><i class="fa fa-user-plus"></i> เพิ่ม User</button></div>
-      <div class="user-list" id="userList"><div class="empty-state" style="padding:28px"><i class="fa fa-users" style="font-size:32px"></i><p style="font-size:13px;font-weight:600">กำลังโหลด User...</p></div></div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-section-header"><div><h2><i class="fa fa-circle-info"></i> System Information</h2><p>ข้อมูลระบบ</p></div></div>
-      <div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Version</div><div style="font-size:16px;font-weight:800;color:var(--wd-blue)">v1.1</div></div>
-        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Records</div><div style="font-size:16px;font-weight:800;color:var(--success)" id="settingsRecordCount">0</div></div>
-        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Database</div><div style="font-size:13px;font-weight:700;color:var(--on-surface)">JS (JavaScript)</div></div>
-        <div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Project</div><div style="font-size:12px;font-weight:700;color:var(--on-surface)">Exit Route Compliance Survey</div></div>
-      </div>
-    </div>
-    <div class="settings-section">
-      <div class="settings-section-header"><div><h2><i class="fa fa-triangle-exclamation" style="color:var(--error)"></i> Danger Zone</h2><p>การดำเนินการที่ไม่สามารถย้อนกลับได้</p></div></div>
-      <div class="danger-zone"><div class="danger-zone-title"><i class="fa fa-skull-crossbones"></i> ระวัง — การดำเนินการถาวร</div><div class="danger-actions"><button class="btn-danger" onclick="openClearModal('all')"><i class="fa fa-trash-can"></i> ล้างข้อมูลทั้งหมด</button><button class="btn-danger" onclick="openClearModal('today')"><i class="fa fa-calendar-xmark"></i> ล้างข้อมูลวันนี้</button></div></div>
-    </div>
+    <div class="settings-section"><div class="settings-section-header"><div><h2><i class="fa fa-users-gear"></i> User Management</h2><p>เพิ่ม แก้ไข และจัดการสิทธิ์ผู้ใช้งาน</p></div><button class="btn-add-user" onclick="openAddUser()"><i class="fa fa-user-plus"></i> เพิ่ม User</button></div><div class="user-list" id="userList"></div></div>
+    <div class="settings-section"><div class="settings-section-header"><div><h2><i class="fa fa-circle-info"></i> System Information</h2></div></div><div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Version</div><div style="font-size:16px;font-weight:800;color:var(--wd-blue)">v1.3</div></div><div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Records</div><div style="font-size:16px;font-weight:800;color:var(--success)" id="settingsRecordCount">0</div></div><div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">PRB Rooms</div><div style="font-size:13px;font-weight:700;color:var(--on-surface)">334 rooms · 10 Buildings</div></div><div style="background:var(--surface-container);border-radius:var(--radius-md);padding:14px"><div style="font-size:10px;font-weight:700;color:var(--outline);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">BPI Rooms</div><div style="font-size:13px;font-weight:700;color:var(--on-surface)">227 rooms (HDD 114 + THO 113)</div></div></div></div>
+    <div class="settings-section"><div class="settings-section-header"><div><h2><i class="fa fa-triangle-exclamation" style="color:var(--error)"></i> Danger Zone</h2></div></div><div class="danger-zone"><div class="danger-zone-title"><i class="fa fa-skull-crossbones"></i> ระวัง — การดำเนินการถาวร</div><div class="danger-actions"><button class="btn-danger" onclick="openClearModal('all')"><i class="fa fa-trash-can"></i> ล้างข้อมูลทั้งหมด</button><button class="btn-danger" onclick="openClearModal('today')"><i class="fa fa-calendar-xmark"></i> ล้างข้อมูลวันนี้</button></div></div></div>
   </div>
 
-  <!-- HOW TO -->
+  <!-- HOWTO -->
   <div class="page" id="page-howto">
     <div class="page-header"><h1>วิธีใช้งาน</h1><p>คู่มือการใช้งาน SafeGuard Inspection System</p></div>
-    <div class="howto-card">
-      <div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน</div>
-      <div class="howto-steps">
-        <div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">Login เข้าระบบ</div><div class="sc-desc">ใช้ Username/Password ที่ Admin กำหนดให้</div></div></div>
-        <div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time</div></div></div>
-        <div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">บันทึกการตรวจสอบ</div><div class="sc-desc">เลือก BU → Building → Room → กรอกข้อมูล → Submit</div></div></div>
-        <div class="howto-step"><div class="step-badge">4</div><div class="step-content"><div class="sc-title">Settings — จัดการ Users</div><div class="sc-desc">Admin เพิ่ม/แก้ไข/ลบ User และกำหนด Role ได้ที่เมนู Settings</div></div></div>
-      </div>
-      <div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์</span></div>
-    </div>
+    <div class="howto-card"><div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน</div><div class="howto-steps"><div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">Login เข้าระบบ</div><div class="sc-desc">ใช้ Username/Password ที่ Admin กำหนดให้</div></div></div><div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time พร้อมกราฟ</div></div></div><div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">บันทึกการตรวจสอบ</div><div class="sc-desc">เลือก BU → Building → Room → กรอกข้อมูล → Submit</div></div></div><div class="howto-step"><div class="step-badge">4</div><div class="step-content"><div class="sc-title">เพิ่มชื่อห้องเอง</div><div class="sc-desc">หากไม่พบชื่อห้องใน list กดปุ่ม "ไม่พบชื่อห้อง? เพิ่มเอง"</div></div></div></div><div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์ผ่าน Firebase Firestore</span></div></div>
   </div>
 
   <!-- ABOUT -->
   <div class="page" id="page-about">
     <div class="page-header"><h1>About</h1><p>ข้อมูลระบบและองค์กร</p></div>
-    <div class="about-hero">
-      <div class="ah-logo">SafeGuard <span>INSPECTION SYSTEM</span></div>
-      <div class="ah-ver"><i class="fa fa-tag"></i> Version 1.1 — Get Started Aug 15'@2026</div>
-      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div>
-    </div>
-    <div class="about-section">
-      <div class="about-item"><div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div><div class="about-text"><div class="at">Developed by @Ploypalin Miyampul</div><div class="as">Security Operation Center  | +6635277032</div></div></div>
-      <div class="about-item"><div class="about-icon" style="background:var(--success-bg);color:var(--success)"><i class="fa fa-building"></i></div><div class="about-text"><div class="at">Organization</div><div class="as">WD Storage Technologies (Thailand) Ltd. — MFM Security · APAC</div></div></div>
-    </div>
+    <div class="about-hero"><div class="ah-logo">SafeGuard <span>INSPECTION SYSTEM</span></div><div class="ah-ver"><i class="fa fa-tag"></i> Version 1.3 — PRB 334 rooms + BPI 227 rooms</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div></div>
+    <div class="about-section"><div class="about-item"><div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div><div class="about-text"><div class="at">Developed by @Ploypalin Miyampul</div><div class="as">Security Operation Center | +6635277032</div></div></div><div class="about-item"><div class="about-icon" style="background:var(--success-bg);color:var(--success)"><i class="fa fa-building"></i></div><div class="about-text"><div class="at">Organization</div><div class="as">WD Storage Technologies (Thailand) Ltd. — MFM Security · APAC</div></div></div></div>
   </div>
-
 </main>
 
-<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav" id="appBottomNav" style="display:none">
   <div class="bottom-nav-item active" id="bnHome" onclick="showPage('home',null,'bnHome')"><i class="fa fa-house"></i><span>Home</span></div>
   <div class="bottom-nav-item" id="bnInspect" onclick="showPage('inspect',null,'bnInspect')"><i class="fa fa-door-open"></i><span>Inspect</span></div>
@@ -944,163 +675,89 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 </nav>
 
 <script>
+/* ══ PRB ROOMS — COMPLETE (334 rooms, 10 buildings, from PRB Location Room Number.txt) ══ */
 const PRB_ROOMS={
-  'admin':['Emer Office engineering (New)','Emer Office 3','Emer Canteen OP10@17','Emer Loading Canteen OP11@17','Emer Office 4','Emer Office 5'],
-  'Phase # 1':['Emer Mainentrance','Emer Reading Room','Electrical Room (MR 1)','TIE TR2 Room','Machine Room 1','Emer Corridor 1','Emer Corridor 2','AHU Room 1','Emer Corridor 3','SUB2','Transfomer Yard2 (SUB2)','Emer Main Corridor 1','Emer Link Bridge','Emer final 1','Emer final 2','Emer Part Stock','Emer Cleaning','Emer Part Stock 1','Emer Cnnecting R','Emer Cnnecting L','Emer Relax Room'],
-  'Phase # 2':['Emer Mainentrance','Emer Link Bridge','Machine Room 2','Door UD/UDI Plant 5','Emer Part Stock 2','Emer Unit Stork','Emer Main Corridor 2','Emer Corridor 6','Transfomer Yard2 (SUB 4)','Substation 4 & TR/Yard 4 Ph.2','electrical room (SUB 4)','Fire Exit Link Bridge Area OP2','Fire Exit Link Bridge Area IP7','electrical room (SUB 3/3)','Emer Corridor 5','electrical room (SUB 3)','Emer Corridor 4','Emer PCS'],
-  'Phase # 3':['Emer Door TX 01','Emer Door Shipping 1','Emer Seal Process Shipping Dock [ No.5 ]','Shutter Door Shipping Dock [ No.4 ]','Emer Door Small Chiller','Emer Door Stair Laser Welding','Small Chiller 2','Emer Door Shipping 2 (TLC)','Emer Door Conveyor (Tranfer door)','Service Conveyor','Emer Door Featuring 2','electrical room Sub 8 TCL door1','electrical room Sub 8 TCL door2','Transformer Sub 8 TLC','Emer Door Featuring 1','Transformer Sub 7 TLC','Emer Door Transformer Sub 7'],
-  'Phase # 4':['Entrance Matting OP4','Lift Lobby IP5','Fire Exit Testing Area GL. I-11 OP6','Fire Exit Testing Area GL. E-11 IP14','Fire Exit Staging Area 3 IP6','Fire Exit Corridor IP10@3','Transformer room3#2','Transformer room3#1','MDB Room3','Utility3 Area','Fire Exit Corridor IP3','Fire Exit Testing Area GL. M-7','Fire Exit Locker Area IP3','Fire Exit AHU Room 1 IP9','Fire Exit AHU Room 2'],
-  'Phase # 5':['P5_1Fl-Stair No.5#2','P5_1Fl-Stair No.5#1','P5_1Fl-MDB Tranformer4','P5_1Fl-MDB Tranformer3','P5_1Fl-Emer MDB Room1','P5_1Fl-MDB Tranformer1','P5_1Fl-MDB Tranformer2','P5_1Fl-Stair No.2','D-G-3-6 (NO NAME)','P5_1Fl-AHU Room 1','P5-1Fl-Small Chiller Room','P5_1Fl-Stair No.1#1','P5_1Fl-Stair No.1#2','C-G-2-1 (NAME)','D-G-2-1 (1Door)','C-G-2-2 (2Door)','P5_1Fl-Stair No.3','P5_1Fl-Stair No.7','P5_1Fl-Stair No.4#1','P5_1Fl-Stair No.4#2','P5_1Fl-Stair No.4#3','P5_2nd-Stair No.5','P5_2Fl-MDB Tranformer4','P5_2Fl-MDB Tranformer3','P5-2Fl-Emer MDB Room2','P5_2Fl-MDB Tranformer1','P5_2Fl-MDB Tranformer2','P5_2nd-Stair2','P5-2Fl-Emer AHU Room1','P5_2nd-Stair1','P5_2nd-Stair6','P5_2nd-Stair3','P5_2nd-Stair 7','P5_2nd-Stair 4#1','P5_2nd-Stair 4#2','P5_3rd-Stair5','P5-3Fl-MDB Loading','P5_3Fl-MDB Tranformer Room6','P5_3Fl-MDB Tranformer Room5','P5_3Fl-MDB Tranformer Room4','P5_3Fl-MDB Tranformer Room3','P5_3Fl-MDB Tranformer Room2','P5_3Fl-MDB Tranformer Room1','P5_3Fl-Emer MDB Room3','P5_3rd-Stair2','P5-3Fl-Shutter Door Loading','P5_3rd-Stair1','P5_3rd-Stair6','P5_3rd-Stair3','P5_3rd-Stair7','3rd Fl--Stair No.4#2','3rd Fl-Stair No.4#1','P5_Roof Fl-Stair No.3','P5_Roof Fl-Stair No.4'],
-  'Utility':['Fire Exit MDB/HV Room IP2 (UT3)','Fire Exit Chiller Room IP5@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP6@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP7@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP4@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP8@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP9@2EN#17 (Shutter door UT3)','Transfomer Room IP1 (UT3)','Fire Exit MDB/HV Room IP3 (UT3)','Emer Chiller11 ( UT4)','Utility_Emer Chiller6 ( UT4)','Utility_Emer Air Com2#2 ( UT4)','Utility_Emer Air Com2 ( UT4)','Utility_Emer Air Com1#2 ( UT4)','Utility_Emer Air Com1 ( UT4)','Utility_Shutter Door Air Com2 ( UT4)','Utility_Shutter Door Chiller1 ( UT4)','Utility_Shutter Door Chiller2 ( UT4)','Utility_Shutter Door Chiller3 ( UT4)','Utility_Shutter Door Chiller4 ( UT4)','Utility_Shutter Door Chiller5 ( UT4)','Emer Chiller14 ( UT4)','Utility_Shutter Door Chiller6 ( UT4)','Utility_Shutter Door Chiller7 ( UT4)','Utility_Shutter Door Chiller8 ( UT4)','Utility_Shutter Door Chiller9 ( UT4)','Emer Chiller10 ( UT4)'],
-  'Support Building':['Car Park_Roof FL-Stair No.1','Car Park_3FL-Stair No.1','Car Park_3FL-Emer Canteen No.3','Car Park_3FL-Emer Canteen No.2','Car Park_3FL-Emer Canteen No.1']
+'admin':['Emer Office engineering (New)','Emer Office 3','Emer Canteen OP10@17','Emer Loading Canteen OP11@17','Emer Office 4','Emer Office 5','Entrance Vestibule','Interview','Mail Room','JK F Room','Lobby','Office CAS 17 (Admin)','Office CAS 16 (finance)','Payroll Office','IT Help Desk','Fax/Copy Finance','Entrance Free Zone 2','ENG Office','IT Helpdesk'],
+'Phase # 1':['Emer Mainentrance','Emer Reading Room','Electrical Room (MR 1)','TIE TR2 Room','Machine Room 1','Emer Corridor 1','Emer Corridor 2','AHU Room 1','Emer Corridor 3','SUB2','Transfomer Yard2 (SUB2)','Emer Main Corridor 1','Emer Link Bridge','Emer final 1','Emer final 2','Emer Part Stock','Emer Cleaning','Emer Part Stock 1','Emer Cnnecting R','Emer Cnnecting L','Emer Relax Room','F/A Lab','Monitor','Security','Parts Stock','Entrance Free Zone 1A','Entrance Free Zone 1B','Receving','Main Entrance#1','Main Entrance#2','Main Entrance#3','Main Entrance#4','Health Center','PRB Data Center','ITO OFFICE','UPS','M$E MACHINE SHOP ROOM','New ORT Test','Medical','MATERRIALS LABORATORY','Autodoor Lab','CCTV Server Room IN','CCTV Server Room','RI Room','ORT/ MI','ORT#2 [ Test ]','Machine Mr1','1R/I Room#1 IN','Leo Clean Room','Receiving#1','R/I Room#1 OUT'],
+'Phase # 2':['Emer Mainentrance','Emer Link Bridge','Machine Room 2','Door UD/UDI Plant 5','Emer Part Stock 2','Emer Unit Stork','Emer Main Corridor 2','Emer Corridor 6','Transfomer Yard2 (SUB 4)','Substation 4 & TR/Yard 4 Ph.2','electrical room (SUB 4)','Fire Exit Link Bridge Area OP2','Fire Exit Link Bridge Area IP7','electrical room (SUB 3/3)','Emer Corridor 5','electrical room (SUB 3)','Emer Corridor 4','Emer PCS','PE LAB F/A Room','CST Room','Main Entrance Ph.2','MSP2','Machine Room 2','FA LAB','DAS CR LAB','Main Entrance Ph.2 #5','Main Entrance Ph.2 #6','Acoustic Lab','Shock&Vibration Lab','Calibration Lab','TEE Office','UTILITY 2','DEBUG CENTER','Debug Analysic','P2_Beam Lab','TE LAB'],
+'Phase # 3':['Emer Door TX 01','Emer Door Shipping 1','Emer Seal Process Shipping Dock [ No.5 ]','Shutter Door Shipping Dock [ No.4 ]','Emer Door Small Chiller','Emer Door Stair Laser Welding','Small Chiller 2','Emer Door Shipping 2 (TLC)','Emer Door Conveyor (Tranfer door)','Service Conveyor','Emer Door Featuring 2','electrical room Sub 8 TCL door1','electrical room Sub 8 TCL door2','Transformer Sub 8 TLC','Emer Door Featuring 1','Transformer Sub 7 TLC','Emer Door Transformer Sub 7','Main Entrance TLC','Main Entrance TLC 2','Units Stock 4','TLC Security Room','TLC Engineering Office # L','Laser Welding#3','Small Chiller 1','TLC Unit Stock 3 (Shipping)','TLC Packing Material [ Shipping ]','Laser Welding Room','TLC Engineering Office #R','Turnstile Phase2 Corridoor Link Bridge 1 IN','Turnstile Phase2 Corridoor Link Bridge 1 OUT','Turnstile Phase2 Corridoor Link Bridge 2 IN','Turnstile Phase2 Corridoor Link Bridge 2 OUT','BRC 2','BRC','Main Entrance ( TX2)'],
+'Phase # 4':['Entrance Matting OP4','Lift Lobby IP5','Fire Exit Testing Area GL. I-11 OP6','Fire Exit Testing Area GL. E-11 IP14','Fire Exit Staging Area 3 IP6','Fire Exit Corridor IP10@3','Transformer room3#2','Transformer room3#1','MDB Room3','Utility3 Area','Fire Exit Corridor IP3','Fire Exit Testing Area GL. M-7','Fire Exit Locker Area IP3','Fire Exit AHU Room 1 IP9','Fire Exit AHU Room 2','Utility Area','TestcoServer1','Network Server1','Storage','Link Bridge Area','Testco Server 2','Network Server2','Monitoring Data Server & SE Office','Bench Test & Repair Room','Spare Part Center','Entrance','TE AUTO MATION LABORTORY','Control Room','To Conveyor Area','HDD Storage','Turnstile Coridoor LinkBridge Tescolab IN1#1','Turnstile Coridoor LinkBridge Tescolab IN1#2','Turnstile Coridoor LinkBridge Tescolab OUT1#1','Turnstile Coridoor LinkBridge Tescolab OUT1#2'],
+'Phase # 5':['P5_1Fl-Stair No.5#2','P5_1Fl-Stair No.5#1','P5_1Fl-MDB Tranformer4','P5_1Fl-MDB Tranformer3','P5_1Fl-Emer MDB Room1','P5_1Fl-MDB Tranformer1','P5_1Fl-MDB Tranformer2','P5_1Fl-Stair No.2','D-G-3-6 (NO NAME)','P5_1Fl-AHU Room 1','P5-1Fl-Small Chiller Room','P5_1Fl-Stair No.1#1','P5_1Fl-Stair No.1#2','C-G-2-1 (NAME)','D-G-2-1 (1Door)','C-G-2-2 (2Door)','P5_1Fl-Stair No.3','P5_1Fl-Stair No.7','P5_1Fl-Stair No.4#1','P5_1Fl-Stair No.4#2','P5_1Fl-Stair No.4#3','P5_2nd-Stair No.5','P5_2Fl-MDB Tranformer4','P5_2Fl-MDB Tranformer3','P5-2Fl-Emer MDB Room2','P5_2Fl-MDB Tranformer1','P5_2Fl-MDB Tranformer2','P5_2nd-Stair2','P5-2Fl-Emer AHU Room1','P5_2nd-Stair1','P5_2nd-Stair6','P5_2nd-Stair3','P5_2nd-Stair 7','P5_2nd-Stair 4#1','P5_2nd-Stair 4#2','P5_3rd-Stair5','P5-3Fl-MDB Loading','P5_3Fl-MDB Tranformer Room6','P5_3Fl-MDB Tranformer Room5','P5_3Fl-MDB Tranformer Room4','P5_3Fl-MDB Tranformer Room3','P5_3Fl-MDB Tranformer Room2','P5_3Fl-MDB Tranformer Room1','P5_3Fl-Emer MDB Room3','P5_3rd-Stair2','P5-3Fl-Shutter Door Loading','P5_3rd-Stair1','P5_3rd-Stair6','P5_3rd-Stair3','P5_3rd-Stair7','3rd Fl--Stair No.4#2','3rd Fl-Stair No.4#1','P5_Roof Fl-Stair No.3','P5_Roof Fl-Stair No.4','AHU Room4','AHU Room5','Automation Debug Center','BMS Fatilic Control Room','EE Room','Engneering LAB','Helium Leak Test PM Overhaul Room','IDF Room3','TPE Command center','MSP Room & Contianer Center','IDF Room 1','Laser','Logistic Office','MSP Room & Contianer  Center','Storage Room','AHU Room1','AHU Room2','AHU Room3','IDF Roon2','MDB Room1','Small Chiller Room','2Fl-AHU Room2','BE Automation Center','P5_2Fl-Costomer Visit Room IN','P5_2Fl-Costomer Visit Room OUT','EE ROOM','2Fl-IDF Room3','Saturn Tester Spare Part Center','VMI Debug Room','2Fl-IDF Room1','IDF Room2','MDB Room2','IDF ROOM1','IDF ROOM2','IDF ROOM3','Costomer Visit Room','AHU Room','RMU&MDB Room3','RMU&MDB Room4','CleanRoom3 AREA'],
+'Utility':['Fire Exit MDB/HV Room IP2 (UT3)','Fire Exit Chiller Room IP5@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP6@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP7@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP4@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP8@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP9@2EN#17 (Shutter door UT3)','Transfomer Room IP1 (UT3)','Fire Exit MDB/HV Room IP3 (UT3)','Emer Chiller11 ( UT4)','Utility_Emer Chiller6 ( UT4)','Utility_Emer Air Com2#2 ( UT4)','Utility_Emer Air Com2 ( UT4)','Utility_Emer Air Com1#2 ( UT4)','Utility_Emer Air Com1 ( UT4)','Utility_Shutter Door Air Com2 ( UT4)','Utility_Shutter Door Chiller1 ( UT4)','Utility_Shutter Door Chiller2 ( UT4)','Utility_Shutter Door Chiller3 ( UT4)','Utility_Shutter Door Chiller4 ( UT4)','Utility_Shutter Door Chiller5 ( UT4)','Emer Chiller14 ( UT4)','Utility_Shutter Door Chiller6 ( UT4)','Utility_Shutter Door Chiller7 ( UT4)','Utility_Shutter Door Chiller8 ( UT4)','Utility_Shutter Door Chiller9 ( UT4)','Emer Chiller10 ( UT4)','UtILITY 1','Utility Building','Fire Exit Chiller Room IP5@2EN#17 (UT3)'],
+'Support Building':['Car Park_Roof FL-Stair No.1','Car Park_3FL-Stair No.1','Car Park_3FL-Emer Canteen No.3','Car Park_3FL-Emer Canteen No.2','Car Park_3FL-Emer Canteen No.1','AIR COM','MDB ROOM','Fire Exit Chiller Room'],
+'Parking':['FIRE PUMP HOUSE','P5-PARKING IN','P5-PARKING OUT','Turnstile IN-1','Turnstile IN-2','Turnstile IN-3','Turnstile IN-4','Turnstile OUT-1','Turnstile OUT-2','Turnstile OUT-3','Turnstile OUT-4','EE ROOM','CANTEEN','CAR PARK-3Fl-CORRIDOOR Link Bride (A4)','AHU ROOM','FAN ROOM'],
+'Outside':['Main Gate#1-1','Main Gate#1-2 Entry_R0_@2 EN#18','Main Gate#1-2 Exit_R1_@2 EN#18','Main Gate#2-1 Exit_R1_@1 EN#19','Main Gate#2 Motercycle','Main Gate#2-2 Entry_R0_@2 EN#19','Main Gate#2-2 Exit_R1_@2 EN#19','Main Gate#3','Main Gate#3-1 Exit_R1_@1 EN#20','Main Gate#3 Motercycle_Carpark','Main Gate#4','Main Gate#4-1 Exit_R1_@1 EN#21','Main Gate#4 Motercycle_Carpark_','Fitness Room','YOKA Room']
 };
-const BPI_ROOMS={'BPI-HDD':{'B3':['B3L11 MSL LAB','B3L110 HEAD MEDIA LAB','B3L111 FA STORE LAB','B3L112 PCBA LAB','B3L113 TPE LAB','B3L114 IT HUB 1D','B3L115 RSS-FEA-Office','B3L116 CST LAB','B3L12 CHARACTERIZATION LAB','B3L13 METROLOGY LAB','B3L14 FW&FIT LAB','B3L15 SPW LAB','B3L16 FA LAB-1','B3L16 FA LAB-2','B3L18 TDE LAB','B3L19 MECHANICAL LAB','B3L215 IT HUB MAZZANINE Room','B3L216 IT HELP DESK ROOM','B3L21.1 EXECUTIVE AREA-1','B3L21.2 EXECUTIVE AREA-2'],'B4':['B4L1 IT HUB Room 1B','B4L215 MDB RM. 4-6','B4L216 MDB RM. 4-11','B4L217 MDB RM. 4-12','B4L218 MDB RM. 4-9','B4L219 Test Eng Command Center','B4L210 X-CALIBRE LAB_1','B4L11 CCTV Room/Security room','B4L13 TOOLING INSPECTION LAB','B4L14 CALIBRATION LAB'],'B6':['B6L133 EE ROOM','B6L134 IT HUB','B6L135 IT HUB 1B','B6L153 Laser welding 1','B6L154 Laser welding 2','B6L155 Laser welding 3'],'Central canteen':['B-Canteen Center Entry 1','B-Canteen Center Entry 2','B-Canteen Center Entry 3','B-Canteen Center Entry 4','B-Canteen Center Entry 5']},'BPI-THO':{'B1':['B1L11* Exit Door 1/1','B1L12* Exit Door 1/2','B1L13* Exit Door 1/4','B1L1E IT HUB','B1L143 HUB COMPUTER 1B','B1L148 IT HUB 1D','B1L150 HUB COMPUTER 1A','B1L154 THO ME INVENTORY','B1L155 ENTRANCE OFFICE B1/7','B1L157 OFFICE B1-45','B1L161 FINANCE B1-28','B1L162 INNOVATION ROOM','B1L164 HGA Development Lab','B1L165 HGA Development Lab (Robot)'],'B2':['B2/1L141 IT HUB RM 1-10','B2/1L146 EXIT DOOR 14','B2L164 CCTV security room','B2L128 HUB COMPUTER L1A','B2L130 ACT / ACF','B2L131 BONDING ALT','B2L132 HSA-AME','B2L134 RESONANCE LAB','B2L152 THO MSL','B2L153 BFC STORAGE','B2L160 EXIT DOOR 1','B2L161 EXIT DOOR 4','B2L162 EXIT DOOR 10','B2L163 EXIT DOOR 5'],'B6':['B6L253 HUB COMPUTER','B6L341 HUB COMPUTER 3A','B6L343 HUB COMPUTER 3B'],'B9':['THO office B9 Back door','THO office B9 Main Entrance'],'Facility':['B/L1-FE&M HUB ROOM','B/L2-FACILITY FRONT','B/L2-FACILITY REAR'],'Facility building':['B/L1-FACILITY STORE','B/L1-SECURITY ROOM']}};
-const OCC_TYPE_DESC={'Office':'สำนักงาน — พื้นที่ทำงานทั่วไป ห้องประชุม','Production':'พื้นที่การผลิต / โรงงานผลิต — สายการผลิต','Chemical room':'ห้องเก็บสารเคมี — มีสารอันตราย','Electrical room':'ห้องไฟฟ้า — ห้อง MDB, ตู้ควบคุม','Clinic':'คลินิก / ห้องพยาบาล','Canteen':'โรงอาหาร — ห้องอาหาร ครัว','Multipurpose Hall':'ห้องอเนกประสงค์ / หอประชุม','Laboratory room':'ห้องปฏิบัติการ — Lab ทดสอบ','Car park building':'อาคารจอดรถ','Mix':'ใช้งานหลายประเภทในพื้นที่เดียวกัน','Other':'อื่น ๆ'};
-const IMGS={egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'};
-window.addEventListener('load',()=>{document.getElementById('imgEgress').src=IMGS.egress;document.getElementById('imgDoorLeaf').src=IMGS.doorLeaf;});
 
+/* ══ BPI ROOMS — COMPLETE (227 rooms) ══ */
+const BPI_ROOMS={
+'BPI-HDD':{
+'B3':['B3L11 MSL LAB','B3L110 HEAD MEDIA LAB','B3L111 FA STORE LAB','B3L112 PCBA LAB','B3L113 TPE LAB','B3L114 IT HUB 1D','B3L115 RSS-FEA-Office','B3L116 CST LAB','B3L12 CHARACTERIZATION LAB','B3L13 METROLOGY LAB','B3L14 FW&FIT LAB','B3L15 SPW LAB','B3L16 FA LAB-1','B3L16 FA LAB-2','B3L18 TDE LAB','B3L19 MECHANICAL LAB','B3L215 IT HUB MAZZANINE Room','B3L216 IT HELP DESK ROOM','B3L21.1 EXECUTIVE AREA-1','B3L21.2 EXECUTIVE AREA-2','B3L10* Turnstile Wide Lanes','B3L11* FACILITIES','B3L111* Turnstile#4 Entry','B3L112* Turnstile#5 Entry','B3L113* HR Office #1','B3L114* HR Office #2','B3L115* MDB ROOM 3-1 IN','B3L116* WD Store Room IN','B3L17* IT HUB 2B TERRACE','B3L118* Turnstile#1 Exit','B3L119* Turnstile#2 Exit'],
+'B4':['B4L1 IT HUB Room 1B','B4L1 7 M2 Door','B4L11 CCTV Room/Security room','B4L13 TOOLING INSPECTION LAB','B4L14 CALIBRATION LAB','B4L141 Back Engineer','B4L142 IT Hub 1A','B4L142 IT Hub 1D','B4L143 Main Entrance','B4L16 Chiller Room 4-1','B4L18 E8 RECEIVING','B4L19 BACK EN','B4L11* MEZZANINE OFFICE 1','B4L12* MEZZANINE OFFICE 2','B4L13* IT HELPDESK MEZZANINE','B4L215 MDB RM. 4-6','B4L216 MDB RM. 4-11','B4L217 MDB RM. 4-12','B4L218 MDB RM. 4-9','B4L219 Test Eng Command Center','B4L210 X-CALIBRE LAB_1','B4L210.1 IT ROOM 2D','B4L211 PROCESS BACKEND','B4L212 TEST SPARE PART','B4L213 IT ROOM 2A','B4L214 IT ROOM 2B','B4L244 Tooling Office','B4L26 IT ROOM 2C','B4L27 CELL BOARD REPAIR','B4L28 IT ROOM 2E','B4L29 SPT LAB','LNL-2220B4L3 Door#15','B4L315 IT ROOM 3C','B4L316 STW 2.5 BOARD REPAIR','B4L317 PRECISION CLEANING/TOOLING','B4L318 REAL TIME','B4L319 STW LAB','B4L320 IT ROOM 3D','B4L321 IT ROOM 3E','B4L322 TOOLING CONVERSION KIT','B4L323 HDD ESD LAB','B4L323.1 CONVERSION ROOM','B4L324 FACILITY CONTROL ROOM','B4L325 TOOLING SPARE CENTER','B4L326 REAL TIME LAB','B4L327 IT DATA CENTER','B4L328 STW SPARE PART','B4L329 IT ROOM 3A','B4L330 IT ROOM 3B','B4L331 TOOLING MAINTENANCE','B4L332 DI Room','B4L333 TOOLING REPAIR CENTER','B4L334 Tooling BE Engineer','B4L335 Tooling Engineer','B4L3 41 MITEC ROOM','B4L336 Elevator Service Room F6','B4L337 Pipe Shaft room','B4L338 B25 Room','B4L339 Near LCF4-5 Room','B4L340 Elevator','B4L342 MDB 4-8','B4L343 MDB 4-14'],
+'B6':['B6L133 EE ROOM','B6L134 IT HUB','B6L135 IT HUB 1B','B6L146 EXIT DOOR 6/1 1* (Main Entrance 2)','B6L147 EXIT DOOR 6/1 2* (Main Entrance 1)','B6L149 EXIT DOOR 6/1 3* (Main Entrance 3)','B6L150 Facility Door #1','B6L151 Facility Door #2','B6L153 Laser welding 1','B6L154 Laser welding 2','B6L155 Laser welding 3','B6L156 Exit door 6/14* (Main Entrance 4)','B6L16.1 ACCESSORIES','B6L16.2 RECEIVING B6','B6L16.3 Electronic Scrap Room'],
+'Central canteen':['B-Canteen Center Entry (GARBAGE)','B-Canteen Center Entry 1','B-Canteen Center Entry 2','B-Canteen Center Entry 3','B-Canteen Center Entry 4','B-Canteen Center Entry 5']
+},
+'BPI-THO':{
+'B1':['B1L11* Exit Door 1/1','B1L12* Exit Door 1/2','B1L13* Exit Door 1/4','B1L1E IT HUB','B1L1 69 MDB 1,2 RM. IN','B1L1 72 MDB 1-10 RM. IN','B1L1 MDB 1 IN','B1L1 MDB 2 IN','B1L143 HUB COMPUTER 1B','B1L148 IT HUB 1D','B1L15* MAINTENANCE SERVICE CHASE ROOM 1','B1L150 HUB COMPUTER 1A','B1L154 THO ME INVENTORY','B1L155 ENTRANCE OFFICE B1/7','B1L157 OFFICE B1-45','B1L16* MAINTENANCE SERVICE CHASE ROOM 2','B1L161 FINANCE B1-28','B1L162 INNOVATION ROOM','B1L164 HGA Development Lab','B1L165 HGA Development Lab (Robot)','B1L166 COOLANT','B1L167 Wafer Room #1','B1L168 Wafer Room #2','B1L173 MDB Room 7-1 IN','B1L174 MDB Room 1-7 IN','B1L175 MDB Room 1-8 IN','B1L176 Flyheight IN','B1L178 Characterization Development','B1M144 TOOLING INSPECTION','B1M146 HUB Computer 1C','B1M177 SF Inventory room'],
+'B2':['B2/1L141 IT HUB RM 1-10','B2/1L146 EXIT DOOR 14','B2/1L147 Under Stair CR7','B2/1L3 FFU ROOM NO.20','B2/1L3 IT HUB_CR6 IN N','B2/1L4 Generator Room IN N','B2/1L4 MDB Room IN N','B2L128 HUB COMPUTER L1A','B2L130 ACT / ACF','B2L131 BONDING ALT','B2L132 HSA-AME','B2L133 HUB COMPUTER','B2L134 RESONANCE LAB','B2L136 HGA TEST ENGINEERING CARTRIDGE MAINTENANCE LAB','B2L137 HGA TEST ENGINEERING SPINSTAND LAB','B2L138 HGA TEST ENGINEERING INVENTORY LAB','B2L139 HGA TEST ENGINEERING ELECTRICAL DEV.LAB','B2L152 THO MSL','B2L153 BFC STORAGE','B2L155 MDB ROOM 2-6','B2L156 PLANT DI','B2L157 PACKING HGA','B2L158 VISITOR ROOM 1*','B2L159 VISITOR ROOM 2*','B2L160 EXIT DOOR 1','B2L161 EXIT DOOR 4','B2L162 EXIT DOOR 10','B2L163 EXIT DOOR 5','B2L164 CCTV security room','B2L165 SF STORE ROOM','B2L219 Test Lab mechanic','B2L220 HUB computer','B2L221 DATA CENTER','B2L222 MITEC ROOM','B2L223 HGA MAINTENANCE LABORATORY TOOLING','B2L224 HGA MAINTENANCE LABORATORY INVENTORY','B2L227 HGA MAINTENANCE LABORATORY','B2L228 EXIT DOOR 6','B2L261.1 MDB ROOM B2L2','B2L262 ESD LAB','B2L263 MDB ROOM 2-9','B2L264 FFU ROOM NO.11','B2L265 FFU ROOM NO.12','B2L266 QST LAB','B2L267 IT HUB CR5','B2L268 IT HUB AIS Room IN N','B2L269 S/F Repair Room IN','B2L270 Test inventory room','B2L310 HSA HVM TOOLING','B2L311 ESD&COMTAMINATION LAB','B2L312 ENVIRONMENT CHAMBER Chamber','B2L313 RELIABILITY LAB','B2L314 INVENTORY TEST LAB','B2L315 VENDER GSS','B2L316 TRIBOLOGY LAB','B2L318 AS LABORATORY','B2L33 IT HUB 3R RM (HUB 3R)','B2L341 RELIABILITY LAB','B2L342 SCI LAB','B2L344 HGA TEST LAB','B2L345 HSA INVENTORY ROOM','B2L346 FA LAB','B2L36 HGA Reliability Test Equipment','B2L37 HGA Test','B2L38 HUB computer','B2L39 HUB computer','B2L1*1 Coolant'],
+'B6':['B6L253 HUB COMPUTER','B6L341 HUB COMPUTER 3A','B6L343 HUB COMPUTER 3B','B6L3 44 B6/2 Door','B6L3 45 Service Shaft Door','B6L3 46 Elevator LC6-2','B6L3 47 Elevator LC6-3','B6L3 48 Elevator Service Room 6/2'],
+'B9':['THO office B9 Back door','THO office B9 Main Entrance'],
+'Facility':['B/L1-FE&M HUB ROOM','B/L2-FACILITY FRONT','B/L2-FACILITY REAR'],
+'Facility building':['B/L1-FACILITY STORE','B/L1-SECURITY ROOM']
+}};
+
+const OCC_TYPE_DESC={'Office':'สำนักงาน — พื้นที่ทำงานทั่วไป','Production':'พื้นที่การผลิต / โรงงานผลิต','Chemical room':'ห้องเก็บสารเคมี — มีสารอันตราย','Electrical room':'ห้องไฟฟ้า — MDB, ตู้ควบคุม','Clinic':'คลินิก / ห้องพยาบาล','Canteen':'โรงอาหาร — ห้องอาหาร ครัว','Multipurpose Hall':'ห้องอเนกประสงค์ / หอประชุม','Laboratory room':'ห้องปฏิบัติการ — Lab ทดสอบ','Car park building':'อาคารจอดรถ','Mix':'ใช้งานหลายประเภทในพื้นที่เดียวกัน','Other':'อื่น ๆ'};
+const IMGS={egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'};
+window.addEventListener('load',function(){document.getElementById('imgEgress').src=IMGS.egress;document.getElementById('imgDoorLeaf').src=IMGS.doorLeaf;});
+
+/* ══ Firebase ══ */
 const firebaseConfig={apiKey:"AIzaSyBKP6uR6QhlLyRjfJiP-EjeaBC33Mpix8Y",authDomain:"smart-logistics-system-v1.firebaseapp.com",projectId:"smart-logistics-system-v1",storageBucket:"smart-logistics-system-v1.firebasestorage.app",messagingSenderId:"255204464932",appId:"1:255204464932:web:d52f72e9d12b33c3017bb1"};
 firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 const COLLECTION='inspections';
 const USERS_COLLECTION='sg_users';
 let allRecords=[],currentFilteredRecords=[];
-let pendingDeleteId=null;
-let clearMode='all';
-let currentUser=null;
-let editingUserId=null;
+let pendingDeleteId=null,clearMode='all',currentUser=null,editingUserId=null;
+var customRooms={};
 
-async function ensureDefaultAdmin(){
-  const snap=await db.collection(USERS_COLLECTION).limit(1).get();
-  if(snap.empty){
-    await db.collection(USERS_COLLECTION).add({
-      fullName:'Saksri Kaewaudon',username:'saksri',
-      password:'wdsecurity2024',role:'admin',
-      dept:'Security Department SOC 614984',
-      createdAt:firebase.firestore.FieldValue.serverTimestamp()
-    });
-  }
-}
+function getCustomRooms(buKey,building){if(!customRooms[buKey])return[];return customRooms[buKey][building]||[];}
+function addToCustomRooms(buKey,building,name){if(!customRooms[buKey])customRooms[buKey]={};if(!customRooms[buKey][building])customRooms[buKey][building]=[];if(!customRooms[buKey][building].includes(name))customRooms[buKey][building].push(name);}
+function removeFromCustomRooms(buKey,building,name){if(!customRooms[buKey]||!customRooms[buKey][building])return;customRooms[buKey][building]=customRooms[buKey][building].filter(function(r){return r!==name;});}
+function toggleRoomCustomBox(){var box=document.getElementById('roomCustomBox');box.classList.toggle('show');if(box.classList.contains('show'))setTimeout(function(){document.getElementById('roomCustomInput').focus();},80);}
+function addCustomRoom(){var inp=document.getElementById('roomCustomInput'),name=inp.value.trim();if(!name){showToast('กรุณากรอกชื่อห้อง','warning');return;}var buKey=document.getElementById('buFull').value,building=document.getElementById('building').value;if(!buKey||!building){showToast('กรุณาเลือก BU และ Building ก่อน','warning');return;}var baseRooms=getBaseRooms(buKey,building);if(baseRooms.includes(name)){showToast('ชื่อห้องนี้มีอยู่ใน list แล้ว','warning');return;}if(getCustomRooms(buKey,building).includes(name)){showToast('ชื่อห้องนี้มีอยู่แล้ว','warning');return;}addToCustomRooms(buKey,building,name);inp.value='';var sel=document.getElementById('roomName'),opt=document.createElement('option');opt.value=name;opt.textContent=name+' ★';opt.setAttribute('data-custom','1');sel.appendChild(opt);sel.value=name;renderCustomRoomTags(buKey,building);updateProgress();showToast('เพิ่มชื่อห้อง "'+name+'" เรียบร้อย','success');}
+function renderCustomRoomTags(buKey,building){var tags=document.getElementById('customRoomTags');if(!tags)return;var rooms=getCustomRooms(buKey,building);if(!rooms.length){tags.innerHTML='';return;}tags.innerHTML=rooms.map(function(r){return '<span class="custom-room-tag"><i class="fa fa-star" style="font-size:8px"></i>'+r+'<button type="button" onclick="removeCustomRoom(\''+r.replace(/'/g,"\\'")+'\')">&#x2715;</button></span>';}).join('');}
+function removeCustomRoom(name){var buKey=document.getElementById('buFull').value,building=document.getElementById('building').value;removeFromCustomRooms(buKey,building,name);var sel=document.getElementById('roomName');for(var i=sel.options.length-1;i>=0;i--){if(sel.options[i].value===name&&sel.options[i].getAttribute('data-custom')==='1'){sel.remove(i);break;}}if(sel.value===name){sel.value='';updateProgress();}renderCustomRoomTags(buKey,building);showToast('ลบชื่อห้อง "'+name+'" แล้ว','');}
+function onRoomNameChange(){updateProgress();}
+function getBaseRooms(buKey,building){if(buKey==='PRB')return PRB_ROOMS[building]||[];if(buKey==='BPI-HDD'||buKey==='BPI-THO')return(BPI_ROOMS[buKey]&&BPI_ROOMS[buKey][building])?BPI_ROOMS[buKey][building]:[];return[];}
 
-async function loadUsers(){
-  const snap=await db.collection(USERS_COLLECTION).orderBy('createdAt').get();
-  return snap.docs.map(d=>({id:d.id,...d.data()}));
-}
-
-async function renderUserList(){
-  const users=await loadUsers();
-  const ul=document.getElementById('userList');
-  if(!users.length){ul.innerHTML='<div class="empty-state" style="padding:28px"><i class="fa fa-users" style="font-size:32px"></i><p style="font-size:13px;font-weight:600">ยังไม่มี User</p></div>';return;}
-  const canEdit=currentUser&&currentUser.role==='admin';
-  ul.innerHTML=users.map(u=>{
-    const initials=u.fullName?u.fullName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'??';
-    const roleLbl={'admin':'Admin','user':'User','viewer':'Viewer'}[u.role]||u.role;
-    const roleClass=u.role||'user';
-    return `<div class="user-row">
-      <div class="user-row-avatar">${initials}</div>
-      <div class="user-row-info">
-        <div class="user-row-name">${u.fullName||'—'}${currentUser&&currentUser.id===u.id?' <span style="font-size:9px;background:rgba(0,229,209,.15);color:#007B6E;padding:1px 7px;border-radius:10px;font-weight:700;border:1px solid rgba(0,229,209,.3)">YOU</span>':''}</div>
-        <div class="user-row-meta">
-          <span>@${u.username||'—'}</span>
-          <span class="role-badge ${roleClass}">${roleLbl}</span>
-          ${u.dept?`<span>${u.dept}</span>`:''}
-        </div>
-      </div>
-      ${canEdit?`<div class="user-row-actions">
-        <button class="item-btn edit" onclick="openEditUser('${u.id}')" title="แก้ไข"><i class="fa fa-pen"></i></button>
-        ${currentUser.id!==u.id?`<button class="item-btn del" onclick="promptDeleteUser('${u.id}','${u.fullName}')" title="ลบ"><i class="fa fa-trash"></i></button>`:''}
-      </div>`:''}
-    </div>`;
-  }).join('');
-}
-
-function openAddUser(){
-  if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin เท่านั้น','warning');return;}
-  editingUserId=null;
-  document.getElementById('userModalTitle').textContent='เพิ่ม User ใหม่';
-  document.getElementById('uFullName').value='';
-  document.getElementById('uUsername').value='';
-  document.getElementById('uPassword').value='';
-  document.getElementById('uRole').value='user';
-  document.getElementById('uDept').value='';
-  document.getElementById('userFormError').style.display='none';
-  document.getElementById('userModal').classList.add('open');
-}
-async function openEditUser(id){
-  if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin เท่านั้น','warning');return;}
-  const snap=await db.collection(USERS_COLLECTION).doc(id).get();
-  if(!snap.exists)return;
-  const u=snap.data();
-  editingUserId=id;
-  document.getElementById('userModalTitle').textContent='แก้ไข User';
-  document.getElementById('uFullName').value=u.fullName||'';
-  document.getElementById('uUsername').value=u.username||'';
-  document.getElementById('uPassword').value=u.password||'';
-  document.getElementById('uRole').value=u.role||'user';
-  document.getElementById('uDept').value=u.dept||'';
-  document.getElementById('userFormError').style.display='none';
-  document.getElementById('userModal').classList.add('open');
-}
+/* ══ User management ══ */
+async function ensureDefaultAdmin(){var snap=await db.collection(USERS_COLLECTION).limit(1).get();if(snap.empty){await db.collection(USERS_COLLECTION).add({fullName:'Saksri Kaewaudon',username:'saksri',password:'wdsecurity2024',role:'admin',dept:'Security Department SOC 614984',createdAt:firebase.firestore.FieldValue.serverTimestamp()});}}
+async function loadUsers(){var snap=await db.collection(USERS_COLLECTION).orderBy('createdAt').get();return snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});}
+async function renderUserList(){var users=await loadUsers();var ul=document.getElementById('userList');if(!users.length){ul.innerHTML='<div class="empty-state" style="padding:28px"><i class="fa fa-users" style="font-size:32px"></i><p style="font-size:13px;font-weight:600">ยังไม่มี User</p></div>';return;}var canEdit=currentUser&&currentUser.role==='admin';ul.innerHTML=users.map(function(u){var initials=u.fullName?u.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2):'??';var roleLbl={'admin':'Admin','user':'User','viewer':'Viewer'}[u.role]||u.role;return '<div class="user-row"><div class="user-row-avatar">'+initials+'</div><div class="user-row-info"><div class="user-row-name">'+(u.fullName||'—')+(currentUser&&currentUser.id===u.id?' <span style="font-size:9px;background:rgba(0,229,209,.15);color:#007B6E;padding:1px 7px;border-radius:10px;font-weight:700;border:1px solid rgba(0,229,209,.3)">YOU</span>':'')+'</div><div class="user-row-meta"><span>@'+(u.username||'—')+'</span><span class="role-badge '+(u.role||'user')+'">'+roleLbl+'</span>'+(u.dept?'<span>'+u.dept+'</span>':'')+'</div></div>'+(canEdit?'<div class="user-row-actions"><button class="item-btn edit" onclick="openEditUser(\''+u.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button>'+(currentUser.id!==u.id?'<button class="item-btn del" onclick="promptDeleteUser(\''+u.id+'\',\''+u.fullName+'\')" title="ลบ"><i class="fa fa-trash"></i></button>':'')+'</div>':'')+'</div>';}).join('');}
+function openAddUser(){if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin','warning');return;}editingUserId=null;document.getElementById('userModalTitle').textContent='เพิ่ม User ใหม่';['uFullName','uUsername','uPassword','uDept'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('uRole').value='user';document.getElementById('userFormError').style.display='none';document.getElementById('userModal').classList.add('open');}
+async function openEditUser(id){if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin','warning');return;}var snap=await db.collection(USERS_COLLECTION).doc(id).get();if(!snap.exists)return;var u=snap.data();editingUserId=id;document.getElementById('userModalTitle').textContent='แก้ไข User';document.getElementById('uFullName').value=u.fullName||'';document.getElementById('uUsername').value=u.username||'';document.getElementById('uPassword').value=u.password||'';document.getElementById('uRole').value=u.role||'user';document.getElementById('uDept').value=u.dept||'';document.getElementById('userFormError').style.display='none';document.getElementById('userModal').classList.add('open');}
 function closeUserModal(){document.getElementById('userModal').classList.remove('open');editingUserId=null;}
-async function saveUser(){
-  const fn=document.getElementById('uFullName').value.trim();
-  const un=document.getElementById('uUsername').value.trim();
-  const pw=document.getElementById('uPassword').value.trim();
-  const role=document.getElementById('uRole').value;
-  const dept=document.getElementById('uDept').value.trim();
-  const errEl=document.getElementById('userFormError');
-  if(!fn||!un||!pw){errEl.textContent='กรุณากรอกข้อมูลที่จำเป็นให้ครบ (ชื่อ, Username, Password)';errEl.style.display='block';return;}
-  const existing=await db.collection(USERS_COLLECTION).where('username','==',un).get();
-  const dupId=existing.docs.find(d=>d.id!==(editingUserId||''));
-  if(dupId){errEl.textContent='Username นี้มีในระบบแล้ว กรุณาใช้ชื่ออื่น';errEl.style.display='block';return;}
-  const data={fullName:fn,username:un,password:pw,role,dept};
-  if(editingUserId){
-    await db.collection(USERS_COLLECTION).doc(editingUserId).update({...data,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-    showToast('แก้ไข User เรียบร้อย','success');
-  } else {
-    await db.collection(USERS_COLLECTION).add({...data,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-    showToast('เพิ่ม User เรียบร้อย','success');
-  }
-  closeUserModal();renderUserList();
-}
-async function promptDeleteUser(id,name){
-  if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin เท่านั้น','warning');return;}
-  if(currentUser.id===id){showToast('ไม่สามารถลบตัวเองได้','warning');return;}
-  if(!confirm('ลบ User "'+name+'" ออกจากระบบ?'))return;
-  await db.collection(USERS_COLLECTION).doc(id).delete();
-  showToast('ลบ User เรียบร้อย','error');renderUserList();
-}
-function togglePassField(id,btn){
-  const inp=document.getElementById(id);
-  const isPass=inp.type==='password';
-  inp.type=isPass?'text':'password';
-  btn.innerHTML=isPass?'<i class="fa fa-eye-slash"></i>':'<i class="fa fa-eye"></i>';
-}
+async function saveUser(){var fn=document.getElementById('uFullName').value.trim(),un=document.getElementById('uUsername').value.trim(),pw=document.getElementById('uPassword').value.trim(),role=document.getElementById('uRole').value,dept=document.getElementById('uDept').value.trim(),errEl=document.getElementById('userFormError');if(!fn||!un||!pw){errEl.textContent='กรุณากรอกข้อมูลที่จำเป็นให้ครบ';errEl.style.display='block';return;}var existing=await db.collection(USERS_COLLECTION).where('username','==',un).get();var dup=existing.docs.find(function(d){return d.id!==(editingUserId||'');});if(dup){errEl.textContent='Username นี้มีในระบบแล้ว';errEl.style.display='block';return;}var data={fullName:fn,username:un,password:pw,role:role,dept:dept};if(editingUserId){await db.collection(USERS_COLLECTION).doc(editingUserId).update(Object.assign({},data,{updatedAt:firebase.firestore.FieldValue.serverTimestamp()}));showToast('แก้ไข User เรียบร้อย','success');}else{await db.collection(USERS_COLLECTION).add(Object.assign({},data,{createdAt:firebase.firestore.FieldValue.serverTimestamp()}));showToast('เพิ่ม User เรียบร้อย','success');}closeUserModal();renderUserList();}
+async function promptDeleteUser(id,name){if(!currentUser||currentUser.role!=='admin'){showToast('เฉพาะ Admin','warning');return;}if(currentUser.id===id){showToast('ไม่สามารถลบตัวเองได้','warning');return;}if(!confirm('ลบ User "'+name+'" ออกจากระบบ?'))return;await db.collection(USERS_COLLECTION).doc(id).delete();showToast('ลบ User เรียบร้อย','error');renderUserList();}
+function togglePassField(id,btn){var inp=document.getElementById(id),isPass=inp.type==='password';inp.type=isPass?'text':'password';btn.innerHTML=isPass?'<i class="fa fa-eye-slash"></i>':'<i class="fa fa-eye"></i>';}
+function toggleLoginPass(){var inp=document.getElementById('loginPass'),icon=document.getElementById('loginPassIcon').querySelector('i');if(inp.type==='password'){inp.type='text';icon.className='fa fa-eye-slash';}else{inp.type='password';icon.className='fa fa-eye';}}
 
-function toggleLoginPass(){
-  const inp=document.getElementById('loginPass');
-  const icon=document.getElementById('loginPassIcon').querySelector('i');
-  if(inp.type==='password'){inp.type='text';icon.className='fa fa-eye-slash';}
-  else{inp.type='password';icon.className='fa fa-eye';}
-}
+/* ══ Auth ══ */
 async function doLogin(){
-  const un=document.getElementById('loginUser').value.trim();
-  const pw=document.getElementById('loginPass').value;
-  const btn=document.getElementById('loginBtn');
-  const err=document.getElementById('loginError');
+  var un=document.getElementById('loginUser').value.trim(),pw=document.getElementById('loginPass').value;
+  var btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');
   if(!un||!pw){err.querySelector('#loginErrorMsg').textContent='กรุณากรอก Username และ Password';err.classList.add('show');return;}
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังตรวจสอบ...';err.classList.remove('show');
   try{
-    const snap=await db.collection(USERS_COLLECTION).where('username','==',un).limit(1).get();
+    var snap=await db.collection(USERS_COLLECTION).where('username','==',un).limit(1).get();
     if(snap.empty||snap.docs[0].data().password!==pw){
       err.querySelector('#loginErrorMsg').textContent='Username หรือ Password ไม่ถูกต้อง';
       err.classList.add('show');btn.disabled=false;btn.innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';return;
     }
-    const userData={id:snap.docs[0].id,...snap.docs[0].data()};
-    currentUser=userData;
-    loginSuccess(userData);
-  } catch(e){
-    err.querySelector('#loginErrorMsg').textContent='เชื่อมต่อ Firebase ไม่สำเร็จ: '+e.message;
+    var userData=Object.assign({id:snap.docs[0].id},snap.docs[0].data());
+    currentUser=userData;loginSuccess(userData);
+  }catch(e){
+    err.querySelector('#loginErrorMsg').textContent='เชื่อมต่อไม่สำเร็จ: '+e.message;
     err.classList.add('show');btn.disabled=false;btn.innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';
   }
 }
@@ -1109,270 +766,119 @@ function loginSuccess(user){
   document.getElementById('topNav').style.display='flex';
   document.getElementById('appMain').style.display='block';
   document.getElementById('appBottomNav').style.display='flex';
-  const initials=user.fullName?user.fullName.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2):'??';
+  var initials=user.fullName?user.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2):'??';
   document.getElementById('navAvatar').textContent=initials;
   document.getElementById('navUserName').textContent=user.fullName||user.username;
   document.getElementById('navUserRole').textContent=(user.role||'user').toUpperCase();
   document.getElementById('ddUserName').textContent=user.fullName||user.username;
   document.getElementById('ddUserRole').textContent=(user.role||'user').toUpperCase()+' · '+(user.dept||'');
-  const settingsBtn=document.querySelectorAll('.nav-desktop-links .nav-link-btn')[3];
-  if(settingsBtn)settingsBtn.style.display=user.role==='admin'?'':'none';
-  initFirestoreListener();
-  renderUserList();
-  showToast('ยินดีต้อนรับ '+user.fullName,'success');
+  var sb=document.querySelectorAll('.nav-desktop-links .nav-link-btn')[3];
+  if(sb)sb.style.display=user.role==='admin'?'':'none';
+  initFirestoreListener();renderUserList();showToast('ยินดีต้อนรับ '+user.fullName,'success');
 }
 function doLogout(){
-  toggleUserDropdown();
-  currentUser=null;
+  toggleUserDropdown();currentUser=null;
   document.getElementById('loginScreen').classList.remove('hidden');
   document.getElementById('topNav').style.display='none';
   document.getElementById('appMain').style.display='none';
   document.getElementById('appBottomNav').style.display='none';
-  document.getElementById('loginUser').value='';
-  document.getElementById('loginPass').value='';
+  document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';
   document.getElementById('loginError').classList.remove('show');
   document.getElementById('loginBtn').disabled=false;
   document.getElementById('loginBtn').innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';
   allRecords=[];
 }
+function toggleUserDropdown(){document.getElementById('userDropdown').classList.toggle('open');}
+document.addEventListener('click',function(e){var dd=document.getElementById('userDropdown'),chip=document.getElementById('userChip');if(dd&&chip&&!dd.contains(e.target)&&!chip.contains(e.target))dd.classList.remove('open');});
 
-function toggleUserDropdown(){const dd=document.getElementById('userDropdown');dd.classList.toggle('open');}
-document.addEventListener('click',function(e){const dd=document.getElementById('userDropdown');const chip=document.getElementById('userChip');if(dd&&chip&&!dd.contains(e.target)&&!chip.contains(e.target))dd.classList.remove('open');});
-
-let unsubscribe=null;
+/* ══ Firestore listener ══ */
+var unsubscribe=null;
 function initFirestoreListener(){
   if(unsubscribe)unsubscribe();
   document.getElementById('statusText').textContent='กำลังเชื่อมต่อ...';
-  unsubscribe=db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(snap=>{
-    allRecords=snap.docs.map(d=>({id:d.id,...d.data()}));
+  unsubscribe=db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(function(snap){
+    allRecords=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});
     currentFilteredRecords=allRecords;
     document.getElementById('statusText').textContent='ระบบพร้อม — Real-time Sync';
     document.getElementById('liveCount').textContent=allRecords.length+' records';
     document.getElementById('settingsRecordCount').textContent=allRecords.length;
     renderDashboard(allRecords);
     if(document.getElementById('page-reports').classList.contains('active'))renderTable(allRecords);
-  },()=>{document.getElementById('statusText').textContent='เชื่อมต่อไม่สำเร็จ';});
+  },function(){document.getElementById('statusText').textContent='เชื่อมต่อไม่สำเร็จ';});
 }
 
-const pages=['home','inspect','reports','settings','howto','about'];
-const bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',settings:'bnSettings',howto:'bnAbout',about:'bnAbout'};
-const desktopBtns=document.querySelectorAll('.nav-desktop-links .nav-link-btn');
-function showPage(name,desktopBtn,bnId){
-  pages.forEach(p=>document.getElementById('page-'+p).classList.remove('active'));
-  document.getElementById('page-'+name).classList.add('active');
-  document.querySelectorAll('.bottom-nav-item').forEach(el=>el.classList.remove('active'));
-  const bnEl=document.getElementById(bnId||bnMap[name]);if(bnEl)bnEl.classList.add('active');
-  desktopBtns.forEach(el=>el.classList.remove('active'));if(desktopBtn)desktopBtn.classList.add('active');
-  if(name==='reports'){renderTable(allRecords);}
-  if(name==='settings'){renderUserList();}
-  window.scrollTo(0,0);
-}
+/* ══ Page nav ══ */
+var pages=['home','inspect','reports','settings','howto','about'];
+var bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',settings:'bnSettings',howto:'bnAbout',about:'bnAbout'};
+var desktopBtns=document.querySelectorAll('.nav-desktop-links .nav-link-btn');
+function showPage(name,desktopBtn,bnId){pages.forEach(function(p){document.getElementById('page-'+p).classList.remove('active');});document.getElementById('page-'+name).classList.add('active');document.querySelectorAll('.bottom-nav-item').forEach(function(el){el.classList.remove('active');});var bnEl=document.getElementById(bnId||bnMap[name]);if(bnEl)bnEl.classList.add('active');desktopBtns.forEach(function(el){el.classList.remove('active');});if(desktopBtn)desktopBtn.classList.add('active');if(name==='reports')renderTable(allRecords);if(name==='settings')renderUserList();window.scrollTo(0,0);}
 
-function openClearModal(mode){
-  clearMode=mode;
-  const modal=document.getElementById('clearDataModal');
-  document.getElementById('clearConfirmInput').value='';
-  document.getElementById('clearConfirmBtn').disabled=true;
-  if(mode==='all'){
-    document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลทั้งหมด '+allRecords.length+' records';
-    document.getElementById('clearDataMsg').textContent='การดำเนินการนี้จะลบข้อมูลการตรวจสอบทั้งหมดออกจาก Firebase Firestore โดยถาวร';
-  } else if(mode==='today'){
-    const todayCount=allRecords.filter(r=>{const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();}).length;
-    document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลวันนี้ '+todayCount+' records';
-    document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่บันทึกวันนี้ ('+new Date().toLocaleDateString('th-TH')+') จำนวน '+todayCount+' records';
-  } else {
-    document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลที่กรองแล้ว '+currentFilteredRecords.length+' records';
-    document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่แสดงอยู่ในตาราง Reports ('+currentFilteredRecords.length+' records)';
-  }
-  modal.classList.add('open');
-}
+/* ══ Clear modal ══ */
+function openClearModal(mode){clearMode=mode;var modal=document.getElementById('clearDataModal');document.getElementById('clearConfirmInput').value='';document.getElementById('clearConfirmBtn').disabled=true;if(mode==='all'){document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลทั้งหมด '+allRecords.length+' records';document.getElementById('clearDataMsg').textContent='การดำเนินการนี้จะลบข้อมูลทั้งหมดออกจาก Firebase Firestore โดยถาวร';}else if(mode==='today'){var tc=allRecords.filter(function(r){var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();}).length;document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลวันนี้ '+tc+' records';document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่บันทึกวันนี้ จำนวน '+tc+' records';}else{document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลที่กรองแล้ว '+currentFilteredRecords.length+' records';document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่แสดงอยู่ในตาราง ('+currentFilteredRecords.length+' records)';}modal.classList.add('open');}
 function closeClearModal(){document.getElementById('clearDataModal').classList.remove('open');}
-function onClearConfirmInput(){
-  const val=document.getElementById('clearConfirmInput').value;
-  document.getElementById('clearConfirmBtn').disabled=val!=='CONFIRM';
-}
-async function confirmClearData(){
-  if(document.getElementById('clearConfirmInput').value!=='CONFIRM')return;
-  const btn=document.getElementById('clearConfirmBtn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังล้าง...';
-  try{
-    let toDelete=[];
-    if(clearMode==='all'){toDelete=allRecords;}
-    else if(clearMode==='today'){toDelete=allRecords.filter(r=>{const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();});}
-    else{toDelete=currentFilteredRecords;}
-    const batch=db.batch();
-    toDelete.forEach(r=>batch.delete(db.collection(COLLECTION).doc(r.id)));
-    await batch.commit();
-    showToast('ล้างข้อมูล '+toDelete.length+' records เรียบร้อย','success');
-    closeClearModal();
-  } catch(e){showToast('ล้างข้อมูลไม่สำเร็จ: '+e.message,'error');}
-  btn.disabled=false;btn.innerHTML='<i class="fa fa-trash"></i> ล้างข้อมูล';
-}
+function onClearConfirmInput(){document.getElementById('clearConfirmBtn').disabled=document.getElementById('clearConfirmInput').value!=='CONFIRM';}
+async function confirmClearData(){if(document.getElementById('clearConfirmInput').value!=='CONFIRM')return;var btn=document.getElementById('clearConfirmBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังล้าง...';try{var toDelete=clearMode==='all'?allRecords:clearMode==='today'?allRecords.filter(function(r){var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();}):currentFilteredRecords;var batch=db.batch();toDelete.forEach(function(r){batch.delete(db.collection(COLLECTION).doc(r.id));});await batch.commit();showToast('ล้างข้อมูล '+toDelete.length+' records เรียบร้อย','success');closeClearModal();}catch(e){showToast('ล้างไม่สำเร็จ: '+e.message,'error');}btn.disabled=false;btn.innerHTML='<i class="fa fa-trash"></i> ล้างข้อมูล';}
 
-(function initEmergencyDoor(){
-  const sel=document.getElementById('emergencyDoorNum');
-  for(let i=1;i<=300;i++){const o=document.createElement('option');o.value=i;o.textContent=i;sel.appendChild(o);}
-})();
+/* ══ Init ══ */
+(function(){var sel=document.getElementById('emergencyDoorNum');for(var i=1;i<=300;i++){var o=document.createElement('option');o.value=i;o.textContent=i;sel.appendChild(o);}})();
 ensureDefaultAdmin();
 
-/* ════ setField — UPDATED: handles optional RC (Re-confirm) button ════ */
-function setField(fid,val,pfx){
-  document.getElementById(fid).value=val;
-  document.getElementById(pfx+'Yes').classList.toggle('active',val==='Yes');
-  document.getElementById(pfx+'No').classList.toggle('active',val==='No');
-  document.getElementById(pfx+'NA').classList.toggle('active',val==='N/A');
-  const rcEl=document.getElementById(pfx+'RC');
-  if(rcEl)rcEl.classList.toggle('active',val==='Re-confirm');
-}
+/* ══ Form fields ══ */
+function setField(fid,val,pfx){document.getElementById(fid).value=val;document.getElementById(pfx+'Yes').classList.toggle('active',val==='Yes');document.getElementById(pfx+'No').classList.toggle('active',val==='No');document.getElementById(pfx+'NA').classList.toggle('active',val==='N/A');var rc=document.getElementById(pfx+'RC');if(rc)rc.classList.toggle('active',val==='Re-confirm');}
 function getField(fid){return document.getElementById(fid).value||'N/A';}
-function resetAllFields(){[['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(([f,p])=>setField(f,'N/A',p));}
-function onOccTypeChange(){const v=document.getElementById('occupancyType').value;const d=document.getElementById('occTypeDesc');if(v&&OCC_TYPE_DESC[v]){d.textContent=OCC_TYPE_DESC[v];d.classList.add('show');}else{d.classList.remove('show');}updateProgress();}
-function togglePanel(id){const p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none';}
-function selectDoorType(val,card){document.querySelectorAll('.dt-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('doorType').value=val;document.getElementById('doorTypePanel').style.display='none';updateProgress();}
-function selectDoorLeaf(val,card){document.querySelectorAll('.dl-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('doorLeaf').value=val;updateProgress();}
-function selectMechanism(val,card){document.querySelectorAll('.mc-card').forEach(c=>c.classList.remove('selected'));card.classList.add('selected');document.getElementById('mechanism').value=val;updateProgress();}
-function changeOcc(delta){const inp=document.getElementById('occupancy');inp.value=Math.max(0,(parseInt(inp.value)||0)+delta);}
+function resetAllFields(){[['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(function(p){setField(p[0],'N/A',p[1]);});}
+function onOccTypeChange(){var v=document.getElementById('occupancyType').value,d=document.getElementById('occTypeDesc');if(v&&OCC_TYPE_DESC[v]){d.textContent=OCC_TYPE_DESC[v];d.classList.add('show');}else{d.classList.remove('show');}updateProgress();}
+function togglePanel(id){var p=document.getElementById(id);p.style.display=p.style.display==='none'?'block':'none';}
+function selectDoorType(val,card){document.querySelectorAll('.dt-card').forEach(function(c){c.classList.remove('selected');});card.classList.add('selected');document.getElementById('doorType').value=val;document.getElementById('doorTypePanel').style.display='none';updateProgress();}
+function selectDoorLeaf(val,card){document.querySelectorAll('.dl-card').forEach(function(c){c.classList.remove('selected');});card.classList.add('selected');document.getElementById('doorLeaf').value=val;updateProgress();}
+function selectMechanism(val,card){document.querySelectorAll('.mc-card').forEach(function(c){c.classList.remove('selected');});card.classList.add('selected');document.getElementById('mechanism').value=val;updateProgress();}
+function changeOcc(delta){var inp=document.getElementById('occupancy');inp.value=Math.max(0,(parseInt(inp.value)||0)+delta);}
 
-function handleBUChange(){
-  const val=document.getElementById('bu').value;
-  document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');
-  resetBuildingAndRoom();
-  if(val==='PRB'){document.getElementById('buFull').value='PRB';setBuildingMode('prb');}
-  else if(val==='BPI'){openBpiPopup();}
-  updateProgress();
-}
-function setBuildingMode(mode,sub){
-  const bldSel=document.getElementById('building');bldSel.innerHTML='<option value="">Select Building...</option>';
-  if(mode==='bpi'&&sub&&BPI_ROOMS[sub]){Object.keys(BPI_ROOMS[sub]).forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b+' ('+BPI_ROOMS[sub][b].length+' rooms)';bldSel.appendChild(o);});document.getElementById('roomNameWrap').style.display='flex';document.getElementById('prbSubWrap').classList.add('sub-hidden');}
-  else{Object.keys(PRB_ROOMS).forEach(b=>{const o=document.createElement('option');o.value=b;o.textContent=b+' ('+PRB_ROOMS[b].length+' rooms)';bldSel.appendChild(o);});document.getElementById('roomNameWrap').style.display='flex';}
-}
-function resetBuildingAndRoom(){
-  const bldSel=document.getElementById('building');bldSel.innerHTML='<option value="">Select Building...</option>';
-  const roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">-- เลือก Building ก่อน --</option>';roomSel.disabled=true;
-  document.getElementById('roomHint').style.display='none';document.getElementById('roomNameWrap').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');
-}
-function onBuildingChange(){
-  const buFull=document.getElementById('buFull').value;const bld=document.getElementById('building').value;
-  const roomSel=document.getElementById('roomName');let rooms=[];
-  if(buFull==='PRB'&&bld&&PRB_ROOMS[bld]){rooms=PRB_ROOMS[bld];document.getElementById('prbSubWrap').classList.remove('sub-hidden');}
-  else if((buFull==='BPI-HDD'||buFull==='BPI-THO')&&bld&&BPI_ROOMS[buFull]&&BPI_ROOMS[buFull][bld]){rooms=BPI_ROOMS[buFull][bld];document.getElementById('prbSubWrap').classList.add('sub-hidden');}
-  else{roomSel.innerHTML='<option value="">-- เลือก Building ก่อน --</option>';roomSel.disabled=true;document.getElementById('roomHint').style.display='none';updateProgress();return;}
-  roomSel.innerHTML='<option value="">เลือกชื่อห้อง...</option>';rooms.forEach(r=>{const o=document.createElement('option');o.value=r;o.textContent=r;roomSel.appendChild(o);});
-  roomSel.disabled=false;document.getElementById('roomHint').style.display='flex';document.getElementById('roomHintText').textContent=rooms.length+' ห้องใน '+bld;updateProgress();
-}
+/* ══ BU/Building/Room ══ */
+function handleBUChange(){var val=document.getElementById('bu').value;document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');resetBuildingAndRoom();if(val==='PRB'){document.getElementById('buFull').value='PRB';setBuildingMode('prb');}else if(val==='BPI'){openBpiPopup();}updateProgress();}
+function setBuildingMode(mode,sub){var bldSel=document.getElementById('building');bldSel.innerHTML='<option value="">Select Building...</option>';if(mode==='bpi'&&sub&&BPI_ROOMS[sub]){Object.keys(BPI_ROOMS[sub]).forEach(function(b){var o=document.createElement('option');o.value=b;o.textContent=b+' ('+BPI_ROOMS[sub][b].length+' rooms)';bldSel.appendChild(o);});document.getElementById('roomNameWrap').style.display='flex';document.getElementById('prbSubWrap').classList.add('sub-hidden');}else{Object.keys(PRB_ROOMS).forEach(function(b){var o=document.createElement('option');o.value=b;o.textContent=b+' ('+PRB_ROOMS[b].length+' rooms)';bldSel.appendChild(o);});document.getElementById('roomNameWrap').style.display='flex';}}
+function resetBuildingAndRoom(){var bldSel=document.getElementById('building');bldSel.innerHTML='<option value="">Select Building...</option>';var roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">-- เลือก Building ก่อน --</option>';roomSel.disabled=true;document.getElementById('roomHint').style.display='none';document.getElementById('roomNameWrap').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');document.getElementById('roomCustomBox').classList.remove('show');document.getElementById('roomCustomToggle').style.display='none';document.getElementById('customRoomTags').innerHTML='';}
+function onBuildingChange(){var buFull=document.getElementById('buFull').value,bld=document.getElementById('building').value;var roomSel=document.getElementById('roomName');var rooms=getBaseRooms(buFull,bld);document.getElementById('roomCustomBox').classList.remove('show');document.getElementById('customRoomTags').innerHTML='';if(!rooms.length&&!bld){roomSel.innerHTML='<option value="">-- เลือก Building ก่อน --</option>';roomSel.disabled=true;document.getElementById('roomHint').style.display='none';document.getElementById('roomCustomToggle').style.display='none';updateProgress();return;}roomSel.innerHTML='<option value="">เลือกชื่อห้อง...</option>';rooms.forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r;roomSel.appendChild(o);});var customs=getCustomRooms(buFull,bld);if(customs.length){var divOpt=document.createElement('option');divOpt.disabled=true;divOpt.textContent='── ห้องที่เพิ่มเอง ──';roomSel.appendChild(divOpt);customs.forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r+' ★';o.setAttribute('data-custom','1');roomSel.appendChild(o);});}roomSel.disabled=false;document.getElementById('roomHint').style.display='flex';document.getElementById('roomHintText').textContent=rooms.length+' ห้องใน '+bld+(customs.length?' + '+customs.length+' เพิ่มเอง':'');document.getElementById('roomCustomToggle').style.display='inline-flex';renderCustomRoomTags(buFull,bld);if(buFull==='PRB')document.getElementById('prbSubWrap').classList.remove('sub-hidden');else document.getElementById('prbSubWrap').classList.add('sub-hidden');updateProgress();}
 function openBpiPopup(){document.getElementById('bpiPopup').classList.add('open');}
 function closeBpiPopup(){document.getElementById('bpiPopup').classList.remove('open');if(!document.getElementById('buFull').value)document.getElementById('bu').value='';updateProgress();}
 function selectBpiSub(sub){document.getElementById('buFull').value=sub;document.getElementById('bpiPillText').textContent=sub;document.getElementById('bpiSelectedPill').style.display='block';document.getElementById('bpiPopup').classList.remove('open');setBuildingMode('bpi',sub);updateProgress();}
 function clearBpiSub(){document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('bu').value='';resetBuildingAndRoom();updateProgress();}
 document.getElementById('bpiPopup').addEventListener('click',function(e){if(e.target===this)closeBpiPopup();});
 
-function updateProgress(){
-  const buFull=document.getElementById('buFull').value;let filled=0;const total=9;
-  if(buFull)filled++;if(document.getElementById('building').value)filled++;if(document.getElementById('floor').value)filled++;
-  if(document.getElementById('roomName').value)filled++;if(document.getElementById('occupancyType').value)filled++;
-  if(document.getElementById('doorType').value)filled++;if(document.getElementById('doorLeaf').value)filled++;
-  if(document.getElementById('mechanism').value)filled++;if(document.getElementById('localLaw').value&&document.getElementById('rba').value)filled++;
-  const pct=Math.round((filled/total)*100);
-  document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressPct').textContent=pct+'%';
-}
-['building','floor','roomName','occupancyType','mechanism','localLaw','rba'].forEach(id=>{const el=document.getElementById(id);if(el)el.addEventListener('change',updateProgress);});
+/* ══ Progress ══ */
+function updateProgress(){var buFull=document.getElementById('buFull').value;var filled=0,total=9;if(buFull)filled++;if(document.getElementById('building').value)filled++;if(document.getElementById('floor').value)filled++;if(document.getElementById('roomName').value)filled++;if(document.getElementById('occupancyType').value)filled++;if(document.getElementById('doorType').value)filled++;if(document.getElementById('doorLeaf').value)filled++;if(document.getElementById('mechanism').value)filled++;if(document.getElementById('localLaw').value&&document.getElementById('rba').value)filled++;var pct=Math.round((filled/total)*100);document.getElementById('progressFill').style.width=pct+'%';document.getElementById('progressPct').textContent=pct+'%';}
+['building','floor','roomName','occupancyType','mechanism','localLaw','rba'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('change',updateProgress);});
 
-function submitInspection(e){
-  e.preventDefault();
-  if(!currentUser){showToast('กรุณา Login ก่อน','warning');return;}
-  const buFull=document.getElementById('buFull').value;
-  if(!buFull){showToast('กรุณาเลือก Site (BU)','warning');return;}
-  const areaVal=document.getElementById('roomName').value;
-  if(!areaVal){showToast('กรุณาเลือกชื่อห้อง','warning');return;}
-  const btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังบันทึก...';
-  const doc={bu:buFull,emergencyDoorNum:buFull==='PRB'?(document.getElementById('emergencyDoorNum').value||''):'',building:document.getElementById('building').value,floor:document.getElementById('floor').value,area:areaVal,occupancyType:document.getElementById('occupancyType').value,emergencyExit:getField('emergencyExit'),occupancy:document.getElementById('occupancy').value||'',doorType:document.getElementById('doorType').value,doorLeaf:document.getElementById('doorLeaf').value,mechanism:document.getElementById('mechanism').value,singleMotion:getField('singleMotion'),egressSwing:getField('egressSwing'),selfClose:getField('selfClose'),secAccess:getField('secAccess'),fireReentry:getField('fireReentry'),releaseCondition:document.getElementById('releaseCondition').value,localLaw:document.getElementById('localLaw').value,rba:document.getElementById('rba').value,remark:document.getElementById('remark').value,inspector:currentUser.fullName||currentUser.username};
-  const recId=document.getElementById('editRecordId').value;
-  if(recId){
-    db.collection(COLLECTION).doc(recId).update({...doc,updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAtISO:new Date().toISOString()})
-      .then(()=>{showToast('แก้ไขเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';cancelEdit();showPage('reports',null,'bnReports');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===2));})
-      .catch(err=>{showToast('แก้ไขไม่สำเร็จ','error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
-  } else {
-    db.collection(COLLECTION).add({...doc,createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdAtISO:new Date().toISOString()})
-      .then(()=>{showToast('บันทึกเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';clearForm();showPage('home',null,'bnHome');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===0));})
-      .catch(err=>{showToast('บันทึกไม่สำเร็จ','error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});
-  }
-}
-function clearForm(){
-  document.getElementById('inspectForm').reset();document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');document.getElementById('occTypeDesc').classList.remove('show');resetAllFields();document.querySelectorAll('.dt-card,.dl-card,.mc-card').forEach(c=>c.classList.remove('selected'));document.getElementById('doorTypePanel').style.display='none';document.getElementById('doorLeafPanel').style.display='none';document.getElementById('editRecordId').value='';document.getElementById('occupancy').value='';resetBuildingAndRoom();updateProgress();
-}
-const MECH_MAP={'Push Bar':0,'Push Bar with vertical panic bolt':1,'Latch':2,'Knob':3,'Auto-Slide':4,'Manual-Slide':5,'Other':6,'N/A':7};
-const LEAF_MAP={'Swinging Type - Double Door':0,'Swinging Type - Single Door':1,'Horizontal Sliding Door - Double Door':2,'Horizontal Sliding Door - Single Door':3,'Vertical Sliding Door':4,'Door missing':5};
+/* ══ Dashboard charts ══ */
+function renderDonut(complied,nonComplied,reconfirm,naCount,total){var circ=2*Math.PI*60,offset=0;function setArc(id,val){var el=document.getElementById(id);if(!el)return;var frac=total>0?val/total:0,dash=frac*circ;el.style.strokeDasharray=dash+' '+(circ-dash);el.style.strokeDashoffset=-offset;offset+=dash;}setArc('donutComplied',complied);setArc('donutNonComplied',nonComplied);setArc('donutReconfirm',reconfirm);document.getElementById('donutCenterVal').textContent=total;document.getElementById('lgComplied').textContent=complied;document.getElementById('lgNonComplied').textContent=nonComplied;document.getElementById('lgReconfirm').textContent=reconfirm;document.getElementById('lgNA').textContent=naCount;}
+function renderBarsInto(containerId,items,maxVal,colorFn){var container=document.getElementById(containerId);if(!container)return;if(!items.length){container.innerHTML='<div style="font-size:11px;color:var(--outline);text-align:center;padding:12px 0">ยังไม่มีข้อมูล</div>';return;}container.innerHTML=items.map(function(item){var pct=maxVal>0?Math.round((item.count/maxVal)*100):0,color=colorFn?colorFn(item):item.color||'#2266FF';return '<div class="bar-row"><div class="bar-label" title="'+item.label+'">'+item.label+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+color+'"></div></div><div class="bar-count">'+item.count+'</div></div>';}).join('');}
+function renderDashboard(records){var today=new Date().toDateString(),complied=0,nonComplied=0,reconfirm=0,naCount=0,todayCount=0,rbaComplied=0;var buMap={},buildingMap={},doorTypeMap={};records.forEach(function(r){var ll=r.localLaw||'N/A';if(ll==='Complied')complied++;else if(ll==='Non-Complied')nonComplied++;else if(ll==='Re-confirm')reconfirm++;else naCount++;if(r.rba==='Complied')rbaComplied++;var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);if(ts.toDateString()===today)todayCount++;var bu=r.bu||'Unknown';buMap[bu]=(buMap[bu]||0)+1;var bld=r.building||'Unknown';buildingMap[bld]=(buildingMap[bld]||0)+1;var dt=r.doorType||'Unknown';doorTypeMap[dt]=(doorTypeMap[dt]||0)+1;});var total=records.length,uniqueBuildings=Object.keys(buildingMap).length;var compRate=total>0?Math.round((complied/total)*100):0,rbaRate=total>0?Math.round((rbaComplied/total)*100):0;document.getElementById('statTotal').textContent=total;document.getElementById('statComplied').textContent=complied;document.getElementById('statNonComplied').textContent=nonComplied;document.getElementById('statToday').textContent=todayCount;document.getElementById('statReconfirm').textContent=reconfirm;document.getElementById('statNA').textContent=naCount;document.getElementById('statBuildings').textContent=uniqueBuildings;document.getElementById('statRate').textContent=compRate+'%';document.getElementById('liveCount').textContent=total+' records';document.getElementById('settingsRecordCount').textContent=total;renderDonut(complied,nonComplied,reconfirm,naCount,total);var buColors={'PRB':'#2266FF','BPI-HDD':'#00875A','BPI-THO':'#00E5D1'};var buItems=Object.keys(buMap).map(function(k){return{label:k,count:buMap[k],color:buColors[k]||'#6423FF'};}).sort(function(a,b){return b.count-a.count;});renderBarsInto('buBarChart',buItems,buItems.length?Math.max.apply(null,buItems.map(function(x){return x.count;})):1,null);var dtColors={'EXIT ACCESS DOOR':'#2266FF','EXIT DOOR':'#00875A','EXIT DISCHARGE DOORS':'#c07800'};var dtItems=Object.keys(doorTypeMap).filter(function(k){return k!=='Unknown';}).map(function(k){return{label:k==='EXIT ACCESS DOOR'?'Access':k==='EXIT DOOR'?'Exit':k==='EXIT DISCHARGE DOORS'?'Discharge':k,count:doorTypeMap[k],color:dtColors[k]||'#6423FF'};}).sort(function(a,b){return b.count-a.count;});renderBarsInto('doorTypeBarChart',dtItems,dtItems.length?Math.max.apply(null,dtItems.map(function(x){return x.count;})):1,null);var bldItems=Object.keys(buildingMap).map(function(k){return{label:k,count:buildingMap[k]};}).sort(function(a,b){return b.count-a.count;}).slice(0,5);var bldCols=['#2266FF','#0099cc','#00875A','#6423FF','#c07800'];renderBarsInto('buildingBarChart',bldItems,bldItems.length?Math.max.apply(null,bldItems.map(function(x){return x.count;})):1,function(item){return bldCols[bldItems.indexOf(item)%bldCols.length];});document.getElementById('rbaRateNum').textContent=rbaRate+'%';document.getElementById('rbaRateFill').style.width=rbaRate+'%';var list=document.getElementById('recentList');if(!records.length){list.innerHTML='<div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:14px;font-weight:700">ยังไม่มีข้อมูล</p></div>';return;}list.innerHTML=records.slice(0,10).map(function(r){var bc=r.localLaw==='Complied'&&r.rba==='Complied'?'complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'non-complied':'na');var bt=r.localLaw==='Complied'&&r.rba==='Complied'?'Complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'Non-Complied':'N/A');var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);var ds=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'})+' '+ts.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});return '<div class="inspection-item"><div class="insp-icon"><i class="fa fa-door-closed"></i></div><div class="insp-info"><div class="insp-title">'+(r.building||'—')+' — '+(r.area||'—')+'</div><div class="insp-sub">'+(r.bu||'')+' | '+(r.inspector||'')+' | '+ds+'</div></div><span class="badge '+bc+'" style="margin-right:6px">'+bt+'</span><div class="item-actions"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></div>';}).join('');}
 
-function editRecord(id){
-  const r=allRecords.find(x=>x.id===id);if(!r)return;
-  clearForm();
-  document.getElementById('editRecordId').value=id;document.getElementById('editBanner').style.display='flex';document.getElementById('editBannerLabel').textContent=r.building+' — '+r.area;document.getElementById('inspectTitle').textContent='แก้ไขรายการ';document.getElementById('submitBtn').innerHTML='<i class="fa fa-floppy-disk"></i> บันทึกการแก้ไข';
-  const sv=(fid,val)=>{const el=document.getElementById(fid);if(el&&val!=null)el.value=val;};
-  if(r.bu==='PRB'){document.getElementById('bu').value='PRB';document.getElementById('buFull').value='PRB';setBuildingMode('prb');sv('building',r.building);if(r.building&&PRB_ROOMS[r.building]){const rooms=PRB_ROOMS[r.building];const roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">เลือก...</option>';rooms.forEach(rm=>{const o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel.appendChild(o);});roomSel.disabled=false;document.getElementById('roomHint').style.display='flex';document.getElementById('roomHintText').textContent=rooms.length+' ห้อง';sv('roomName',r.area);document.getElementById('prbSubWrap').classList.remove('sub-hidden');if(r.emergencyDoorNum)sv('emergencyDoorNum',r.emergencyDoorNum);}}
-  else if(r.bu==='BPI-HDD'||r.bu==='BPI-THO'){document.getElementById('bu').value='BPI';document.getElementById('buFull').value=r.bu;document.getElementById('bpiPillText').textContent=r.bu;document.getElementById('bpiSelectedPill').style.display='block';setBuildingMode('bpi',r.bu);sv('building',r.building);if(r.building&&BPI_ROOMS[r.bu]&&BPI_ROOMS[r.bu][r.building]){const rooms=BPI_ROOMS[r.bu][r.building];const roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">เลือก...</option>';rooms.forEach(rm=>{const o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel.appendChild(o);});roomSel.disabled=false;sv('roomName',r.area);}}
-  sv('floor',r.floor);if(r.occupancyType){sv('occupancyType',r.occupancyType);const desc=document.getElementById('occTypeDesc');if(OCC_TYPE_DESC[r.occupancyType]){desc.textContent=OCC_TYPE_DESC[r.occupancyType];desc.classList.add('show');}}
-  sv('occupancy',r.occupancy||'');sv('releaseCondition',r.releaseCondition);sv('localLaw',r.localLaw);sv('rba',r.rba);sv('remark',r.remark);
-  [['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(([f,p])=>setField(f,r[f]||'N/A',p));
-  if(r.doorType){document.getElementById('doorType').value=r.doorType;document.querySelectorAll('.dt-card').forEach(c=>{if(c.querySelector('.dt-name')&&c.querySelector('.dt-name').textContent===r.doorType)c.classList.add('selected');});}
-  if(r.doorLeaf!==undefined){document.getElementById('doorLeaf').value=r.doorLeaf;const cards=document.querySelectorAll('.dl-card');const idx=LEAF_MAP[r.doorLeaf];if(idx!==undefined&&cards[idx])cards[idx].classList.add('selected');}
-  if(r.mechanism!==undefined){document.getElementById('mechanism').value=r.mechanism;const mcards=document.querySelectorAll('.mc-card');const midx=MECH_MAP[r.mechanism];if(midx!==undefined&&mcards[midx])mcards[midx].classList.add('selected');}
-  updateProgress();showPage('inspect',null,'bnInspect');desktopBtns.forEach((el,i)=>el.classList.toggle('active',i===1));window.scrollTo(0,0);
-}
+/* ══ Reports table ══ */
+function eeTag(v){if(v==='Yes')return '<span style="background:var(--success-bg);color:var(--success);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Yes</span>';if(v==='No')return '<span style="background:var(--error-bg);color:var(--error);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">No</span>';return '<span style="background:var(--surface-high);color:var(--outline);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">N/A</span>';}
+function renderTable(records){currentFilteredRecords=records;var tbody=document.getElementById('reportBody');if(!records.length){tbody.innerHTML='<tr><td colspan="14" style="text-align:center;padding:36px;color:var(--outline)"><i class="fa fa-inbox" style="font-size:26px;display:block;margin-bottom:7px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}tbody.innerHTML=records.map(function(r,i){var llc=r.localLaw==='Complied'?'complied':(r.localLaw==='Non-Complied'?'non-complied':'na');var rbc=r.rba==='Complied'?'complied':(r.rba==='Non-Complied'?'non-complied':'na');var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);var dt=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'});return '<tr><td style="font-weight:800;color:var(--primary)">'+(i+1)+'</td><td style="font-size:11px">'+dt+'</td><td><strong>'+(r.bu||'')+'</strong></td><td>'+(r.building||'')+'</td><td>'+(r.floor||'')+'</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+(r.area||'')+'</td><td><span style="background:var(--primary-container);color:var(--primary);padding:2px 7px;border-radius:9px;font-size:10px;font-weight:700">'+(r.occupancyType||'-')+'</span></td><td>'+eeTag(r.emergencyExit||'N/A')+'</td><td style="text-align:center">'+(r.occupancy?r.occupancy+' คน':'-')+'</td><td style="font-size:11px">'+(r.doorType||'')+'</td><td><span class="badge '+llc+'">'+(r.localLaw||'—')+'</span></td><td><span class="badge '+rbc+'">'+(r.rba||'—')+'</span></td><td style="font-size:11px">'+(r.inspector||'')+'</td><td><div style="display:flex;gap:4px"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></td></tr>';}).join('');}
+function applyFilter(){var bu=document.getElementById('filterBU').value,comp=document.getElementById('filterCompliance').value,date=document.getElementById('filterDate').value;var f=allRecords;if(bu)f=f.filter(function(r){return r.bu===bu;});if(comp)f=f.filter(function(r){return r.localLaw===comp||r.rba===comp;});if(date)f=f.filter(function(r){return(r.createdAtISO||'').startsWith(date);});renderTable(f);}
+function exportCSV(){if(!allRecords.length){showToast('ไม่มีข้อมูล','error');return;}var hdr=['ID','Date','BU','Building','Floor','Area/Room','Occupancy Type','Emergency Exit','Occupancy','Door Type','Leaf','Mechanism','Single Motion','Egress Swing','Self Close','Sec Access','Fire Re-entry','Release','Local Law','RBA','Remark','Inspector'];var rows=allRecords.map(function(r){var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return[r.id,ts.toISOString(),r.bu,r.building,r.floor,r.area,r.occupancyType||'',r.emergencyExit||'',r.occupancy||'',r.doorType,r.doorLeaf,r.mechanism,r.singleMotion,r.egressSwing,r.selfClose,r.secAccess,r.fireReentry,r.releaseCondition,r.localLaw,r.rba,r.remark,r.inspector];});var csv=[hdr].concat(rows).map(function(r){return r.map(function(v){return'"'+(v||'').toString().replace(/"/g,'""')+'"';}).join(',');}).join('\n');var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SafeGuard_'+new Date().toISOString().slice(0,10)+'.csv';a.click();showToast('Export '+allRecords.length+' records!','success');}
+
+/* ══ Edit/Delete records ══ */
+var MECH_MAP={'Push Bar':0,'Push Bar with vertical panic bolt':1,'Latch':2,'Knob':3,'Auto-Slide':4,'Manual-Slide':5,'Other':6,'N/A':7};
+var LEAF_MAP={'Swinging Type - Double Door':0,'Swinging Type - Single Door':1,'Horizontal Sliding Door - Double Door':2,'Horizontal Sliding Door - Single Door':3,'Vertical Sliding Door':4,'Door missing':5};
+
+function editRecord(id){var r=allRecords.find(function(x){return x.id===id;});if(!r)return;clearForm();document.getElementById('editRecordId').value=id;document.getElementById('editBanner').style.display='flex';document.getElementById('editBannerLabel').textContent=r.building+' — '+r.area;document.getElementById('inspectTitle').textContent='แก้ไขรายการ';document.getElementById('submitBtn').innerHTML='<i class="fa fa-floppy-disk"></i> บันทึกการแก้ไข';var sv=function(fid,val){var el=document.getElementById(fid);if(el&&val!=null)el.value=val;};if(r.bu==='PRB'){document.getElementById('bu').value='PRB';document.getElementById('buFull').value='PRB';setBuildingMode('prb');sv('building',r.building);if(r.building&&PRB_ROOMS[r.building]){var rooms=PRB_ROOMS[r.building],customs=getCustomRooms('PRB',r.building);var roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">เลือก...</option>';rooms.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel.appendChild(o);});if(customs.length){var d=document.createElement('option');d.disabled=true;d.textContent='── ห้องที่เพิ่มเอง ──';roomSel.appendChild(d);customs.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm+' ★';o.setAttribute('data-custom','1');roomSel.appendChild(o);});}roomSel.disabled=false;var allRooms=rooms.concat(customs);if(r.area&&!allRooms.includes(r.area)){addToCustomRooms('PRB',r.building,r.area);var opt=document.createElement('option');opt.value=r.area;opt.textContent=r.area+' ★';opt.setAttribute('data-custom','1');roomSel.appendChild(opt);}sv('roomName',r.area);document.getElementById('roomHint').style.display='flex';document.getElementById('roomHintText').textContent=rooms.length+' ห้อง';document.getElementById('roomCustomToggle').style.display='inline-flex';renderCustomRoomTags('PRB',r.building);document.getElementById('prbSubWrap').classList.remove('sub-hidden');if(r.emergencyDoorNum)sv('emergencyDoorNum',r.emergencyDoorNum);}}else if(r.bu==='BPI-HDD'||r.bu==='BPI-THO'){document.getElementById('bu').value='BPI';document.getElementById('buFull').value=r.bu;document.getElementById('bpiPillText').textContent=r.bu;document.getElementById('bpiSelectedPill').style.display='block';setBuildingMode('bpi',r.bu);sv('building',r.building);if(r.building&&BPI_ROOMS[r.bu]&&BPI_ROOMS[r.bu][r.building]){var rooms2=BPI_ROOMS[r.bu][r.building],customs2=getCustomRooms(r.bu,r.building);var roomSel2=document.getElementById('roomName');roomSel2.innerHTML='<option value="">เลือก...</option>';rooms2.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel2.appendChild(o);});if(customs2.length){var d2=document.createElement('option');d2.disabled=true;d2.textContent='── ห้องที่เพิ่มเอง ──';roomSel2.appendChild(d2);customs2.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm+' ★';o.setAttribute('data-custom','1');roomSel2.appendChild(o);});}roomSel2.disabled=false;var allRooms2=rooms2.concat(customs2);if(r.area&&!allRooms2.includes(r.area)){addToCustomRooms(r.bu,r.building,r.area);var opt2=document.createElement('option');opt2.value=r.area;opt2.textContent=r.area+' ★';opt2.setAttribute('data-custom','1');roomSel2.appendChild(opt2);}sv('roomName',r.area);document.getElementById('roomHint').style.display='flex';document.getElementById('roomCustomToggle').style.display='inline-flex';renderCustomRoomTags(r.bu,r.building);}}sv('floor',r.floor);if(r.occupancyType){sv('occupancyType',r.occupancyType);var desc=document.getElementById('occTypeDesc');if(OCC_TYPE_DESC[r.occupancyType]){desc.textContent=OCC_TYPE_DESC[r.occupancyType];desc.classList.add('show');}}sv('occupancy',r.occupancy||'');sv('releaseCondition',r.releaseCondition);sv('localLaw',r.localLaw);sv('rba',r.rba);sv('remark',r.remark);[['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(function(p){setField(p[0],r[p[0]]||'N/A',p[1]);});if(r.doorType){document.getElementById('doorType').value=r.doorType;document.querySelectorAll('.dt-card').forEach(function(c){if(c.querySelector('.dt-name')&&c.querySelector('.dt-name').textContent===r.doorType)c.classList.add('selected');});}if(r.doorLeaf!==undefined){document.getElementById('doorLeaf').value=r.doorLeaf;var lcards=document.querySelectorAll('.dl-card');var lidx=LEAF_MAP[r.doorLeaf];if(lidx!==undefined&&lcards[lidx])lcards[lidx].classList.add('selected');}if(r.mechanism!==undefined){document.getElementById('mechanism').value=r.mechanism;var mcards=document.querySelectorAll('.mc-card');var midx=MECH_MAP[r.mechanism];if(midx!==undefined&&mcards[midx])mcards[midx].classList.add('selected');}updateProgress();showPage('inspect',null,'bnInspect');desktopBtns.forEach(function(el,i){el.classList.toggle('active',i===1);});window.scrollTo(0,0);}
 function cancelEdit(){clearForm();document.getElementById('editBanner').style.display='none';document.getElementById('inspectTitle').textContent='Exit Route Compliance Survey';document.getElementById('submitBtn').innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';}
 function promptDelete(id,label){pendingDeleteId=id;document.getElementById('deleteRecordLabel').textContent=label;document.getElementById('deleteModal').classList.add('open');}
-function confirmDelete(){if(!pendingDeleteId)return;db.collection(COLLECTION).doc(pendingDeleteId).delete().then(()=>{showToast('ลบเรียบร้อย','error');pendingDeleteId=null;document.getElementById('deleteModal').classList.remove('open');}).catch(e=>{showToast('ลบไม่สำเร็จ','error');document.getElementById('deleteModal').classList.remove('open');});}
+function confirmDelete(){if(!pendingDeleteId)return;db.collection(COLLECTION).doc(pendingDeleteId).delete().then(function(){showToast('ลบเรียบร้อย','error');pendingDeleteId=null;document.getElementById('deleteModal').classList.remove('open');}).catch(function(){showToast('ลบไม่สำเร็จ','error');document.getElementById('deleteModal').classList.remove('open');});}
 document.getElementById('deleteModal').addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');});
 document.getElementById('clearDataModal').addEventListener('click',function(e){if(e.target===this)closeClearModal();});
 document.getElementById('userModal').addEventListener('click',function(e){if(e.target===this)closeUserModal();});
 
-function eeTag(v){
-  if(v==='Yes')return '<span style="background:var(--success-bg);color:var(--success);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">Yes</span>';
-  if(v==='No')return '<span style="background:var(--error-bg);color:var(--error);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">No</span>';
-  return '<span style="background:var(--surface-high);color:var(--outline);padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700">N/A</span>';
-}
-function renderDashboard(records){
-  const today=new Date().toDateString();let complied=0,nonComplied=0,todayCount=0;
-  records.forEach(r=>{if(r.localLaw==='Complied'&&r.rba==='Complied')complied++;if(r.localLaw==='Non-Complied'||r.rba==='Non-Complied')nonComplied++;const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);if(ts.toDateString()===today)todayCount++;});
-  document.getElementById('statTotal').textContent=records.length;document.getElementById('statComplied').textContent=complied;document.getElementById('statNonComplied').textContent=nonComplied;document.getElementById('statToday').textContent=todayCount;
-  const list=document.getElementById('recentList');
-  if(!records.length){list.innerHTML='<div class="empty-state"><i class="fa fa-inbox"></i><p style="font-size:14px;font-weight:700">ยังไม่มีข้อมูล</p></div>';return;}
-  list.innerHTML=records.slice(0,10).map(r=>{
-    const bc=r.localLaw==='Complied'&&r.rba==='Complied'?'complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'non-complied':'na');
-    const bt=r.localLaw==='Complied'&&r.rba==='Complied'?'Complied':(r.localLaw==='Non-Complied'||r.rba==='Non-Complied'?'Non-Complied':'N/A');
-    const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
-    const ds=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'})+' '+ts.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
-    return '<div class="inspection-item"><div class="insp-icon"><i class="fa fa-door-closed"></i></div><div class="insp-info"><div class="insp-title">'+(r.building||'—')+' — '+(r.area||'—')+'</div><div class="insp-sub">'+(r.bu||'')+' | '+(r.inspector||'')+' | '+ds+'</div></div><span class="badge '+bc+'" style="margin-right:6px">'+bt+'</span><div class="item-actions"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></div>';
-  }).join('');
-}
-function renderTable(records){
-  currentFilteredRecords=records;
-  const tbody=document.getElementById('reportBody');
-  if(!records.length){tbody.innerHTML='<tr><td colspan="14" style="text-align:center;padding:36px;color:var(--outline)"><i class="fa fa-inbox" style="font-size:26px;display:block;margin-bottom:7px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}
-  tbody.innerHTML=records.map((r,i)=>{
-    const llc=r.localLaw==='Complied'?'complied':(r.localLaw==='Non-Complied'?'non-complied':'na');
-    const rbc=r.rba==='Complied'?'complied':(r.rba==='Non-Complied'?'non-complied':'na');
-    const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
-    const dt=ts.toLocaleDateString('th-TH',{day:'2-digit',month:'short',year:'numeric'});
-    return '<tr><td style="font-weight:800;color:var(--primary)">'+(i+1)+'</td><td style="font-size:11px">'+dt+'</td><td><strong>'+(r.bu||'')+'</strong></td><td>'+(r.building||'')+'</td><td>'+(r.floor||'')+'</td><td style="max-width:130px;overflow:hidden;text-overflow:ellipsis">'+(r.area||'')+'</td><td><span style="background:var(--primary-container);color:var(--primary);padding:2px 7px;border-radius:9px;font-size:10px;font-weight:700">'+(r.occupancyType||'-')+'</span></td><td>'+eeTag(r.emergencyExit||'N/A')+'</td><td style="text-align:center">'+(r.occupancy?r.occupancy+' คน':'-')+'</td><td style="font-size:11px">'+(r.doorType||'')+'</td><td><span class="badge '+llc+'">'+(r.localLaw||'—')+'</span></td><td><span class="badge '+rbc+'">'+(r.rba||'—')+'</span></td><td style="font-size:11px">'+(r.inspector||'')+'</td><td><div style="display:flex;gap:4px"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></td></tr>';
-  }).join('');
-}
-function applyFilter(){
-  const bu=document.getElementById('filterBU').value;const comp=document.getElementById('filterCompliance').value;const date=document.getElementById('filterDate').value;
-  let f=allRecords;if(bu)f=f.filter(r=>r.bu===bu);if(comp)f=f.filter(r=>r.localLaw===comp||r.rba===comp);if(date)f=f.filter(r=>(r.createdAtISO||'').startsWith(date));
-  renderTable(f);
-}
-function exportCSV(){
-  if(!allRecords.length){showToast('ไม่มีข้อมูล','error');return;}
-  const hdr=['ID','Date','BU','Building','Floor','Area/Room','Occupancy Type','Emergency Exit','Occupancy','Door Type','Leaf','Mechanism','Single Motion','Egress Swing','Self Close','Sec Access','Fire Re-entry','Release','Local Law','RBA','Remark','Inspector'];
-  const rows=allRecords.map(r=>{const ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return[r.id,ts.toISOString(),r.bu,r.building,r.floor,r.area,r.occupancyType||'',r.emergencyExit||'',r.occupancy||'',r.doorType,r.doorLeaf,r.mechanism,r.singleMotion,r.egressSwing,r.selfClose,r.secAccess,r.fireReentry,r.releaseCondition,r.localLaw,r.rba,r.remark,r.inspector];});
-  const csv=[hdr,...rows].map(r=>r.map(v=>'"'+(v||'').toString().replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='SafeGuard_'+new Date().toISOString().slice(0,10)+'.csv';a.click();
-  showToast('Export '+allRecords.length+' records!','success');
-}
+/* ══ Submit ══ */
+function submitInspection(e){e.preventDefault();if(!currentUser){showToast('กรุณา Login ก่อน','warning');return;}var buFull=document.getElementById('buFull').value;if(!buFull){showToast('กรุณาเลือก Site (BU)','warning');return;}var areaVal=document.getElementById('roomName').value;if(!areaVal){showToast('กรุณาเลือกชื่อห้อง','warning');return;}var btn=document.getElementById('submitBtn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังบันทึก...';var doc={bu:buFull,emergencyDoorNum:buFull==='PRB'?(document.getElementById('emergencyDoorNum').value||''):'',building:document.getElementById('building').value,floor:document.getElementById('floor').value,area:areaVal,occupancyType:document.getElementById('occupancyType').value,emergencyExit:getField('emergencyExit'),occupancy:document.getElementById('occupancy').value||'',doorType:document.getElementById('doorType').value,doorLeaf:document.getElementById('doorLeaf').value,mechanism:document.getElementById('mechanism').value,singleMotion:getField('singleMotion'),egressSwing:getField('egressSwing'),selfClose:getField('selfClose'),secAccess:getField('secAccess'),fireReentry:getField('fireReentry'),releaseCondition:document.getElementById('releaseCondition').value,localLaw:document.getElementById('localLaw').value,rba:document.getElementById('rba').value,remark:document.getElementById('remark').value,inspector:currentUser.fullName||currentUser.username};var recId=document.getElementById('editRecordId').value;if(recId){db.collection(COLLECTION).doc(recId).update(Object.assign({},doc,{updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAtISO:new Date().toISOString()})).then(function(){showToast('แก้ไขเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';cancelEdit();showPage('reports',null,'bnReports');desktopBtns.forEach(function(el,i){el.classList.toggle('active',i===2);});}).catch(function(){showToast('แก้ไขไม่สำเร็จ','error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});}else{db.collection(COLLECTION).add(Object.assign({},doc,{createdAt:firebase.firestore.FieldValue.serverTimestamp(),createdAtISO:new Date().toISOString()})).then(function(){showToast('บันทึกเรียบร้อย!','success');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';clearForm();showPage('home',null,'bnHome');desktopBtns.forEach(function(el,i){el.classList.toggle('active',i===0);});}).catch(function(){showToast('บันทึกไม่สำเร็จ','error');btn.disabled=false;btn.innerHTML='<i class="fa fa-paper-plane"></i> Submit Inspection';});}}
+function clearForm(){document.getElementById('inspectForm').reset();document.getElementById('buFull').value='';document.getElementById('bpiSelectedPill').style.display='none';document.getElementById('prbSubWrap').classList.add('sub-hidden');document.getElementById('occTypeDesc').classList.remove('show');resetAllFields();document.querySelectorAll('.dt-card,.dl-card,.mc-card').forEach(function(c){c.classList.remove('selected');});document.getElementById('doorTypePanel').style.display='none';document.getElementById('doorLeafPanel').style.display='none';document.getElementById('editRecordId').value='';document.getElementById('occupancy').value='';resetBuildingAndRoom();updateProgress();}
 function openLightbox(src,cap){document.getElementById('lightboxImg').src=src;document.getElementById('lightboxCap').textContent=cap||'';document.getElementById('lightbox').classList.add('open');}
 function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('open');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){['lightbox','deleteModal','clearDataModal','userModal','bpiPopup'].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.remove('open');});}});
-function showToast(msg,type){const wrap=document.getElementById('toastWrap');const t=document.createElement('div');t.className='toast'+(type?' '+type:'');t.textContent=msg;wrap.appendChild(t);setTimeout(()=>t.remove(),3000);}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){['lightbox','deleteModal','clearDataModal','userModal','bpiPopup'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('open');});}});
+function showToast(msg,type){var wrap=document.getElementById('toastWrap'),t=document.createElement('div');t.className='toast'+(type?' '+type:'');t.textContent=msg;wrap.appendChild(t);setTimeout(function(){t.remove();},3000);}
 </script>
 </body>
 </html>
