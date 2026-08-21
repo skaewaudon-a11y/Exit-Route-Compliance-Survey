@@ -708,7 +708,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
             <input type="hidden" id="fireReentry" value="N/A">
           </div>
           <div class="form-grid">
-            <div class="field-group"><label class="field-label">3.3 ระบบควบคุมฯ จะปลดล็อกเมื่อ...</label><select class="field-select" id="releaseCondition"><option value="">Select...</option><option value="A">A. When Building General Alarm Activated</option><option value="B">B. When No Power Supplied</option><option value="C">C. No Support</option><option value="D">D. Both A &amp; B</option><option value="E">E. Re confirm</option></select></div>
+            <div class="field-group"><label class="field-label">3.3 ระบบควบคุมฯ จะปลดล็อกเมื่อ...</label><select class="field-select" id="releaseCondition"><option value="">Select...</option><option value="A">A. When Building General Alarm Activated</option><option value="B">B. When No Power Supplied</option><option value="C">C = No Support</option><option value="D">D. Both A &amp; B</option><option value="E">E = Re Confirm</option></select></div>
             <div class="field-group"><label class="field-label">3.4 Complied with Local Law *</label><select class="field-select" id="localLaw" required><option value="">Select...</option><option value="Complied">Complied</option><option value="Non-Complied">Non-Complied</option><option value="Re-confirm">Re-confirm</option><option value="N/A">N/A</option></select></div>
             <div class="field-group"><label class="field-label">3.5 Complied with RBA *</label><select class="field-select" id="rba" required><option value="">Select...</option><option value="Complied">Complied</option><option value="Non-Complied">Non-Complied</option><option value="Re-confirm">Re-confirm</option><option value="N/A">N/A</option></select></div>
             <div class="field-group col-span-2"><label class="field-label">หมายเหตุ (Remark)</label><textarea class="field-textarea" id="remark" placeholder="ระบุหมายเหตุเพิ่มเติม..."></textarea></div>
@@ -801,7 +801,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 
   <div class="page" id="page-howto">
     <div class="page-header"><h1>วิธีใช้งาน</h1><p>คู่มือการใช้งาน Exit Route Compliance Survey Inspection System</p></div>
-    <div class="howto-card"><div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน</div><div class="howto-steps"><div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">Login เข้าระบบ</div><div class="sc-desc">ใช้ Username/Password ที่ Admin กำหนดให้</div></div></div><div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time พร้อมกราฟ</div></div></div><div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">บันทึกการตรวจสอบ</div><div class="sc-desc">เลือก BU → Building → Room → กรอกข้อมูล → Submit</div></div></div></div><div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์ผ่าน Firebase Firestore</span></div></div>
+    <div class="howto-card"><div class="howto-title"><i class="fa fa-circle-play"></i> เริ่มต้นใช้งาน</div><div class="howto-steps"><div class="howto-step"><div class="step-badge">1</div><div class="step-content"><div class="sc-title">Login เข้าระบบ</div><div class="sc-desc">ใช้ Username/Password ที่ Admin กำหนดให้</div></div></div><div class="howto-step"><div class="step-badge">2</div><div class="step-content"><div class="sc-title">ดู Dashboard</div><div class="sc-desc">หน้า Home แสดงสถิติแบบ Real-time พร้อมกราฟ</div></div></div><div class="howto-step"><div class="step-badge">3</div><div class="step-content"><div class="sc-title">บันทึกการตรวจสอบ</div><div class="sc-desc">เลือก BU → Building → Room → กรอกข้อมูล → Submit</div></div></div></div><div class="howto-tip"><i class="fa fa-lightbulb"></i><span>ข้อมูลซิงค์อัตโนมัติทุกอุปกรณ์</span></div></div>
   </div>
 
   <div class="page" id="page-about">
@@ -847,6 +847,21 @@ var BPI_HDD_TOTAL=(function(){var t=0;Object.keys(BPI_ROOMS['BPI-HDD']).forEach(
 var BPI_THO_TOTAL=(function(){var t=0;Object.keys(BPI_ROOMS['BPI-THO']).forEach(function(b){t+=BPI_ROOMS['BPI-THO'][b].length;});return t;})();
 var BPI_TOTAL=BPI_HDD_TOTAL+BPI_THO_TOTAL;
 var ALL_TOTAL=PRB_TOTAL+BPI_TOTAL;
+
+/* ★ RELEASE CONDITION LABEL MAP — ใช้ทั้ง Export CSV และ Summary Chart */
+var RELEASE_LABEL_MAP={
+  'A':'A. When Building General Alarm Activated',
+  'B':'B. When No Power Supplied',
+  'C':'C = No Support',
+  'D':'D. Both A & B',
+  'E':'E = Re Confirm'
+};
+
+function mapReleaseCondition(v){
+  if(!v)return'';
+  return RELEASE_LABEL_MAP[v]||v;
+}
+
 function initScrollProgress(){var wrap=document.getElementById('reportTableWrap');if(!wrap)return;wrap.addEventListener('scroll',function(){var max=wrap.scrollWidth-wrap.clientWidth;var pct=max>0?Math.round((wrap.scrollLeft/max)*100):0;document.getElementById('scrollProgressFill').style.width=pct+'%';document.getElementById('scrollPct').textContent=pct+'%';});}
 function switchBpiTab(which,btn){document.querySelectorAll('.bpi-sub-tab').forEach(function(t){t.classList.remove('active');});document.querySelectorAll('.bpi-sub-panel').forEach(function(p){p.classList.remove('active');});btn.classList.add('active');document.getElementById('bpi'+which.charAt(0).toUpperCase()+which.slice(1)+'Panel').classList.add('active');}
 function renderBldList(containerId,buKey,siteRecords,cls){var container=document.getElementById(containerId);if(!container)return;var bldData=buKey==='PRB'?PRB_ROOMS_DASHBOARD:(buKey==='BPI-HDD'?BPI_ROOMS['BPI-HDD']:BPI_ROOMS['BPI-THO']);var html='';Object.keys(bldData).forEach(function(bld){var total=bldData[bld].length;var done=siteRecords.filter(function(r){return r.building===bld;}).length;done=Math.min(done,total);var pct=total>0?Math.min(Math.round(done/total*100),100):0;var pctColor=pct>=100?'var(--success)':pct>=50?'#c07800':'var(--error)';html+='<div class="bld-row"><div class="bld-name" title="'+bld+'">'+bld+'</div><div class="bld-bar-wrap"><div class="bld-bar '+cls+'" style="width:'+pct+'%"></div></div><div class="bld-stats"><span class="bld-done">'+done+'</span><span class="bld-slash">/</span><span class="bld-total">'+total+'</span></div><div class="bld-pct" style="color:'+pctColor+';font-weight:800">'+pct+'%</div></div>';});container.innerHTML=html||'<div style="font-size:11px;color:var(--outline);padding:8px 0">ยังไม่มีข้อมูล</div>';}
@@ -920,10 +935,37 @@ function updateProgress(){var buFull=document.getElementById('buFull').value;var
 ['building','floor','roomName','occupancyType','mechanism','localLaw','rba'].forEach(function(id){var el=document.getElementById(id);if(el)el.addEventListener('change',updateProgress);});
 function ynnaBadge(v){if(!v||v==='N/A')return '<span style="background:var(--surface-high);color:var(--outline);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">N/A</span>';if(v==='Yes')return '<span style="background:var(--success-bg);color:var(--success);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">Yes</span>';if(v==='No')return '<span style="background:var(--error-bg);color:var(--error);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">No</span>';if(v==='Re-confirm')return '<span style="background:var(--warning-bg);color:var(--warning);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">RC</span>';return '<span style="background:var(--surface-high);color:var(--outline);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">'+v+'</span>';}
 function complianceBadge(v){var cls=v==='Complied'?'complied':v==='Non-Complied'?'non-complied':v==='Re-confirm'?'reconfirm':'na';return '<span class="badge '+cls+'">'+(v||'—')+'</span>';}
-function releaseBadge(v){if(!v)return '<span style="color:var(--outline);font-size:10px">—</span>';return '<span style="background:rgba(34,102,255,.08);color:var(--primary);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">'+v+'</span>';}
+function releaseBadge(v){if(!v)return '<span style="color:var(--outline);font-size:10px">—</span>';var label=mapReleaseCondition(v);return '<span style="background:rgba(34,102,255,.08);color:var(--primary);padding:2px 7px;border-radius:6px;font-size:10px;font-weight:700">'+label+'</span>';}
 function renderTable(records){currentFilteredRecords=records;var tbody=document.getElementById('reportBody');if(!records.length){tbody.innerHTML='<tr><td colspan="23" style="text-align:center;padding:36px;color:var(--outline)"><i class="fa fa-inbox" style="font-size:26px;display:block;margin-bottom:7px;opacity:.3"></i>ไม่พบข้อมูล</td></tr>';return;}tbody.innerHTML=records.map(function(r,i){var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);var dt=fmtDateTime(ts);var wh=(r.doorWidth?r.doorWidth+'w':'')+(r.doorWidth&&r.doorHeight?' x ':'')+((r.doorHeight)?r.doorHeight+'h':'');var areaShort=r.area?r.area.length>22?r.area.slice(0,22)+'…':r.area:'';var leafShort=r.doorLeaf?r.doorLeaf.length>16?r.doorLeaf.slice(0,16)+'…':r.doorLeaf:'—';var mechShort=r.mechanism?r.mechanism.length>14?r.mechanism.slice(0,14)+'…':r.mechanism:'—';return '<tr>'+'<td class="c-no" style="font-weight:800;color:var(--primary)">'+(i+1)+'</td>'+'<td class="c-date">'+dt+'</td>'+'<td class="c-bu"><strong>'+(r.bu||'')+'</strong></td>'+'<td class="c-bld">'+(r.building||'')+'</td>'+'<td class="c-floor" style="font-size:10px">'+(r.floor||'')+'</td>'+'<td class="c-room" title="'+(r.area||'')+'">'+areaShort+'</td>'+'<td class="c-occ"><span style="background:var(--primary-container);color:var(--primary);padding:2px 6px;border-radius:6px;font-size:10px;font-weight:700;white-space:nowrap">'+(r.occupancyType||'—')+'</span></td>'+'<td class="c-ee">'+ynnaBadge(r.emergencyExit||'N/A')+'</td>'+'<td class="c-occp">'+(r.occupancy||'—')+'</td>'+'<td class="c-dt" title="'+(r.doorType||'')+'" style="font-size:10px">'+(r.doorType||'—')+'</td>'+'<td class="c-wh" style="font-weight:700;color:var(--primary)">'+(wh||'—')+'</td>'+'<td class="c-leaf" title="'+(r.doorLeaf||'')+'">'+leafShort+'</td>'+'<td class="c-mech" title="'+(r.mechanism||'')+'">'+mechShort+'</td>'+'<td class="c-sm">'+ynnaBadge(r.singleMotion||'N/A')+'</td>'+'<td class="c-es">'+ynnaBadge(r.egressSwing||'N/A')+'</td>'+'<td class="c-sc">'+ynnaBadge(r.selfClose||'N/A')+'</td>'+'<td class="c-sa">'+ynnaBadge(r.secAccess||'N/A')+'</td>'+'<td class="c-fr">'+ynnaBadge(r.fireReentry||'N/A')+'</td>'+'<td class="c-rel">'+releaseBadge(r.releaseCondition)+'</td>'+'<td class="c-ll">'+complianceBadge(r.localLaw)+'</td>'+'<td class="c-rba">'+complianceBadge(r.rba)+'</td>'+'<td class="c-insp" style="font-size:10px">'+(r.inspector||'')+'</td>'+'<td class="c-act"><div style="display:flex;gap:3px"><button class="item-btn edit" onclick="editRecord(\''+r.id+'\')" title="แก้ไข"><i class="fa fa-pen"></i></button><button class="item-btn del" onclick="promptDelete(\''+r.id+'\',\''+(r.building||'')+' — '+(r.area||'')+'\')" title="ลบ"><i class="fa fa-trash"></i></button></div></td>'+'</tr>';}).join('');var fill=document.getElementById('scrollProgressFill');var pct=document.getElementById('scrollPct');if(fill)fill.style.width='0%';if(pct)pct.textContent='0%';var wrap=document.getElementById('reportTableWrap');if(wrap)wrap.scrollLeft=0;}
 function fmtDateTime(ts){var d=ts instanceof Date?ts:new Date(ts);if(isNaN(d.getTime()))return'';var dd=String(d.getDate()).padStart(2,'0');var mm=String(d.getMonth()+1).padStart(2,'0');var yyyy=d.getFullYear();var hh=String(d.getHours()).padStart(2,'0');var mi=String(d.getMinutes()).padStart(2,'0');var ss=String(d.getSeconds()).padStart(2,'0');return dd+'/'+mm+'/'+yyyy+' '+hh+':'+mi+':'+ss;}
-function exportCSV(){var selectedBU=document.getElementById('fBU')?document.getElementById('fBU').value:'';var exportRecords=selectedBU?allRecords.filter(function(r){return r.bu===selectedBU;}):allRecords;if(!exportRecords.length){showToast('ไม่มีข้อมูลสำหรับ '+(selectedBU||'All BU'),'error');return;}var hdr=['Date/Time','BU','Building','Floor','Area/Room','Occupancy Type','Emergency Exit','Occupancy','Emg. Door No.','Door Type','Width(cm)','Height(cm)','2.2 Door Leaf','2.3 Mechanism','2.4 Single Motion','2.5 Egress Direction','2.6 Self-Close','3.1 Sec Access Control','3.2 Fire Re-entry','3.3 Release Condition','3.4 Local Law','3.5 RBA','Remark','Inspector'];var rows=exportRecords.map(function(r){var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return[fmtDateTime(ts),r.bu,r.building,r.floor,r.area,r.occupancyType||'',r.emergencyExit||'',r.occupancy||'',r.emergencyDoorNum||'',r.doorType||'',r.doorWidth||'',r.doorHeight||'',r.doorLeaf||'',r.mechanism||'',r.singleMotion||'',r.egressSwing||'',r.selfClose||'',r.secAccess||'',r.fireReentry||'',r.releaseCondition||'',r.localLaw||'',r.rba||'',r.remark||'',r.inspector||''];});var csv=[hdr].concat(rows).map(function(r){return r.map(function(v){return'"'+(v||'').toString().replace(/"/g,'""')+'"';}).join(',');}).join('\n');var buLabel=selectedBU?('_'+selectedBU):'_All';var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='SafeGuard'+buLabel+'_'+new Date().toISOString().slice(0,10)+'.csv';a.click();showToast('Export '+exportRecords.length+' records ('+(selectedBU||'All BU')+')!','success');}
+
+/* ★ KEY FIX — exportCSV ใช้ mapReleaseCondition แปลงค่าก่อน export */
+function exportCSV(){
+  var selectedBU=document.getElementById('fBU')?document.getElementById('fBU').value:'';
+  var exportRecords=selectedBU?allRecords.filter(function(r){return r.bu===selectedBU;}):allRecords;
+  if(!exportRecords.length){showToast('ไม่มีข้อมูลสำหรับ '+(selectedBU||'All BU'),'error');return;}
+  var hdr=['Date/Time','BU','Building','Floor','Area/Room','Occupancy Type','Emergency Exit','Occupancy','Emg. Door No.','Door Type','Width(cm)','Height(cm)','2.2 Door Leaf','2.3 Mechanism','2.4 Single Motion','2.5 Egress Direction','2.6 Self-Close','3.1 Sec Access Control','3.2 Fire Re-entry','3.3 Release Condition','3.4 Local Law','3.5 RBA','Remark','Inspector'];
+  var rows=exportRecords.map(function(r){
+    var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);
+    return[
+      fmtDateTime(ts),r.bu,r.building,r.floor,r.area,
+      r.occupancyType||'',r.emergencyExit||'',r.occupancy||'',r.emergencyDoorNum||'',
+      r.doorType||'',r.doorWidth||'',r.doorHeight||'',r.doorLeaf||'',r.mechanism||'',
+      r.singleMotion||'',r.egressSwing||'',r.selfClose||'',r.secAccess||'',r.fireReentry||'',
+      /* ★ แปลง releaseCondition ก่อน export */
+      mapReleaseCondition(r.releaseCondition||''),
+      r.localLaw||'',r.rba||'',r.remark||'',r.inspector||''
+    ];
+  });
+  var csv=[hdr].concat(rows).map(function(r){return r.map(function(v){return'"'+(v||'').toString().replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var buLabel=selectedBU?('_'+selectedBU):'_All';
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;
+  a.download='SafeGuard'+buLabel+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('Export '+exportRecords.length+' records ('+(selectedBU||'All BU')+')!','success');
+}
+
 var MECH_MAP={'Push Bar':0,'Push Bar with vertical panic bolt':1,'Latch':2,'Knob':3,'Auto-Slide':4,'Manual-Slide':5,'Other':6,'N/A':7};
 var LEAF_MAP={'Swinging Type - Double Door':0,'Swinging Type - Single Door':1,'Horizontal Sliding Door - Double Door':2,'Horizontal Sliding Door - Single Door':3,'Vertical Sliding Door':4,'Door missing':5};
 function editRecord(id){var r=allRecords.find(function(x){return x.id===id;});if(!r)return;clearForm();document.getElementById('editRecordId').value=id;document.getElementById('editBanner').style.display='flex';document.getElementById('editBannerLabel').textContent=r.building+' — '+r.area;document.getElementById('inspectTitle').textContent='แก้ไขรายการ';document.getElementById('submitBtn').innerHTML='<i class="fa fa-floppy-disk"></i> บันทึกการแก้ไข';var sv=function(fid,val){var el=document.getElementById(fid);if(el&&val!=null)el.value=val;};if(r.bu==='PRB'){document.getElementById('bu').value='PRB';document.getElementById('buFull').value='PRB';setBuildingMode('prb');showDoorDims(true);sv('building',r.building);if(r.building&&PRB_ROOMS_ALL[r.building]){var rooms=PRB_ROOMS_ALL[r.building],customs=getCustomRooms('PRB',r.building);var roomSel=document.getElementById('roomName');roomSel.innerHTML='<option value="">เลือก...</option>';rooms.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel.appendChild(o);});if(customs.length){var d=document.createElement('option');d.disabled=true;d.textContent='── ห้องที่เพิ่มเอง ──';roomSel.appendChild(d);customs.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm+' ★';o.setAttribute('data-custom','1');roomSel.appendChild(o);});}roomSel.disabled=false;var allRooms=rooms.concat(customs);if(r.area&&!allRooms.includes(r.area)){addToCustomRooms('PRB',r.building,r.area);var opt=document.createElement('option');opt.value=r.area;opt.textContent=r.area+' ★';opt.setAttribute('data-custom','1');roomSel.appendChild(opt);}sv('roomName',r.area);document.getElementById('roomHint').style.display='flex';document.getElementById('roomCustomToggle').style.display='inline-flex';renderCustomRoomTags('PRB',r.building);document.getElementById('prbSubWrap').classList.remove('sub-hidden');if(r.emergencyDoorNum)sv('emergencyDoorNum',r.emergencyDoorNum);if(r.doorWidth){document.getElementById('doorWidth').value=r.doorWidth;onDimChange('doorWidth','w');}if(r.doorHeight){document.getElementById('doorHeight').value=r.doorHeight;onDimChange('doorHeight','h');}}}else if(r.bu==='BPI-HDD'||r.bu==='BPI-THO'){document.getElementById('bu').value='BPI';document.getElementById('buFull').value=r.bu;document.getElementById('bpiPillText').textContent=r.bu;document.getElementById('bpiSelectedPill').style.display='block';setBuildingMode('bpi',r.bu);showDoorDims(false);sv('building',r.building);if(r.building&&BPI_ROOMS[r.bu]&&BPI_ROOMS[r.bu][r.building]){var rooms2=BPI_ROOMS[r.bu][r.building],customs2=getCustomRooms(r.bu,r.building);var roomSel2=document.getElementById('roomName');roomSel2.innerHTML='<option value="">เลือก...</option>';rooms2.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm;roomSel2.appendChild(o);});if(customs2.length){var d2=document.createElement('option');d2.disabled=true;d2.textContent='── ห้องที่เพิ่มเอง ──';roomSel2.appendChild(d2);customs2.forEach(function(rm){var o=document.createElement('option');o.value=rm;o.textContent=rm+' ★';o.setAttribute('data-custom','1');roomSel2.appendChild(o);});}roomSel2.disabled=false;var allRooms2=rooms2.concat(customs2);if(r.area&&!allRooms2.includes(r.area)){addToCustomRooms(r.bu,r.building,r.area);var opt2=document.createElement('option');opt2.value=r.area;opt2.textContent=r.area+' ★';opt2.setAttribute('data-custom','1');roomSel2.appendChild(opt2);}sv('roomName',r.area);document.getElementById('roomHint').style.display='flex';document.getElementById('roomCustomToggle').style.display='inline-flex';renderCustomRoomTags(r.bu,r.building);}}sv('floor',r.floor);if(r.occupancyType){sv('occupancyType',r.occupancyType);var desc=document.getElementById('occTypeDesc');if(OCC_TYPE_DESC[r.occupancyType]){desc.textContent=OCC_TYPE_DESC[r.occupancyType];desc.classList.add('show');}}sv('occupancy',r.occupancy||'');sv('releaseCondition',r.releaseCondition);sv('localLaw',r.localLaw);sv('rba',r.rba);sv('remark',r.remark);[['emergencyExit','ee'],['singleMotion','sm'],['egressSwing','es'],['selfClose','sc'],['secAccess','sa'],['fireReentry','fr']].forEach(function(p){setField(p[0],r[p[0]]||'N/A',p[1]);});if(r.doorType){document.getElementById('doorType').value=r.doorType;document.querySelectorAll('.dt-card').forEach(function(c){if(c.querySelector('.dt-name')&&c.querySelector('.dt-name').textContent===r.doorType)c.classList.add('selected');});}if(r.doorLeaf!==undefined){document.getElementById('doorLeaf').value=r.doorLeaf;var lcards=document.querySelectorAll('.dl-card');var lidx=LEAF_MAP[r.doorLeaf];if(lidx!==undefined&&lcards[lidx])lcards[lidx].classList.add('selected');}if(r.mechanism!==undefined){document.getElementById('mechanism').value=r.mechanism;var mcards=document.querySelectorAll('.mc-card');var midx=MECH_MAP[r.mechanism];if(midx!==undefined&&mcards[midx])mcards[midx].classList.add('selected');}updateProgress();showPage('inspect',null,'bnInspect');desktopBtns.forEach(function(el,i){el.classList.toggle('active',i===1);});window.scrollTo(0,0);}
@@ -940,25 +982,12 @@ function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox'))
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){['lightbox','deleteModal','clearDataModal','userModal','bpiPopup'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('open');});}});
 function showToast(msg,type){var wrap=document.getElementById('toastWrap'),t=document.createElement('div');t.className='toast'+(type?' '+type:'');t.textContent=msg;wrap.appendChild(t);setTimeout(function(){t.remove();},3000);}
 
-/* ══════════════════════════════════════════════════════════
-   SUMMARY PAGE — Release Condition label map แก้ไข C/E
-══════════════════════════════════════════════════════════ */
-
-/* ★ KEY FIX: map รหัสตัวอักษร → ชื่อเต็ม สำหรับกราฟ Summary เท่านั้น
-   ค่าใน Firestore ยังคงเป็น "C" / "E" ตามเดิม — ไม่มีการแก้ไขข้อมูล */
-var RELEASE_LABEL_MAP={
-  'A':'A/Building General Alarm',
-  'B':'B/No Power Supplied',
-  'C':'C/No Support',
-  'D':'D/Both A & B',
-  'E':'E/Re-confirm'
-};
-
+/* ══ SUMMARY PAGE FUNCTIONS ══ */
 var SUM_CHARTS=[
   {id:'sc_doorType',   field:'doorType',         label:'Door Type',         icon:'fa-door-closed'},
   {id:'sc_doorLeaf',   field:'doorLeaf',          label:'Door Leaf',         icon:'fa-object-group'},
   {id:'sc_mechanism',  field:'mechanism',         label:'Mechanism',         icon:'fa-key'},
-  {id:'sc_release',    field:'releaseCondition',  label:'Release Condition', icon:'fa-lock-open',  labelMap:RELEASE_LABEL_MAP},
+  {id:'sc_release',    field:'releaseCondition',  label:'Release Condition', icon:'fa-lock-open', labelMap:RELEASE_LABEL_MAP},
   {id:'sc_localLaw',   field:'localLaw',          label:'3.4 Local Law',     icon:'fa-scale-balanced'},
   {id:'sc_rba',        field:'rba',               label:'3.5 RBA',           icon:'fa-shield-halved'}
 ];
@@ -970,9 +999,7 @@ function onSumBUChange(){
   var bWrap=document.getElementById('sumBuildingWrap');
   bSel.innerHTML='<option value="">All Buildings</option>';
   if(!bu){bWrap.style.display='none';return;}
-  getBuildingsForBU(bu).forEach(function(b){
-    var o=document.createElement('option');o.value=b;o.textContent=b;bSel.appendChild(o);
-  });
+  getBuildingsForBU(bu).forEach(function(b){var o=document.createElement('option');o.value=b;o.textContent=b;bSel.appendChild(o);});
   bWrap.style.display='flex';
 }
 
@@ -992,13 +1019,11 @@ function getSummaryRecords(){
   return recs;
 }
 
-/* buildFreq รับ optional labelMap เพื่อแปลงรหัสเป็นชื่อเต็มก่อนนับ */
 function buildFreq(records,field,labelMap){
   var map={};
   records.forEach(function(r){
     var raw=(r[field]||'').toString().trim();
     if(!raw)return;
-    /* แปลงชื่อถ้ามี labelMap */
     var v=labelMap&&labelMap[raw]?labelMap[raw]:raw;
     map[v]=(map[v]||0)+1;
   });
@@ -1011,60 +1036,22 @@ function renderSummaryCharts(){
   var recs=getSummaryRecords();
   var bu=document.getElementById('sumBU').value;
   var building=document.getElementById('sumBuilding').value;
-
   var scopeText='ทั้งหมด (All)';
   if(bu&&building)scopeText=bu+' › '+building;
   else if(bu)scopeText=bu+' · All Buildings';
   document.getElementById('sumScopeBadge').innerHTML='<i class="fa fa-layer-group"></i> '+scopeText+' <span style="background:rgba(34,102,255,.15);color:var(--primary);font-size:10px;font-weight:800;padding:2px 8px;border-radius:var(--radius-full);margin-left:4px">'+recs.length+' records</span>';
   document.getElementById('printSummaryMeta').textContent=scopeText+' · '+new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'long',year:'numeric'});
-
   var grid=document.getElementById('summaryChartsGrid');
-
-  if(!recs.length){
-    grid.innerHTML='<div style="grid-column:1/-1"><div class="sc-empty"><i class="fa fa-inbox"></i>ไม่มีข้อมูลในเงื่อนไขที่เลือก</div></div>';
-    return;
-  }
-
+  if(!recs.length){grid.innerHTML='<div style="grid-column:1/-1"><div class="sc-empty"><i class="fa fa-inbox"></i>ไม่มีข้อมูลในเงื่อนไขที่เลือก</div></div>';return;}
   grid.innerHTML=SUM_CHARTS.map(function(cfg){
-    /* ส่ง labelMap เข้า buildFreq ถ้ามี */
     var freq=buildFreq(recs,cfg.field,cfg.labelMap||null);
     var total=freq.reduce(function(s,x){return s+x.count;},0);
     var barsHtml='';
-    if(!freq.length){
-      barsHtml='<div class="sc-empty"><i class="fa fa-chart-simple"></i>ไม่มีข้อมูล</div>';
-    } else {
-      barsHtml=freq.map(function(item,idx){
-        var pct=total>0?Math.round(item.count/total*100):0;
-        var colorCls=SUM_COLORS[idx%SUM_COLORS.length];
-        var labelShort=item.label.length>22?item.label.slice(0,22)+'…':item.label;
-        var barWidth=Math.max(pct,0);
-        var pctInside=pct>=18?'<span class="sc-bar-pct">'+pct+'%</span>':'';
-        var pctOutside=pct<18?'<span class="sc-bar-pct-outside">'+pct+'%</span>':'';
-        return '<div class="sc-bar-row">'
-          +'<div class="sc-label" title="'+item.label+'">'+labelShort+'</div>'
-          +'<div class="sc-bar-wrap">'
-            +pctOutside
-            +'<div class="sc-bar-fill '+colorCls+'" style="width:'+barWidth+'%">'+pctInside+'</div>'
-          +'</div>'
-          +'<div class="sc-count-val">'+item.count+'</div>'
-          +'</div>';
-      }).join('');
-    }
-    return '<div class="summary-chart-card">'
-      +'<div class="sc-header">'
-        +'<div class="sc-title"><i class="fa '+cfg.icon+'"></i> '+cfg.label+'</div>'
-        +'<div class="sc-count">'+recs.length+' records</div>'
-      +'</div>'
-      +'<div class="sc-body">'+barsHtml+'</div>'
-      +'</div>';
+    if(!freq.length){barsHtml='<div class="sc-empty"><i class="fa fa-chart-simple"></i>ไม่มีข้อมูล</div>';}
+    else{barsHtml=freq.map(function(item,idx){var pct=total>0?Math.round(item.count/total*100):0;var colorCls=SUM_COLORS[idx%SUM_COLORS.length];var labelShort=item.label.length>22?item.label.slice(0,22)+'…':item.label;var barWidth=Math.max(pct,0);var pctInside=pct>=18?'<span class="sc-bar-pct">'+pct+'%</span>':'';var pctOutside=pct<18?'<span class="sc-bar-pct-outside">'+pct+'%</span>':'';return '<div class="sc-bar-row"><div class="sc-label" title="'+item.label+'">'+labelShort+'</div><div class="sc-bar-wrap">'+pctOutside+'<div class="sc-bar-fill '+colorCls+'" style="width:'+barWidth+'%">'+pctInside+'</div></div><div class="sc-count-val">'+item.count+'</div></div>';}).join('');}
+    return '<div class="summary-chart-card"><div class="sc-header"><div class="sc-title"><i class="fa '+cfg.icon+'"></i> '+cfg.label+'</div><div class="sc-count">'+recs.length+' records</div></div><div class="sc-body">'+barsHtml+'</div></div>';
   }).join('');
-
-  setTimeout(function(){
-    document.querySelectorAll('.sc-bar-fill').forEach(function(el){
-      var w=el.style.width;el.style.width='0%';
-      setTimeout(function(){el.style.width=w;},50);
-    });
-  },30);
+  setTimeout(function(){document.querySelectorAll('.sc-bar-fill').forEach(function(el){var w=el.style.width;el.style.width='0%';setTimeout(function(){el.style.width=w;},50);});},30);
 }
 
 function exportSummaryCSV(){
@@ -1076,18 +1063,14 @@ function exportSummaryCSV(){
   SUM_CHARTS.forEach(function(cfg){
     var freq=buildFreq(recs,cfg.field,cfg.labelMap||null);
     var total=freq.reduce(function(s,x){return s+x.count;},0);
-    freq.forEach(function(item){
-      var pct=total>0?Math.round(item.count/total*100):0;
-      rows.push([cfg.label,item.label,item.count,pct]);
-    });
+    freq.forEach(function(item){var pct=total>0?Math.round(item.count/total*100):0;rows.push([cfg.label,item.label,item.count,pct]);});
     rows.push(['','','','']);
   });
   var csv=rows.map(function(r){return r.map(function(v){return'"'+(v||'').toString().replace(/"/g,'""')+'"';}).join(',');}).join('\n');
   var scope=(bu?(bu+(building?'_'+building:'')):'All');
   var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
   var url=URL.createObjectURL(blob),a=document.createElement('a');
-  a.href=url;
-  a.download='SafeGuard_Summary_'+scope+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.href=url;a.download='SafeGuard_Summary_'+scope+'_'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
   showToast('Export Summary CSV เรียบร้อย!','success');
 }
