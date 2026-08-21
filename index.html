@@ -97,15 +97,11 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 @keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.4)}}
 .status-text{font-size:12px;font-weight:600;color:#fff;flex:1}
 .status-badge{background:rgba(0,229,209,.15);color:var(--wd-teal);font-size:11px;font-weight:700;padding:3px 11px;border-radius:var(--radius-full);border:1px solid rgba(0,229,209,.3)}
-/* ══ HIDDEN ELEMENTS ══════════════════════════════════ */
 .top-stats{display:none!important}
 #liveCount{display:none!important}
-/* ① ซ่อน Changelog section ทั้งหมดในหน้า About */
 #page-about .section-title,
 #page-about .about-section:last-of-type{display:none!important}
-/* ② ซ่อน filter-result-count ("แสดง X จาก Y records") */
 #filterResultCount{display:none!important}
-/* ══════════════════════════════════════════════════════ */
 .top-stat{background:var(--surface-card);border-radius:var(--radius-lg);padding:14px 16px;box-shadow:var(--shadow-sm);border:1px solid var(--outline-variant);display:flex;align-items:center;gap:12px;transition:box-shadow .18s,transform .18s}
 .top-stat:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
 .top-stat-icon{width:38px;height:38px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
@@ -516,6 +512,65 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 .lightbox-inner{max-width:92vw;max-height:90vh;position:relative}
 .lightbox-inner img{max-width:100%;max-height:88vh;border-radius:var(--radius-md);box-shadow:0 8px 40px rgba(0,0,0,.6);display:block}
 .lightbox-close{position:absolute;top:-13px;right:-13px;background:var(--primary);border:none;color:#fff;font-size:16px;cursor:pointer;border-radius:50%;width:34px;height:34px;display:flex;align-items:center;justify-content:center}
+
+/* ══ SUMMARY PAGE STYLES ══ */
+.summary-filter-card{background:var(--surface-card);border-radius:var(--radius-xl);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);padding:18px 20px;margin-bottom:14px}
+.summary-filter-row{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.summary-filter-group{display:flex;flex-direction:column;gap:4px}
+.summary-filter-label{font-size:10px;font-weight:700;color:var(--outline);letter-spacing:.06em;text-transform:uppercase}
+.summary-filter-select{padding:9px 32px 9px 13px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%234a6b80' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;font-size:12px;font-weight:600;color:var(--on-surface);font-family:inherit;outline:none;appearance:none;cursor:pointer;transition:border-color .15s;min-width:160px}
+.summary-filter-select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(34,102,255,.1)}
+.btn-summary-show{padding:9px 20px;border-radius:var(--radius-md);border:none;background:var(--wd-grad-h);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:7px;height:40px;transition:opacity .15s;box-shadow:0 2px 8px rgba(34,102,255,.3)}
+.btn-summary-show:hover{opacity:.88}
+.btn-summary-reset{padding:9px 14px;border-radius:var(--radius-md);border:1.5px solid var(--outline-variant);background:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;color:var(--outline);display:flex;align-items:center;gap:6px;height:40px;transition:all .15s}
+.btn-summary-reset:hover{background:var(--surface-container);border-color:var(--outline)}
+.summary-action-bar{display:flex;gap:9px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.summary-scope-badge{display:inline-flex;align-items:center;gap:6px;background:var(--primary-container);color:var(--primary);font-size:11px;font-weight:700;padding:5px 13px;border-radius:var(--radius-full);border:1px solid rgba(34,102,255,.2)}
+.btn-summary-print{padding:8px 16px;border-radius:var(--radius-md);border:none;background:var(--wd-grad-h);color:#fff;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:opacity .15s;box-shadow:0 2px 8px rgba(34,102,255,.25)}
+.btn-summary-print:hover{opacity:.88}
+.btn-summary-csv{padding:8px 16px;border-radius:var(--radius-md);border:1.5px solid rgba(0,135,90,.35);background:#fff;color:var(--success);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:6px;transition:all .15s}
+.btn-summary-csv:hover{background:var(--success-bg);border-color:var(--success)}
+.summary-charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:680px){.summary-charts-grid{grid-template-columns:1fr}}
+.summary-chart-card{background:var(--surface-card);border-radius:var(--radius-xl);border:1px solid var(--outline-variant);box-shadow:var(--shadow-sm);overflow:hidden;position:relative}
+.summary-chart-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--wd-grad-h)}
+.sc-header{padding:14px 16px 10px;border-bottom:1px solid var(--surface-high)}
+.sc-title{font-size:13px;font-weight:800;color:var(--wd-black);display:flex;align-items:center;gap:8px}
+.sc-title i{color:var(--primary);font-size:14px}
+.sc-count{font-size:10px;color:var(--outline);margin-top:2px;font-weight:600}
+.sc-body{padding:14px 16px}
+.sc-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:9px}
+.sc-bar-row:last-child{margin-bottom:0}
+.sc-label{font-size:10px;font-weight:700;color:var(--on-surface-variant);width:130px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-bar-wrap{flex:1;height:22px;background:var(--surface-high);border-radius:var(--radius-full);overflow:hidden;position:relative}
+.sc-bar-fill{height:100%;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:flex-end;padding-right:7px;transition:width .6s ease;min-width:0}
+.sc-bar-pct{font-size:10px;font-weight:800;color:#fff;white-space:nowrap;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sc-bar-pct-outside{font-size:10px;font-weight:800;color:var(--outline);white-space:nowrap;position:absolute;left:6px;top:50%;transform:translateY(-50%)}
+.sc-count-val{font-size:10px;font-weight:800;color:var(--on-surface);width:30px;text-align:right;flex-shrink:0}
+.sc-empty{text-align:center;padding:28px 16px;color:var(--outline);font-size:12px;font-weight:600}
+.sc-empty i{display:block;font-size:28px;opacity:.25;margin-bottom:7px}
+.sc-c0{background:linear-gradient(90deg,#2266FF,#4488FF)}
+.sc-c1{background:linear-gradient(90deg,#00875A,#00BF82)}
+.sc-c2{background:linear-gradient(90deg,#c0001a,#e53935)}
+.sc-c3{background:linear-gradient(90deg,#8a5200,#FCA91A)}
+.sc-c4{background:linear-gradient(90deg,#6423FF,#9b59f5)}
+.sc-c5{background:linear-gradient(90deg,#007B6E,#00E5D1)}
+.sc-c6{background:linear-gradient(90deg,#c04000,#ff7043)}
+.sc-c7{background:linear-gradient(90deg,#1a6b9e,#29b6f6)}
+@media print{
+  .top-nav,.bottom-nav,.summary-filter-card,.summary-action-bar{display:none!important}
+  body{background:#fff}
+  .main-content{margin-top:0!important;padding:0!important;max-width:100%!important}
+  .page{display:none!important}
+  #page-summary{display:block!important}
+  .print-summary-header{display:flex!important}
+  .summary-charts-grid{grid-template-columns:1fr 1fr!important;gap:10px!important}
+  .summary-chart-card{break-inside:avoid;box-shadow:none!important;border:1px solid #ccc!important}
+}
+.print-summary-header{display:none;align-items:center;justify-content:space-between;padding:16px 0 12px;border-bottom:2px solid var(--wd-blue);margin-bottom:16px}
+.print-summary-header .psh-title{font-size:18px;font-weight:800;color:var(--wd-black)}
+.print-summary-header .psh-meta{font-size:11px;color:var(--outline);margin-top:2px}
+.print-summary-header .psh-logo{font-size:13px;font-weight:800;color:var(--primary)}
 </style>
 </head>
 <body>
@@ -537,7 +592,6 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 
 <div class="toast-wrap" id="toastWrap"></div>
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)"><div class="lightbox-inner"><button class="lightbox-close" onclick="closeLightbox()"><i class="fa fa-xmark"></i></button><img id="lightboxImg" src="" alt=""><div class="lightbox-caption" id="lightboxCap"></div></div></div>
-
 <div class="modal-overlay" id="deleteModal"><div class="modal-box"><div class="modal-header"><div class="modal-header-icon"><i class="fa fa-trash"></i></div><div><div class="modal-title">ยืนยันการลบรายการ</div><div class="modal-subtitle">การดำเนินการนี้ไม่สามารถย้อนกลับได้</div></div></div><div class="modal-body"><p>คุณต้องการลบรายการนี้ออกจากระบบ?</p><div class="modal-warning-box"><i class="fa fa-triangle-exclamation"></i><span id="deleteRecordLabel"></span></div></div><div class="modal-footer"><button class="modal-btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('open')">ยกเลิก</button><button class="modal-btn-danger" onclick="confirmDelete()"><i class="fa fa-trash"></i> ลบรายการ</button></div></div></div>
 <div class="modal-overlay" id="clearDataModal"><div class="modal-box"><div class="modal-header"><div class="modal-header-icon"><i class="fa fa-triangle-exclamation"></i></div><div><div class="modal-title">ล้างข้อมูลทั้งหมด</div><div class="modal-subtitle" id="clearDataSubtitle">ข้อมูลจะถูกลบออกจากระบบถาวร</div></div></div><div class="modal-body"><p id="clearDataMsg">การดำเนินการนี้จะลบข้อมูลการตรวจสอบทั้งหมดออกจากฐานข้อมูลโดยถาวร</p><div class="clear-steps"><div class="clear-step"><i class="fa fa-database"></i><span>ลบ records ทั้งหมดออกจากฐานข้อมูล</span></div><div class="clear-step"><i class="fa fa-chart-bar"></i><span>Dashboard จะรีเซ็ตเป็น 0</span></div><div class="clear-step"><i class="fa fa-file-excel"></i><span>ไม่สามารถ Export ข้อมูลเดิมได้อีก</span></div></div><p style="margin-top:14px;font-size:12px;font-weight:700;color:var(--on-surface)">พิมพ์ <strong style="color:var(--error)">"CONFIRM"</strong> เพื่อยืนยัน:</p><input class="confirm-type-input" type="text" id="clearConfirmInput" placeholder='พิมพ์ "CONFIRM" ที่นี่' oninput="onClearConfirmInput()"></div><div class="modal-footer"><button class="modal-btn-cancel" onclick="closeClearModal()">ยกเลิก</button><button class="modal-btn-danger" id="clearConfirmBtn" disabled onclick="confirmClearData()"><i class="fa fa-trash"></i> ล้างข้อมูล</button></div></div></div>
 <div class="modal-overlay" id="userModal"><div class="modal-box" style="max-width:480px"><div class="modal-header"><div class="modal-header-icon"><i class="fa fa-user-plus"></i></div><div><div class="modal-title" id="userModalTitle">เพิ่ม User ใหม่</div><div class="modal-subtitle">กรอกข้อมูลผู้ใช้งานระบบ</div></div></div><div class="modal-body"><div class="user-form-grid"><div class="field-group"><label class="field-label">ชื่อ-นามสกุล *</label><input class="field-input" type="text" id="uFullName" placeholder="Firstname Lastname"></div><div class="field-group"><label class="field-label">Username *</label><input class="field-input" type="text" id="uUsername" placeholder="username" autocomplete="off"></div><div class="field-group"><label class="field-label">Password *</label><div class="pass-input-wrap"><input class="field-input" type="password" id="uPassword" placeholder="Password" autocomplete="new-password"><button type="button" class="pass-toggle" onclick="togglePassField('uPassword',this)"><i class="fa fa-eye"></i></button></div></div><div class="field-group"><label class="field-label">Role *</label><select class="field-select" id="uRole"><option value="admin">Admin</option><option value="user" selected>User</option><option value="viewer">Viewer</option></select></div><div class="field-group col-span-2" style="grid-column:1/-1"><label class="field-label">แผนก / ตำแหน่ง</label><input class="field-input" type="text" id="uDept" placeholder="เช่น Security Department"></div></div><div id="userFormError" style="display:none;background:var(--error-bg);border:1px solid rgba(192,0,26,.25);border-radius:var(--radius-md);padding:10px 14px;font-size:12px;font-weight:600;color:var(--error);margin-top:12px"></div></div><div class="modal-footer"><button class="modal-btn-cancel" onclick="closeUserModal()">ยกเลิก</button><button class="modal-btn-confirm" onclick="saveUser()"><i class="fa fa-floppy-disk"></i> บันทึก</button></div></div></div>
@@ -553,6 +607,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
       <button class="nav-link-btn active" onclick="showPage('home',this)">Home</button>
       <button class="nav-link-btn" onclick="showPage('inspect',this)">Inspect</button>
       <button class="nav-link-btn" onclick="showPage('reports',this)">Reports</button>
+      <button class="nav-link-btn" onclick="showPage('summary',this)">Summary</button>
       <button class="nav-link-btn" onclick="showPage('settings',this)">Settings</button>
       <button class="nav-link-btn" onclick="showPage('howto',this)">วิธีใช้</button>
       <button class="nav-link-btn" onclick="showPage('about',this)">About</button>
@@ -572,6 +627,7 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
 </div>
 
 <main class="main-content" id="appMain" style="display:none">
+
   <div class="page active" id="page-home">
     <div class="page-header"><h1>Dashboard</h1><p>Exit Route Compliance Survey — สรุปผลการตรวจสอบ</p></div>
     <div class="status-bar"><div class="status-dot"></div><span class="status-text" id="statusText">กำลังเชื่อมต่อระบบ...</span><span class="status-badge" id="liveCount">0 records</span></div>
@@ -702,6 +758,40 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
     </div>
   </div>
 
+  <!-- ═══ SUMMARY PAGE ═══════════════════════════════════ -->
+  <div class="page" id="page-summary">
+    <div class="print-summary-header" id="printSummaryHeader">
+      <div><div class="psh-title">Summary Report — Exit Route Compliance Survey</div><div class="psh-meta" id="printSummaryMeta">All Sites · All Buildings</div></div>
+      <div class="psh-logo"><i class="fa fa-shield-halved"></i> SafeGuard</div>
+    </div>
+    <div class="page-header"><h1>Summary</h1><p>สรุปข้อมูลประตูเป็นกราฟ แยกตาม Site และอาคาร</p></div>
+    <div class="summary-filter-card">
+      <div class="summary-filter-row">
+        <div class="summary-filter-group">
+          <span class="summary-filter-label"><i class="fa fa-building"></i> Site (BU)</span>
+          <select class="summary-filter-select" id="sumBU" onchange="onSumBUChange()">
+            <option value="">All Sites</option>
+            <option value="PRB">PRB</option>
+            <option value="BPI-HDD">BPI-HDD</option>
+            <option value="BPI-THO">BPI-THO</option>
+          </select>
+        </div>
+        <div class="summary-filter-group" id="sumBuildingWrap" style="display:none">
+          <span class="summary-filter-label"><i class="fa fa-warehouse"></i> Building</span>
+          <select class="summary-filter-select" id="sumBuilding"><option value="">All Buildings</option></select>
+        </div>
+        <button class="btn-summary-show" onclick="renderSummaryCharts()"><i class="fa fa-chart-bar"></i> แสดงกราฟ</button>
+        <button class="btn-summary-reset" onclick="resetSummaryFilter()"><i class="fa fa-xmark"></i> Reset</button>
+      </div>
+    </div>
+    <div class="summary-action-bar">
+      <span class="summary-scope-badge" id="sumScopeBadge"><i class="fa fa-layer-group"></i> ทั้งหมด (All)</span>
+      <button class="btn-summary-print" onclick="window.print()"><i class="fa fa-print"></i> Print / PDF</button>
+      <button class="btn-summary-csv" onclick="exportSummaryCSV()"><i class="fa fa-table"></i> Export CSV</button>
+    </div>
+    <div class="summary-charts-grid" id="summaryChartsGrid"></div>
+  </div>
+
   <div class="page" id="page-settings">
     <div class="page-header"><h1>Settings</h1><p>จัดการผู้ใช้งาน สิทธิ์การเข้าถึง และตั้งค่าระบบ</p></div>
     <div class="settings-section"><div class="settings-section-header"><div><h2><i class="fa fa-users-gear"></i> User Management</h2><p>เพิ่ม แก้ไข และจัดการสิทธิ์ผู้ใช้งาน</p></div><button class="btn-add-user" onclick="openAddUser()"><i class="fa fa-user-plus"></i> เพิ่ม User</button></div><div class="user-list" id="userList"></div></div>
@@ -718,12 +808,10 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
     <div class="page-header"><h1>About</h1><p>ข้อมูลระบบและองค์กร</p></div>
     <div class="about-hero"><div class="ah-logo">Exit Route Compliance Survey <span>INSPECTION SYSTEM</span></div><div class="ah-ver"><i class="fa fa-tag"></i> Version 2.1 | Update Aug 18'2026</div><div style="font-size:11px;color:rgba(255,255,255,.5);margin-top:10px">Western Digital Storage Technologies (Thailand) Ltd.<br>Global Mfg Facilities (MFM) · REO — Security</div></div>
     <div class="about-section"><div class="about-item"><div class="about-icon" style="background:var(--primary-container);color:var(--primary)"><i class="fa fa-user"></i></div><div class="about-text"><div class="at">Developed by @Ploypalin Miyampul</div><div class="as">Security Operation Center | +6635277032</div></div></div><div class="about-item"><div class="about-icon" style="background:var(--success-bg);color:var(--success)"><i class="fa fa-building"></i></div><div class="about-text"><div class="at">Organization</div><div class="as">WD Storage Technologies (Thailand) Ltd. — MFM Security · APAC</div></div></div></div>
-    <!-- Changelog section ซ่อนด้วย CSS — ข้อมูลยังคงอยู่ใน DOM -->
     <div class="section-title"><i class="fa fa-clock-rotate-left" style="color:var(--primary)"></i> Changelog</div>
     <div class="about-section"><div class="changelog-list">
-      <div class="changelog-item"><span class="changelog-ver latest">v2.6</span><div class="changelog-body"><div class="cb-title">PRB 100% + ซ่อน Top Stats, Records Badge, Utility, Support Building</div><div class="cb-desc">ซ่อน 4 KPI cards และ badge "X records" ใน status bar — ข้อมูลยังคงอยู่ใน DOM ครบ ซ่อนด้วย CSS display:none เท่านั้น</div><div class="cb-tags"><span class="cb-tag ui">UI</span><span class="cb-tag fix">Hide</span></div></div></div>
+      <div class="changelog-item"><span class="changelog-ver latest">v2.6</span><div class="changelog-body"><div class="cb-title">PRB 100% + ซ่อน Top Stats, Records Badge, Utility, Support Building</div><div class="cb-desc">ซ่อน 4 KPI cards และ badge "X records" ใน status bar</div><div class="cb-tags"><span class="cb-tag ui">UI</span><span class="cb-tag fix">Hide</span></div></div></div>
       <div class="changelog-item"><span class="changelog-ver old">v2.5</span><div class="changelog-body"><div class="cb-title">PRB Room Data Updated — 356 inspection points</div><div class="cb-desc">อัปเดต PRB_ROOMS: admin=28, P1=90, P2=75, P3=22, P4=47, P5=94</div><div class="cb-tags"><span class="cb-tag fix">Bug Fix</span><span class="cb-tag feat">Data</span></div></div></div>
-      <div class="changelog-item"><span class="changelog-ver old">v2.4</span><div class="changelog-body"><div class="cb-title">BPI Room Data Correction — 226 rooms total</div><div class="cb-desc">ลบ B2L37 HGA Test, LNL-2220B4L3 Door#15, B6L16.2 RECEIVING B6 · rename B4L334 → Tooling HSA Engineer</div><div class="cb-tags"><span class="cb-tag fix">Bug Fix</span><span class="cb-tag feat">Data</span></div></div></div>
     </div></div>
   </div>
 </main>
@@ -732,38 +820,15 @@ body{font-family:'Inter',Arial,sans-serif;background:var(--surface);color:var(--
   <div class="bottom-nav-item active" id="bnHome" onclick="showPage('home',null,'bnHome')"><i class="fa fa-house"></i><span>Home</span></div>
   <div class="bottom-nav-item" id="bnInspect" onclick="showPage('inspect',null,'bnInspect')"><i class="fa fa-door-open"></i><span>Inspect</span></div>
   <div class="bottom-nav-item" id="bnReports" onclick="showPage('reports',null,'bnReports')"><i class="fa fa-chart-bar"></i><span>Reports</span></div>
+  <div class="bottom-nav-item" id="bnSummary" onclick="showPage('summary',null,'bnSummary')"><i class="fa fa-chart-pie"></i><span>Summary</span></div>
   <div class="bottom-nav-item" id="bnSettings" onclick="showPage('settings',null,'bnSettings')"><i class="fa fa-gear"></i><span>Settings</span></div>
   <div class="bottom-nav-item" id="bnAbout" onclick="showPage('about',null,'bnAbout')"><i class="fa fa-circle-info"></i><span>About</span></div>
 </nav>
 
 <script>
-const PRB_ROOMS_ALL={
-  'admin':['Emer ห้องประชุมใหญ่ 2','Emer ห้องประชุมใหญ่ 1','ห้องประชุมใหญ่','Emer Office engineering (New)','Emer Office engineering (New)_2','Emer Office engineering (New)_3','Emer Office engineering (New)_4','Emer Office engineering (New)_5','Emer Office engineering (New)_6','Emer Office engineering (New)_7','Emer Office engineering (New)_8','Emer Office engineering (New)_9','Emer Office engineering (New)_10','Emer Office engineering (New)_11','Emer Office engineering (New)_12','Emer Office engineering (New)_13','Emer Office engineering (New)_14','Emer Office engineering (New)_F2_1','Emer Office engineering (New)_F2_2','Emer Office engineering (New)_F2_3','Emer Office engineering (New)_F2_4','Emer Office 5','Emer Office 4','Emer Office engineering (New)_15','Emer Office engineering (New)_16','Emer Office engineering (New)_17','Emer Office 5_2','Emer Office engineering (New)_18'],
-  'Phase # 1':['Emer Part Stock 1','AHU','New ort','S/S 5','AHu-ORT','ORT','ort office','Emer linkbridge p1','Daslab emer','ห้อฃเก็บสารดับเพลิง','IT network','Network ofiice','Network store','UPS room','Data center','Data center_2','Data center_3','Device analytical','ห้องรังสี','UPS room_2','Elec rm','Elec rm_2','Elec rm_3','Elec rm_4','Elec rm_5','AHU_2','AHU_3','HDD ASM','TPE command','ห้องพยาบาล','ห้องพยาบาล_2','ห้องพยาบาล_3','ห้องพยาบาล_4','ห้องพยาบาล_5','ห้องพยาบาล_6','ห้องพยาบาล_7','Emer p1-05','Emer ห้องพยาบาล','CI room','HR@MFG','mfg office','mfg office_2','ห้องหม้อแปลง','ห้องไฟฟ้า','ห้องไฟฟ้า_2','ห้องไฟฟ้า_3','Emer ห้องเครื่องเฟส 1','Emer ห้องเครื่องเฟส 1_2','Emer p1-04','Training room','ห้องสมุด','Training room_2','Emer p1-03','Emer locker','Emer ห้องพักผ่อน','Emer pump room','ห้องอบรมใหญ่','ห้องสวัสดิการ','ห้องพักผ่อน','Monitor room','Security manager room','Security center','Security center_2','Metrology','Emer p1-02','Emer final 1','Emer final 2','ORT#2 [ Test ]','ORT#2 [ Test ]_2','Emer Main Corridor 1','M$E MACHINE SHOP ROOM','ITO OFFICE','AME','MATERRIALS LABORATORY','ORT/ MI','UPS','Emer Corridor 3','Emer Corridor 2','Medical','Mother\'s Cornor','Emer Corridor 1','Machine Room 1','CCTV Server Room IN','Receving','Receving_2','RI Room','RI Room_2','Security','Emer Mainentrance','Emer Mainentrance_2'],
-  'Phase # 2':['Das lab','FA lab 2','FA, lab2','Das lab_2','ahu','Pcs office','Training','Spare room','Emer pcs','ห้องอบรม','Spare room_2','Traing simu','ห้องอบรม_2','M toilet no. 16','W toilet no 16','Emer mr 2','Emer link bridge','MC 2','Emer FA lab','FA lab','Das lab_3','P2-01','P2-02','Mainten only','ประตูฉุกเฉิน P2-03','Machine room','Storage','W toilet','W toilet_2','M toilet no. 12','Changing P2-04','M toilet no. 12_2','w toilet no. 13','ทางเข้าห้องเปลี่ยนชุด P2-05','s/s no3','ห้องหม้อแปลง s/s no3','ห้องหม้อแปลง s/s no3_2','ห้องหม้อแปลง s/s no3_3','S/S No3','ห้องเปลี่ยนรองเท้า','Changing P2-08','ห้องหม้อแปลง S/S 303','ห้องหม้อแปลง S/S 303_2','S/S 303','ห้องหม้อแปลง ss/4','S/S 4','S/S 4_2','Emer s/s 4','Emer s/s 4_2','Emer s/s 4_3','Emer s/s 4_4','SS no. 4','Mps','ข้าง emer coridor 2','Emer Part Stock 2','PE LAB F/A Room','CST Room','Emer Mainentrance','Emer Corridor 4','MSP2','MSP2_2','Emer Corridor 5','Acoustic Lab','Acoustic Lab_2','Shock&Vibration Lab','Shock&Vibration Lab_2','Emer Corridor 6','Emer Main Corridor 2','Calibration Lab','Teradyne ofiice','DEBUG CENTER','TEE Office','BRC','BRC_2','Emer unit stock 2'],
-  'Phase # 3':['TLC entry linkbridge','Laser Welding Room','Small Chiller 2','Emer Door Conveyor (Tranfer door)','Emer Door Featuring 2','Emer Door Shipping 1','BRC 2','BRC','TLC Unit Stock 3 (Shipping)','Main Entrance ( TX2)','Emer ข้าง passbox welding','Small Chiller 1','Small Chiller 1_2','Emer Seal Process Shipping Dock [ No.5 ]','เลเซอร์ รูม 4','Units Stock 4','TLC Engineering Office #R','Emer Door Featuring 1','Main Entrance TLC 2','Main Entrance TLC','TLC Security Room','Emer Door TX 01'],
-  'Phase # 4':['AHU Room2-3 link bridge','AHU Room -2B4','AHU Room2-1','TPE LABORATORY','ประตูฉุกเฉินB4ชั้น2','HDD Storage','HDD Storage_2','Fire Exit AHU Room 1 IP9','Fire Exit AHU Room 1 IP9_2','AHU Room1 Lingbridge','AHU Room1','W.TOILETชั้น2 B4','M.Toilet ชั้น2 4','ทางเข้าอ๊อฟฟิตชั้น2 B4','TestcoServer1','Network Server1','Monitoring Data Server & SE Office','Bench Test & Repair Room','Spare Part Center','ESD Control Engineering','Bean &Twio room','Fire Exit Testing Area GL. M-7','Female Toilet no.24','Handiccap','Male Toilet no.24','Entrance Matting OP4','Lift Lobby IP5','ประตูห้องไฟฟ้า UT3-3','ห้องไฟฟ้า Sub13-4 B4','ห้องหม้อแปลง SUB13-2 บานใหญ่','ห้องหมอแปล บานใหญ่ Sub13-1','ห้องหมอแปลง Sub13-2','ห้อหม้อแปลง SUB13-1','ห้องหมอแปลงไฟฟ้า-2B4','ทางเข้าห้องหม้อแปลงไฟฟ้า B4-1','Sub12 RM B4','Sub 12','TestcoServer1_2','Utility Area','Utility area b4','ห้อง ชาร์ดแบ็ต','Fire Exit Staging Area 3 IP6','Fire exit staging 3_ไม่มีระบย','Storage','Fire Exit Testing Area GL. E-11 IP14','Fire Exit Testing Area GL. I-11 OP6','Control Room'],
-  'Phase # 5':['W toilet','W toilet_2','M toilet','idf room 3','Customer visit','P5_3rd-Stair3','P5_3rd-Stair1','idf room 1','P5_3rd-Stair2','P5_3Fl-Emer MDB Room3','P5_3rd-Stair5','idf room 2','BB ROOM 3','P5_2nd-Stair 4#2','EE.Room','Command','AHU Room2','AHU ROOM3','W toilet_3','M toilet_2','Command_2','BMS FATILI CONTROL ROOM','VMI','Saturn','AHU ROOM4','IDF room 3','BE automation','P5_2nd-Stair3','P5_1Fl-Stair No.4#3','Small chiller','Small chiller_2','P5_2nd-Stair1','Small chiller_3','IDF Room2','P5_1Fl-Stair No.5#2','P5_1Fl-Stair No.1#1','P5_1Fl-MDB Tranformer3','P5_1Fl-MDB Tranformer3_2','P5_1Fl-MDB Tranformer3_3','P5_1Fl-MDB Tranformer3_4','P5_1Fl-Emer MDB Room1','P5_1Fl-MDB Tranformer1','P5_1Fl-MDB Tranformer2','Emer door link bridge','P5-3Fl-MDB Loading','P5_2Fl-MDB Tranformer2','P5_1Fl-MDB Tranformer1_2','P5-2Fl-Emer AHU Room1','P5_2nd-Stair2','MDB room 2','MDB room 2_2','D-G-3-6 (NO NAME)','P5_2nd-Stair No.5','P5_1Fl-Stair No.2','AHU room 2','AHU room 2_2','P5-1Fl-Small Chiller Room','AHU room 2_3','AHU room 2_4','P5-1Fl-Small Chiller Room_2','P5_1Fl-Stair No.4#2','Anti Room -2','P5_1Fl-Stair No.4#1','EE room','Anti Room','P5_1Fl-AHU Room 1','AS-2-1','Backend Testing Unit Area2','IDF Room 1','P5_1Fl-Stair No.1#1_2','P5_1Fl-Stair No.1#1_3','C-G-2-1 (NAME)','Backend Area 2','Staging area 1','Staging area2','C-G-2-2 (2Door)','P5_1Fl-Stair No.3','P5_1Fl-Stair No.3_2','Backend Testing Unit Area2_2','Storage room','MPS rooom','Helium Leak Test PM 0verhaul Room','MSP room','Engineer lab','TE MTC OFFICE','IDF room 3_2','Nursing room','BREA ROOM','Break room','M.TOILET','W. Toilet','EE Room','P5_1Fl-Stair No.4#2_2','P5_2nd-Stair 4#1'],
-  'Utility':['Fire Exit MDB/HV Room IP2 (UT3)','Fire Exit Chiller Room IP5@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP6@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP7@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP4@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP8@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP9@2EN#17 (Shutter door UT3)','Transfomer Room IP1 (UT3)','Fire Exit MDB/HV Room IP3 (UT3)','Emer Chiller11 ( UT4)','Utility_Emer Chiller6 ( UT4)','Utility_Emer Air Com2#2 ( UT4)','Utility_Emer Air Com2 ( UT4)','Utility_Emer Air Com1#2 ( UT4)','Utility_Emer Air Com1 ( UT4)','Utility_Shutter Door Air Com2 ( UT4)','Utility_Shutter Door Chiller1 ( UT4)','Utility_Shutter Door Chiller2 ( UT4)','Utility_Shutter Door Chiller3 ( UT4)','Utility_Shutter Door Chiller4 ( UT4)','Utility_Shutter Door Chiller5 ( UT4)','Emer Chiller14 ( UT4)','Utility_Shutter Door Chiller6 ( UT4)','Utility_Shutter Door Chiller7 ( UT4)','Utility_Shutter Door Chiller8 ( UT4)','Utility_Shutter Door Chiller9 ( UT4)','Emer Chiller10 ( UT4)'],
-  'Support Building':['Car Park_Roof FL-Stair No.1','Car Park_3FL-Stair No.1','Car Park_3FL-Emer Canteen No.3','Car Park_3FL-Emer Canteen No.2','Car Park_3FL-Emer Canteen No.1']
-};
+const PRB_ROOMS_ALL={'admin':['Emer ห้องประชุมใหญ่ 2','Emer ห้องประชุมใหญ่ 1','ห้องประชุมใหญ่','Emer Office engineering (New)','Emer Office engineering (New)_2','Emer Office engineering (New)_3','Emer Office engineering (New)_4','Emer Office engineering (New)_5','Emer Office engineering (New)_6','Emer Office engineering (New)_7','Emer Office engineering (New)_8','Emer Office engineering (New)_9','Emer Office engineering (New)_10','Emer Office engineering (New)_11','Emer Office engineering (New)_12','Emer Office engineering (New)_13','Emer Office engineering (New)_14','Emer Office engineering (New)_F2_1','Emer Office engineering (New)_F2_2','Emer Office engineering (New)_F2_3','Emer Office engineering (New)_F2_4','Emer Office 5','Emer Office 4','Emer Office engineering (New)_15','Emer Office engineering (New)_16','Emer Office engineering (New)_17','Emer Office 5_2','Emer Office engineering (New)_18'],'Phase # 1':['Emer Part Stock 1','AHU','New ort','S/S 5','AHu-ORT','ORT','ort office','Emer linkbridge p1','Daslab emer','ห้องเก็บสารดับเพลิง','IT network','Network ofiice','Network store','UPS room','Data center','Data center_2','Data center_3','Device analytical','ห้องรังสี','UPS room_2','Elec rm','Elec rm_2','Elec rm_3','Elec rm_4','Elec rm_5','AHU_2','AHU_3','HDD ASM','TPE command','ห้องพยาบาล','ห้องพยาบาล_2','ห้องพยาบาล_3','ห้องพยาบาล_4','ห้องพยาบาล_5','ห้องพยาบาล_6','ห้องพยาบาล_7','Emer p1-05','Emer ห้องพยาบาล','CI room','HR@MFG','mfg office','mfg office_2','ห้องหม้อแปลง','ห้องไฟฟ้า','ห้องไฟฟ้า_2','ห้องไฟฟ้า_3','Emer ห้องเครื่องเฟส 1','Emer ห้องเครื่องเฟส 1_2','Emer p1-04','Training room','ห้องสมุด','Training room_2','Emer p1-03','Emer locker','Emer ห้องพักผ่อน','Emer pump room','ห้องอบรมใหญ่','ห้องสวัสดิการ','ห้องพักผ่อน','Monitor room','Security manager room','Security center','Security center_2','Metrology','Emer p1-02','Emer final 1','Emer final 2','ORT#2 [ Test ]','ORT#2 [ Test ]_2','Emer Main Corridor 1','M$E MACHINE SHOP ROOM','ITO OFFICE','AME','MATERRIALS LABORATORY','ORT/ MI','UPS','Emer Corridor 3','Emer Corridor 2','Medical','Mother\'s Cornor','Emer Corridor 1','Machine Room 1','CCTV Server Room IN','Receving','Receving_2','RI Room','RI Room_2','Security','Emer Mainentrance','Emer Mainentrance_2'],'Phase # 2':['Das lab','FA lab 2','FA, lab2','Das lab_2','ahu','Pcs office','Training','Spare room','Emer pcs','ห้องอบรม','Spare room_2','Traing simu','ห้องอบรม_2','M toilet no. 16','W toilet no 16','Emer mr 2','Emer link bridge','MC 2','Emer FA lab','FA lab','Das lab_3','P2-01','P2-02','Mainten only','ประตูฉุกเฉิน P2-03','Machine room','Storage','W toilet','W toilet_2','M toilet no. 12','Changing P2-04','M toilet no. 12_2','w toilet no. 13','ทางเข้าห้องเปลี่ยนชุด P2-05','s/s no3','ห้องหม้อแปลง s/s no3','ห้องหม้อแปลง s/s no3_2','ห้องหม้อแปลง s/s no3_3','S/S No3','ห้องเปลี่ยนรองเท้า','Changing P2-08','ห้องหม้อแปลง S/S 303','ห้องหม้อแปลง S/S 303_2','S/S 303','ห้องหม้อแปลง ss/4','S/S 4','S/S 4_2','Emer s/s 4','Emer s/s 4_2','Emer s/s 4_3','Emer s/s 4_4','SS no. 4','Mps','ข้าง emer coridor 2','Emer Part Stock 2','PE LAB F/A Room','CST Room','Emer Mainentrance','Emer Corridor 4','MSP2','MSP2_2','Emer Corridor 5','Acoustic Lab','Acoustic Lab_2','Shock&Vibration Lab','Shock&Vibration Lab_2','Emer Corridor 6','Emer Main Corridor 2','Calibration Lab','Teradyne ofiice','DEBUG CENTER','TEE Office','BRC','BRC_2','Emer unit stock 2'],'Phase # 3':['TLC entry linkbridge','Laser Welding Room','Small Chiller 2','Emer Door Conveyor (Tranfer door)','Emer Door Featuring 2','Emer Door Shipping 1','BRC 2','BRC','TLC Unit Stock 3 (Shipping)','Main Entrance ( TX2)','Emer ข้าง passbox welding','Small Chiller 1','Small Chiller 1_2','Emer Seal Process Shipping Dock [ No.5 ]','เลเซอร์ รูม 4','Units Stock 4','TLC Engineering Office #R','Emer Door Featuring 1','Main Entrance TLC 2','Main Entrance TLC','TLC Security Room','Emer Door TX 01'],'Phase # 4':['AHU Room2-3 link bridge','AHU Room -2B4','AHU Room2-1','TPE LABORATORY','ประตูฉุกเฉินB4ชั้น2','HDD Storage','HDD Storage_2','Fire Exit AHU Room 1 IP9','Fire Exit AHU Room 1 IP9_2','AHU Room1 Lingbridge','AHU Room1','W.TOILETชั้น2 B4','M.Toilet ชั้น2 4','ทางเข้าอ๊อฟฟิตชั้น2 B4','TestcoServer1','Network Server1','Monitoring Data Server & SE Office','Bench Test & Repair Room','Spare Part Center','ESD Control Engineering','Bean &Twio room','Fire Exit Testing Area GL. M-7','Female Toilet no.24','Handiccap','Male Toilet no.24','Entrance Matting OP4','Lift Lobby IP5','ประตูห้องไฟฟ้า UT3-3','ห้องไฟฟ้า Sub13-4 B4','ห้องหม้อแปลง SUB13-2 บานใหญ่','ห้องหมอแปล บานใหญ่ Sub13-1','ห้องหมอแปลง Sub13-2','ห้อหม้อแปลง SUB13-1','ห้องหมอแปลงไฟฟ้า-2B4','ทางเข้าห้องหม้อแปลงไฟฟ้า B4-1','Sub12 RM B4','Sub 12','TestcoServer1_2','Utility Area','Utility area b4','ห้อง ชาร์ดแบ็ต','Fire Exit Staging Area 3 IP6','Fire exit staging 3_ไม่มีระบย','Storage','Fire Exit Testing Area GL. E-11 IP14','Fire Exit Testing Area GL. I-11 OP6','Control Room'],'Phase # 5':['W toilet','W toilet_2','M toilet','idf room 3','Customer visit','P5_3rd-Stair3','P5_3rd-Stair1','idf room 1','P5_3rd-Stair2','P5_3Fl-Emer MDB Room3','P5_3rd-Stair5','idf room 2','BB ROOM 3','P5_2nd-Stair 4#2','EE.Room','Command','AHU Room2','AHU ROOM3','W toilet_3','M toilet_2','Command_2','BMS FATILI CONTROL ROOM','VMI','Saturn','AHU ROOM4','IDF room 3','BE automation','P5_2nd-Stair3','P5_1Fl-Stair No.4#3','Small chiller','Small chiller_2','P5_2nd-Stair1','Small chiller_3','IDF Room2','P5_1Fl-Stair No.5#2','P5_1Fl-Stair No.1#1','P5_1Fl-MDB Tranformer3','P5_1Fl-MDB Tranformer3_2','P5_1Fl-MDB Tranformer3_3','P5_1Fl-MDB Tranformer3_4','P5_1Fl-Emer MDB Room1','P5_1Fl-MDB Tranformer1','P5_1Fl-MDB Tranformer2','Emer door link bridge','P5-3Fl-MDB Loading','P5_2Fl-MDB Tranformer2','P5_1Fl-MDB Tranformer1_2','P5-2Fl-Emer AHU Room1','P5_2nd-Stair2','MDB room 2','MDB room 2_2','D-G-3-6 (NO NAME)','P5_2nd-Stair No.5','P5_1Fl-Stair No.2','AHU room 2','AHU room 2_2','P5-1Fl-Small Chiller Room','AHU room 2_3','AHU room 2_4','P5-1Fl-Small Chiller Room_2','P5_1Fl-Stair No.4#2','Anti Room -2','P5_1Fl-Stair No.4#1','EE room','Anti Room','P5_1Fl-AHU Room 1','AS-2-1','Backend Testing Unit Area2','IDF Room 1','P5_1Fl-Stair No.1#1_2','P5_1Fl-Stair No.1#1_3','C-G-2-1 (NAME)','Backend Area 2','Staging area 1','Staging area2','C-G-2-2 (2Door)','P5_1Fl-Stair No.3','P5_1Fl-Stair No.3_2','Backend Testing Unit Area2_2','Storage room','MPS rooom','Helium Leak Test PM 0verhaul Room','MSP room','Engineer lab','TE MTC OFFICE','IDF room 3_2','Nursing room','BREA ROOM','Break room','M.TOILET','W. Toilet','EE Room','P5_1Fl-Stair No.4#2_2','P5_2nd-Stair 4#1'],'Utility':['Fire Exit MDB/HV Room IP2 (UT3)','Fire Exit Chiller Room IP5@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP6@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP7@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP4@2EN#17 (Emer door UT3)','Fire Exit Chiller Room IP8@2EN#17 (Shutter door UT3)','Fire Exit Chiller Room IP9@2EN#17 (Shutter door UT3)','Transfomer Room IP1 (UT3)','Fire Exit MDB/HV Room IP3 (UT3)','Emer Chiller11 ( UT4)','Utility_Emer Chiller6 ( UT4)','Utility_Emer Air Com2#2 ( UT4)','Utility_Emer Air Com2 ( UT4)','Utility_Emer Air Com1#2 ( UT4)','Utility_Emer Air Com1 ( UT4)','Utility_Shutter Door Air Com2 ( UT4)','Utility_Shutter Door Chiller1 ( UT4)','Utility_Shutter Door Chiller2 ( UT4)','Utility_Shutter Door Chiller3 ( UT4)','Utility_Shutter Door Chiller4 ( UT4)','Utility_Shutter Door Chiller5 ( UT4)','Emer Chiller14 ( UT4)','Utility_Shutter Door Chiller6 ( UT4)','Utility_Shutter Door Chiller7 ( UT4)','Utility_Shutter Door Chiller8 ( UT4)','Utility_Shutter Door Chiller9 ( UT4)','Emer Chiller10 ( UT4)'],'Support Building':['Car Park_Roof FL-Stair No.1','Car Park_3FL-Stair No.1','Car Park_3FL-Emer Canteen No.3','Car Park_3FL-Emer Canteen No.2','Car Park_3FL-Emer Canteen No.1']};
 const PRB_ROOMS_DASHBOARD=(function(){var keys=['admin','Phase # 1','Phase # 2','Phase # 3','Phase # 4','Phase # 5'];var obj={};keys.forEach(function(k){obj[k]=PRB_ROOMS_ALL[k];});return obj;})();
-const BPI_ROOMS={
-  'BPI-HDD':{
-    'B3':['B3L11 MSL LAB','B3L110 HEAD MEDIA LAB','B3L111 FA STORE LAB','B3L112 PCBA LAB','B3L113 TPE LAB','B3L114 IT HUB 1D','B3L115 RSS-FEA-Office','B3L116 CST LAB','B3L12 CHARACTERIZATION LAB','B3L13 METROLOGY LAB','B3L14 FW&FIT LAB','B3L15 SPW LAB','B3L16 FA LAB-1','B3L16 FA LAB-2','B3L18 TDE LAB','B3L19 MECHANICAL LAB','B3L215 IT HUB MAZZANINE Room','B3L216 IT HELP DESK ROOM','B3L21.1 EXECUTIVE AREA-1','B3L21.2 EXECUTIVE AREA-2','B3L10* Turnstile Wide Lanes','B3L11* FACILITIES','B3L111* Turnstile#4 Entry','B3L112* Turnstile#5 Entry','B3L113* HR Office #1','B3L114* HR Office #2','B3L115* MDB ROOM 3-1 IN','B3L116* WD Store Room IN','B3L17* IT HUB 2B TERRACE','B3L118* Turnstile#1 Exit','B3L119* Turnstile#2 Exit'],
-    'B4':['B4L1 IT HUB Room 1B','B4L1 7 M2 Door','B4L11 CCTV Room/Security room','B4L13 TOOLING INSPECTION LAB','B4L14 CALIBRATION LAB','B4L141 Back Engineer','B4L142 IT Hub 1A','B4L142 IT Hub 1D','B4L143 Main Entrance','B4L16 Chiller Room 4-1','B4L18 E8 RECEIVING','B4L19 BACK EN','B4L11* MEZZANINE OFFICE 1','B4L12* MEZZANINE OFFICE 2','B4L13* IT HELPDESK MEZZANINE','B4L215 MDB RM. 4-6','B4L216 MDB RM. 4-11','B4L217 MDB RM. 4-12','B4L218 MDB RM. 4-9','B4L219 Test Eng Command Center','B4L210 X-CALIBRE LAB_1','B4L210.1 IT ROOM 2D','B4L211 PROCESS BACKEND','B4L212 TEST SPARE PART','B4L213 IT ROOM 2A','B4L214 IT ROOM 2B','B4L244 Tooling Office','B4L26 IT ROOM 2C','B4L27 CELL BOARD REPAIR','B4L28 IT ROOM 2E','B4L29 SPT LAB','B4L315 IT ROOM 3C','B4L316 STW 2.5 BOARD REPAIR','B4L317 PRECISION CLEANING/TOOLING','B4L318 REAL TIME','B4L319 STW LAB','B4L320 IT ROOM 3D','B4L321 IT ROOM 3E','B4L322 TOOLING CONVERSION KIT','B4L323 HDD ESD LAB','B4L323.1 CONVERSION ROOM','B4L324 FACILITY CONTROL ROOM','B4L325 TOOLING SPARE CENTER','B4L326 REAL TIME LAB','B4L327 IT DATA CENTER','B4L328 STW SPARE PART','B4L329 IT ROOM 3A','B4L330 IT ROOM 3B','B4L331 TOOLING MAINTENANCE','B4L332 DI Room','B4L333 TOOLING REPAIR CENTER','B4L334 Tooling HSA Engineer','B4L335 Tooling Engineer','B4L3 41 MITEC ROOM','B4L336 Elevator Service Room F6','B4L337 Pipe Shaft room','B4L338 B25 Room','B4L339 Near LCF4-5 Room','B4L340 Elevator','B4L342 MDB 4-8','B4L343 MDB 4-14'],
-    'B6':['B6L133 EE ROOM','B6L134 IT HUB','B6L135 IT HUB 1B','B6L146 EXIT DOOR 6/1 1* (Main Entrance 2)','B6L147 EXIT DOOR 6/1 2* (Main Entrance 1)','B6L149 EXIT DOOR 6/1 3* (Main Entrance 3)','B6L150 Facility Door #1','B6L151 Facility Door #2','B6L153 Laser welding 1','B6L154 Laser welding 2','B6L155 Laser welding 3','B6L156 Exit door 6/14* (Main Entrance 4)','B6L16.1 ACCESSORIES','B6L16.3 Electronic Scrap Room'],
-    'Central canteen':['B-Canteen Center Entry (GARBAGE)','B-Canteen Center Entry 1','B-Canteen Center Entry 2','B-Canteen Center Entry 3','B-Canteen Center Entry 4','B-Canteen Center Entry 5']
-  },
-  'BPI-THO':{
-    'B1':['B1L11* Exit Door 1/1','B1L12* Exit Door 1/2','B1L13* Exit Door 1/4','B1L1E IT HUB','B1L1 69 MDB 1,2 RM. IN','B1L1 72 MDB 1-10 RM. IN','B1L1 MDB 1 IN','B1L1 MDB 2 IN','B1L143 HUB COMPUTER 1B','B1L148 IT HUB 1D','B1L15* MAINTENANCE SERVICE CHASE ROOM 1','B1L150 HUB COMPUTER 1A','B1L154 THO ME INVENTORY','B1L155 ENTRANCE OFFICE B1/7','B1L157 OFFICE B1-45','B1L16* MAINTENANCE SERVICE CHASE ROOM 2','B1L161 FINANCE B1-28','B1L162 INNOVATION ROOM','B1L164 HGA Development Lab','B1L165 HGA Development Lab (Robot)','B1L166 COOLANT','B1L167 Wafer Room #1','B1L168 Wafer Room #2','B1L173 MDB Room 7-1 IN','B1L174 MDB Room 1-7 IN','B1L175 MDB Room 1-8 IN','B1L176 Flyheight IN','B1L178 Characterization Development','B1M144 TOOLING INSPECTION','B1M146 HUB Computer 1C','B1M177 SF Inventory room'],
-    'B2':['B2/1L141 IT HUB RM 1-10','B2/1L146 EXIT DOOR 14','B2/1L147 Under Stair CR7','B2/1L3 FFU ROOM NO.20','B2/1L3 IT HUB_CR6 IN N','B2/1L4 Generator Room IN N','B2/1L4 MDB Room IN N','B2L128 HUB COMPUTER L1A','B2L130 ACT / ACF','B2L131 BONDING ALT','B2L132 HSA-AME','B2L133 HUB COMPUTER','B2L134 RESONANCE LAB','B2L136 HGA TEST ENGINEERING CARTRIDGE MAINTENANCE LAB','B2L137 HGA TEST ENGINEERING SPINSTAND LAB','B2L138 HGA TEST ENGINEERING INVENTORY LAB','B2L139 HGA TEST ENGINEERING ELECTRICAL DEV.LAB','B2L152 THO MSL','B2L153 BFC STORAGE','B2L155 MDB ROOM 2-6','B2L156 PLANT DI','B2L157 PACKING HGA','B2L158 VISITOR ROOM 1*','B2L159 VISITOR ROOM 2*','B2L160 EXIT DOOR 1','B2L161 EXIT DOOR 4','B2L162 EXIT DOOR 10','B2L163 EXIT DOOR 5','B2L164 CCTV security room','B2L165 SF STORE ROOM','B2L166 APTI LAB','B2L219 Test Lab mechanic','B2L220 HUB computer','B2L221 DATA CENTER','B2L222 MITEC ROOM','B2L223 HGA MAINTENANCE LABORATORY TOOLING','B2L224 HGA MAINTENANCE LABORATORY INVENTORY','B2L227 HGA MAINTENANCE LABORATORY','B2L228 EXIT DOOR 6','B2L261.1 MDB ROOM B2L2','B2L262 ESD LAB','B2L263 MDB ROOM 2-9','B2L264 FFU ROOM NO.11','B2L265 FFU ROOM NO.12','B2L266 QST LAB','B2L267 IT HUB CR5','B2L268 IT HUB AIS Room IN N','B2L269 S/F Repair Room IN','B2L270 Test inventory room','B2L310 HSA HVM TOOLING','B2L311 ESD&COMTAMINATION LAB','B2L312 ENVIRONMENT CHAMBER Chamber','B2L313 RELIABILITY LAB','B2L314 INVENTORY TEST LAB','B2L315 VENDER GSS','B2L316 TRIBOLOGY LAB','B2L318 AS LABORATORY','B2L33 IT HUB 3R RM (HUB 3R)','B2L341 RELIABILITY LAB','B2L342 SCI LAB','B2L344 HGA TEST LAB','B2L345 HSA INVENTORY ROOM','B2L346 FA LAB','B2L36 HGA Reliability Test Equipment','B2L38 HUB computer','B2L39 HUB computer','B2L1*1 Coolant'],
-    'B6':['B6L253 HUB COMPUTER','B6L341 HUB COMPUTER 3A','B6L343 HUB COMPUTER 3B','B6L3 44 B6/2 Door','B6L3 45 Service Shaft Door','B6L3 46 Elevator LC6-2','B6L3 47 Elevator LC6-3','B6L3 48 Elevator Service Room 6/2'],
-    'B9':['THO office B9 Back door','THO office B9 Main Entrance'],
-    'Facility':['B/L1-FE&M HUB ROOM','B/L2-FACILITY FRONT','B/L2-FACILITY REAR'],
-    'Facility building':['B/L1-FACILITY STORE','B/L1-SECURITY ROOM']
-  }
-};
+const BPI_ROOMS={'BPI-HDD':{'B3':['B3L11 MSL LAB','B3L110 HEAD MEDIA LAB','B3L111 FA STORE LAB','B3L112 PCBA LAB','B3L113 TPE LAB','B3L114 IT HUB 1D','B3L115 RSS-FEA-Office','B3L116 CST LAB','B3L12 CHARACTERIZATION LAB','B3L13 METROLOGY LAB','B3L14 FW&FIT LAB','B3L15 SPW LAB','B3L16 FA LAB-1','B3L16 FA LAB-2','B3L18 TDE LAB','B3L19 MECHANICAL LAB','B3L215 IT HUB MAZZANINE Room','B3L216 IT HELP DESK ROOM','B3L21.1 EXECUTIVE AREA-1','B3L21.2 EXECUTIVE AREA-2','B3L10* Turnstile Wide Lanes','B3L11* FACILITIES','B3L111* Turnstile#4 Entry','B3L112* Turnstile#5 Entry','B3L113* HR Office #1','B3L114* HR Office #2','B3L115* MDB ROOM 3-1 IN','B3L116* WD Store Room IN','B3L17* IT HUB 2B TERRACE','B3L118* Turnstile#1 Exit','B3L119* Turnstile#2 Exit'],'B4':['B4L1 IT HUB Room 1B','B4L1 7 M2 Door','B4L11 CCTV Room/Security room','B4L13 TOOLING INSPECTION LAB','B4L14 CALIBRATION LAB','B4L141 Back Engineer','B4L142 IT Hub 1A','B4L142 IT Hub 1D','B4L143 Main Entrance','B4L16 Chiller Room 4-1','B4L18 E8 RECEIVING','B4L19 BACK EN','B4L11* MEZZANINE OFFICE 1','B4L12* MEZZANINE OFFICE 2','B4L13* IT HELPDESK MEZZANINE','B4L215 MDB RM. 4-6','B4L216 MDB RM. 4-11','B4L217 MDB RM. 4-12','B4L218 MDB RM. 4-9','B4L219 Test Eng Command Center','B4L210 X-CALIBRE LAB_1','B4L210.1 IT ROOM 2D','B4L211 PROCESS BACKEND','B4L212 TEST SPARE PART','B4L213 IT ROOM 2A','B4L214 IT ROOM 2B','B4L244 Tooling Office','B4L26 IT ROOM 2C','B4L27 CELL BOARD REPAIR','B4L28 IT ROOM 2E','B4L29 SPT LAB','B4L315 IT ROOM 3C','B4L316 STW 2.5 BOARD REPAIR','B4L317 PRECISION CLEANING/TOOLING','B4L318 REAL TIME','B4L319 STW LAB','B4L320 IT ROOM 3D','B4L321 IT ROOM 3E','B4L322 TOOLING CONVERSION KIT','B4L323 HDD ESD LAB','B4L323.1 CONVERSION ROOM','B4L324 FACILITY CONTROL ROOM','B4L325 TOOLING SPARE CENTER','B4L326 REAL TIME LAB','B4L327 IT DATA CENTER','B4L328 STW SPARE PART','B4L329 IT ROOM 3A','B4L330 IT ROOM 3B','B4L331 TOOLING MAINTENANCE','B4L332 DI Room','B4L333 TOOLING REPAIR CENTER','B4L334 Tooling HSA Engineer','B4L335 Tooling Engineer','B4L3 41 MITEC ROOM','B4L336 Elevator Service Room F6','B4L337 Pipe Shaft room','B4L338 B25 Room','B4L339 Near LCF4-5 Room','B4L340 Elevator','B4L342 MDB 4-8','B4L343 MDB 4-14'],'B6':['B6L133 EE ROOM','B6L134 IT HUB','B6L135 IT HUB 1B','B6L146 EXIT DOOR 6/1 1* (Main Entrance 2)','B6L147 EXIT DOOR 6/1 2* (Main Entrance 1)','B6L149 EXIT DOOR 6/1 3* (Main Entrance 3)','B6L150 Facility Door #1','B6L151 Facility Door #2','B6L153 Laser welding 1','B6L154 Laser welding 2','B6L155 Laser welding 3','B6L156 Exit door 6/14* (Main Entrance 4)','B6L16.1 ACCESSORIES','B6L16.3 Electronic Scrap Room'],'Central canteen':['B-Canteen Center Entry (GARBAGE)','B-Canteen Center Entry 1','B-Canteen Center Entry 2','B-Canteen Center Entry 3','B-Canteen Center Entry 4','B-Canteen Center Entry 5']},'BPI-THO':{'B1':['B1L11* Exit Door 1/1','B1L12* Exit Door 1/2','B1L13* Exit Door 1/4','B1L1E IT HUB','B1L1 69 MDB 1,2 RM. IN','B1L1 72 MDB 1-10 RM. IN','B1L1 MDB 1 IN','B1L1 MDB 2 IN','B1L143 HUB COMPUTER 1B','B1L148 IT HUB 1D','B1L15* MAINTENANCE SERVICE CHASE ROOM 1','B1L150 HUB COMPUTER 1A','B1L154 THO ME INVENTORY','B1L155 ENTRANCE OFFICE B1/7','B1L157 OFFICE B1-45','B1L16* MAINTENANCE SERVICE CHASE ROOM 2','B1L161 FINANCE B1-28','B1L162 INNOVATION ROOM','B1L164 HGA Development Lab','B1L165 HGA Development Lab (Robot)','B1L166 COOLANT','B1L167 Wafer Room #1','B1L168 Wafer Room #2','B1L173 MDB Room 7-1 IN','B1L174 MDB Room 1-7 IN','B1L175 MDB Room 1-8 IN','B1L176 Flyheight IN','B1L178 Characterization Development','B1M144 TOOLING INSPECTION','B1M146 HUB Computer 1C','B1M177 SF Inventory room'],'B2':['B2/1L141 IT HUB RM 1-10','B2/1L146 EXIT DOOR 14','B2/1L147 Under Stair CR7','B2/1L3 FFU ROOM NO.20','B2/1L3 IT HUB_CR6 IN N','B2/1L4 Generator Room IN N','B2/1L4 MDB Room IN N','B2L128 HUB COMPUTER L1A','B2L130 ACT / ACF','B2L131 BONDING ALT','B2L132 HSA-AME','B2L133 HUB COMPUTER','B2L134 RESONANCE LAB','B2L136 HGA TEST ENGINEERING CARTRIDGE MAINTENANCE LAB','B2L137 HGA TEST ENGINEERING SPINSTAND LAB','B2L138 HGA TEST ENGINEERING INVENTORY LAB','B2L139 HGA TEST ENGINEERING ELECTRICAL DEV.LAB','B2L152 THO MSL','B2L153 BFC STORAGE','B2L155 MDB ROOM 2-6','B2L156 PLANT DI','B2L157 PACKING HGA','B2L158 VISITOR ROOM 1*','B2L159 VISITOR ROOM 2*','B2L160 EXIT DOOR 1','B2L161 EXIT DOOR 4','B2L162 EXIT DOOR 10','B2L163 EXIT DOOR 5','B2L164 CCTV security room','B2L165 SF STORE ROOM','B2L166 APTI LAB','B2L219 Test Lab mechanic','B2L220 HUB computer','B2L221 DATA CENTER','B2L222 MITEC ROOM','B2L223 HGA MAINTENANCE LABORATORY TOOLING','B2L224 HGA MAINTENANCE LABORATORY INVENTORY','B2L227 HGA MAINTENANCE LABORATORY','B2L228 EXIT DOOR 6','B2L261.1 MDB ROOM B2L2','B2L262 ESD LAB','B2L263 MDB ROOM 2-9','B2L264 FFU ROOM NO.11','B2L265 FFU ROOM NO.12','B2L266 QST LAB','B2L267 IT HUB CR5','B2L268 IT HUB AIS Room IN N','B2L269 S/F Repair Room IN','B2L270 Test inventory room','B2L310 HSA HVM TOOLING','B2L311 ESD&COMTAMINATION LAB','B2L312 ENVIRONMENT CHAMBER Chamber','B2L313 RELIABILITY LAB','B2L314 INVENTORY TEST LAB','B2L315 VENDER GSS','B2L316 TRIBOLOGY LAB','B2L318 AS LABORATORY','B2L33 IT HUB 3R RM (HUB 3R)','B2L341 RELIABILITY LAB','B2L342 SCI LAB','B2L344 HGA TEST LAB','B2L345 HSA INVENTORY ROOM','B2L346 FA LAB','B2L36 HGA Reliability Test Equipment','B2L38 HUB computer','B2L39 HUB computer','B2L1*1 Coolant'],'B6':['B6L253 HUB COMPUTER','B6L341 HUB COMPUTER 3A','B6L343 HUB COMPUTER 3B','B6L3 44 B6/2 Door','B6L3 45 Service Shaft Door','B6L3 46 Elevator LC6-2','B6L3 47 Elevator LC6-3','B6L3 48 Elevator Service Room 6/2'],'B9':['THO office B9 Back door','THO office B9 Main Entrance'],'Facility':['B/L1-FE&M HUB ROOM','B/L2-FACILITY FRONT','B/L2-FACILITY REAR'],'Facility building':['B/L1-FACILITY STORE','B/L1-SECURITY ROOM']}};
 const OCC_TYPE_DESC={'Office':'สำนักงาน — พื้นที่ทำงานทั่วไป','Production':'พื้นที่การผลิต / โรงงานผลิต','Chemical room':'ห้องเก็บสารเคมี — มีสารอันตราย','Electrical room':'ห้องไฟฟ้า — MDB, ตู้ควบคุม','Clinic':'คลินิก / ห้องพยาบาล','Canteen':'โรงอาหาร — ห้องอาหาร ครัว','Multipurpose Hall':'ห้องอเนกประสงค์ / หอประชุม','Laboratory room':'ห้องปฏิบัติการ — Lab ทดสอบ','Car park building':'อาคารจอดรถ','Mix':'ใช้งานหลายประเภทในพื้นที่เดียวกัน','Other':'อื่น ๆ'};
 const IMGS={egress:'https://lh3.googleusercontent.com/aida-public/AB6AXuDmSjmG6bvgOeYYy2vJy_HwIj2pgn-QLGQLnyDDnL9kU8NuNM0P-OOaVOzV6vAZWcqSIr7KAmtOIALKxHevq7NBcbFT-HWsSen5xlLbbogLTXnRBMvQrEAZbEEa9LJQA1glLDeeDm2ex1ToCVVJQYBtUoZojmJ7SISV7RlA6qsyPBYee0jJ47U5LxWYABgnicbcnMvlGtQhkRE84zlfx2NHAtpbZYcRIqs00jRbvuPFY-h4RHIoW9JF3D2NJJYq6YrdnA',doorLeaf:'https://lh3.googleusercontent.com/aida-public/AB6AXuBRJ2TmfetwqpbbLBioG_99CHDgtQw2Pb5r8FkCvKjBm2-FuAmlK-RcGbANrAoECVsBz65Q6huahW6reI-VRtJgM3DnFXVOFRS0SiNW4Mzd6kbcfkZWGs3ptnxJRGLBSjZvaQMV15xISPVKWd2x3wkfnpgz5P6XBLTpQf-vLFkQmGtGmEc1a0z1lMnXxyRn-1uwm8i_ifO2ZpApAbvVbuRSdKHXScmpOn33dAYd76KRTSbcshYNHvH5vN46ndvpnVE3vA'};
 window.addEventListener('load',function(){document.getElementById('imgEgress').src=IMGS.egress;document.getElementById('imgDoorLeaf').src=IMGS.doorLeaf;});
@@ -792,7 +857,7 @@ function onFilterBUChange(){var bu=document.getElementById('fBU').value;var bWra
 function onFilterBuildingChange(){var bu=document.getElementById('fBU').value;var building=document.getElementById('fBuilding').value;var aSel=document.getElementById('fArea');var aWrap=document.getElementById('fAreaWrap');aSel.innerHTML='<option value="">All Areas</option>';if(!building){aWrap.style.display='none';return;}getRoomsForBUBuilding(bu,building).forEach(function(r){var o=document.createElement('option');o.value=r;o.textContent=r;aSel.appendChild(o);});aWrap.style.display='flex';}
 function applyFilter(){var bu=document.getElementById('fBU').value;var building=document.getElementById('fBuilding').value;var area=document.getElementById('fArea').value;var comp=document.getElementById('fCompliance').value;var date=document.getElementById('fDate').value;var f=allRecords;if(bu)f=f.filter(function(r){return r.bu===bu;});if(building)f=f.filter(function(r){return r.building===building;});if(area)f=f.filter(function(r){return r.area===area;});if(comp)f=f.filter(function(r){return r.localLaw===comp||r.rba===comp;});if(date)f=f.filter(function(r){return(r.createdAtISO||'').startsWith(date);});renderTable(f);renderFilterTags(bu,building,area,comp,date,f.length);}
 function clearFilter(){['fBU','fCompliance','fDate'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('fBuilding').innerHTML='<option value="">All Buildings</option>';document.getElementById('fArea').innerHTML='<option value="">All Areas</option>';document.getElementById('fBuildingWrap').style.display='none';document.getElementById('fAreaWrap').style.display='none';document.getElementById('filterActiveTags').innerHTML='';document.getElementById('filterResultCount').style.display='none';renderTable(allRecords);}
-function renderFilterTags(bu,building,area,comp,date,count){var tags=document.getElementById('filterActiveTags');var html='';if(bu)html+='<span class="filter-tag"><i class="fa fa-building"></i> '+bu+'</span>';if(building)html+='<span class="filter-tag"><i class="fa fa-warehouse"></i> '+building+'</span>';if(area)html+='<span class="filter-tag"><i class="fa fa-door-open"></i> '+area+'</span>';if(comp)html+='<span class="filter-tag"><i class="fa fa-circle-check"></i> '+comp+'</span>';if(date)html+='<span class="filter-tag"><i class="fa fa-calendar"></i> '+date+'</span>';tags.innerHTML=html;/* filter-result-count ซ่อนด้วย CSS — ไม่ต้อง show */}
+function renderFilterTags(bu,building,area,comp,date,count){var tags=document.getElementById('filterActiveTags');var html='';if(bu)html+='<span class="filter-tag"><i class="fa fa-building"></i> '+bu+'</span>';if(building)html+='<span class="filter-tag"><i class="fa fa-warehouse"></i> '+building+'</span>';if(area)html+='<span class="filter-tag"><i class="fa fa-door-open"></i> '+area+'</span>';if(comp)html+='<span class="filter-tag"><i class="fa fa-circle-check"></i> '+comp+'</span>';if(date)html+='<span class="filter-tag"><i class="fa fa-calendar"></i> '+date+'</span>';tags.innerHTML=html;}
 function showDoorDims(show){var sec=document.getElementById('doorDimSection');if(show){sec.classList.add('show');}else{sec.classList.remove('show');document.getElementById('doorWidth').value='';document.getElementById('doorHeight').value='';document.getElementById('doorWidthTag').innerHTML='';document.getElementById('doorHeightTag').innerHTML='';clearDimPresets('w');clearDimPresets('h');}}
 function setDim(fieldId,val,axis){document.getElementById(fieldId).value=val;onDimChange(fieldId,axis);}
 function clearDimPresets(axis){var cid=axis==='w'?'widthPresets':'heightPresets';document.querySelectorAll('#'+cid+' .dim-preset-btn').forEach(function(b){b.classList.remove('active');});}
@@ -817,16 +882,16 @@ async function promptDeleteUser(id,name){if(!currentUser||currentUser.role!=='ad
 function togglePassField(id,btn){var inp=document.getElementById(id),isPass=inp.type==='password';inp.type=isPass?'text':'password';btn.innerHTML=isPass?'<i class="fa fa-eye-slash"></i>':'<i class="fa fa-eye"></i>';}
 function toggleLoginPass(){var inp=document.getElementById('loginPass'),icon=document.getElementById('loginPassIcon').querySelector('i');if(inp.type==='password'){inp.type='text';icon.className='fa fa-eye-slash';}else{inp.type='password';icon.className='fa fa-eye';}}
 async function doLogin(){var un=document.getElementById('loginUser').value.trim(),pw=document.getElementById('loginPass').value,btn=document.getElementById('loginBtn'),err=document.getElementById('loginError');if(!un||!pw){err.querySelector('#loginErrorMsg').textContent='กรุณากรอก Username และ Password';err.classList.add('show');return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span> กำลังตรวจสอบ...';err.classList.remove('show');try{var snap=await db.collection(USERS_COLLECTION).where('username','==',un).limit(1).get();if(snap.empty||snap.docs[0].data().password!==pw){err.querySelector('#loginErrorMsg').textContent='Username หรือ Password ไม่ถูกต้อง';err.classList.add('show');btn.disabled=false;btn.innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';return;}var userData=Object.assign({id:snap.docs[0].id},snap.docs[0].data());currentUser=userData;loginSuccess(userData);}catch(e){err.querySelector('#loginErrorMsg').textContent='เชื่อมต่อไม่สำเร็จ: '+e.message;err.classList.add('show');btn.disabled=false;btn.innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';}}
-function loginSuccess(user){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('topNav').style.display='flex';document.getElementById('appMain').style.display='block';document.getElementById('appBottomNav').style.display='flex';var initials=user.fullName?user.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2):'??';document.getElementById('navAvatar').textContent=initials;document.getElementById('navUserName').textContent=user.fullName||user.username;document.getElementById('navUserRole').textContent=(user.role||'user').toUpperCase();document.getElementById('ddUserName').textContent=user.fullName||user.username;document.getElementById('ddUserRole').textContent=(user.role||'user').toUpperCase()+' · '+(user.dept||'');var sb=document.querySelectorAll('.nav-desktop-links .nav-link-btn')[3];if(sb)sb.style.display=user.role==='admin'?'':'none';initFirestoreListener();renderUserList();showToast('ยินดีต้อนรับ '+user.fullName,'success');}
+function loginSuccess(user){document.getElementById('loginScreen').classList.add('hidden');document.getElementById('topNav').style.display='flex';document.getElementById('appMain').style.display='block';document.getElementById('appBottomNav').style.display='flex';var initials=user.fullName?user.fullName.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2):'??';document.getElementById('navAvatar').textContent=initials;document.getElementById('navUserName').textContent=user.fullName||user.username;document.getElementById('navUserRole').textContent=(user.role||'user').toUpperCase();document.getElementById('ddUserName').textContent=user.fullName||user.username;document.getElementById('ddUserRole').textContent=(user.role||'user').toUpperCase()+' · '+(user.dept||'');var sb=document.querySelectorAll('.nav-desktop-links .nav-link-btn')[4];if(sb)sb.style.display=user.role==='admin'?'':'none';initFirestoreListener();renderUserList();showToast('ยินดีต้อนรับ '+user.fullName,'success');}
 function doLogout(){toggleUserDropdown();currentUser=null;document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('topNav').style.display='none';document.getElementById('appMain').style.display='none';document.getElementById('appBottomNav').style.display='none';document.getElementById('loginUser').value='';document.getElementById('loginPass').value='';document.getElementById('loginError').classList.remove('show');document.getElementById('loginBtn').disabled=false;document.getElementById('loginBtn').innerHTML='<i class="fa fa-right-to-bracket"></i> เข้าสู่ระบบ';allRecords=[];}
 function toggleUserDropdown(){document.getElementById('userDropdown').classList.toggle('open');}
 document.addEventListener('click',function(e){var dd=document.getElementById('userDropdown'),chip=document.getElementById('userChip');if(dd&&chip&&!dd.contains(e.target)&&!chip.contains(e.target))dd.classList.remove('open');});
 var unsubscribe=null;
-function initFirestoreListener(){if(unsubscribe)unsubscribe();document.getElementById('statusText').textContent='กำลังเชื่อมต่อ...';unsubscribe=db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(function(snap){allRecords=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});currentFilteredRecords=allRecords;document.getElementById('statusText').textContent='ระบบพร้อม — Real-time Sync';renderDashboard(allRecords);if(document.getElementById('page-reports').classList.contains('active'))renderTable(allRecords);},function(){document.getElementById('statusText').textContent='เชื่อมต่อไม่สำเร็จ';});}
-var pages=['home','inspect','reports','settings','howto','about'];
-var bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',settings:'bnSettings',howto:'bnAbout',about:'bnAbout'};
+function initFirestoreListener(){if(unsubscribe)unsubscribe();document.getElementById('statusText').textContent='กำลังเชื่อมต่อ...';unsubscribe=db.collection(COLLECTION).orderBy('createdAt','desc').onSnapshot(function(snap){allRecords=snap.docs.map(function(d){return Object.assign({id:d.id},d.data());});currentFilteredRecords=allRecords;document.getElementById('statusText').textContent='ระบบพร้อม — Real-time Sync';renderDashboard(allRecords);if(document.getElementById('page-reports').classList.contains('active'))renderTable(allRecords);if(document.getElementById('page-summary').classList.contains('active'))renderSummaryCharts();},function(){document.getElementById('statusText').textContent='เชื่อมต่อไม่สำเร็จ';});}
+var pages=['home','inspect','reports','summary','settings','howto','about'];
+var bnMap={home:'bnHome',inspect:'bnInspect',reports:'bnReports',summary:'bnSummary',settings:'bnSettings',howto:'bnAbout',about:'bnAbout'};
 var desktopBtns=document.querySelectorAll('.nav-desktop-links .nav-link-btn');
-function showPage(name,desktopBtn,bnId){pages.forEach(function(p){document.getElementById('page-'+p).classList.remove('active');});document.getElementById('page-'+name).classList.add('active');document.querySelectorAll('.bottom-nav-item').forEach(function(el){el.classList.remove('active');});var bnEl=document.getElementById(bnId||bnMap[name]);if(bnEl)bnEl.classList.add('active');desktopBtns.forEach(function(el){el.classList.remove('active');});if(desktopBtn)desktopBtn.classList.add('active');if(name==='reports'){renderTable(allRecords);setTimeout(initScrollProgress,100);}if(name==='settings')renderUserList();window.scrollTo(0,0);}
+function showPage(name,desktopBtn,bnId){pages.forEach(function(p){document.getElementById('page-'+p).classList.remove('active');});document.getElementById('page-'+name).classList.add('active');document.querySelectorAll('.bottom-nav-item').forEach(function(el){el.classList.remove('active');});var bnEl=document.getElementById(bnId||bnMap[name]);if(bnEl)bnEl.classList.add('active');desktopBtns.forEach(function(el){el.classList.remove('active');});if(desktopBtn)desktopBtn.classList.add('active');if(name==='reports'){renderTable(allRecords);setTimeout(initScrollProgress,100);}if(name==='settings')renderUserList();if(name==='summary')renderSummaryCharts();window.scrollTo(0,0);}
 function openClearModal(mode){clearMode=mode;var modal=document.getElementById('clearDataModal');document.getElementById('clearConfirmInput').value='';document.getElementById('clearConfirmBtn').disabled=true;if(mode==='all'){document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลทั้งหมด '+allRecords.length+' records';document.getElementById('clearDataMsg').textContent='การดำเนินการนี้จะลบข้อมูลทั้งหมดออกจาก Firebase Firestore โดยถาวร';}else if(mode==='today'){var tc=allRecords.filter(function(r){var ts=r.createdAt&&r.createdAt.toDate?r.createdAt.toDate():new Date(r.createdAtISO||0);return ts.toDateString()===new Date().toDateString();}).length;document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลวันนี้ '+tc+' records';document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่บันทึกวันนี้ จำนวน '+tc+' records';}else{document.getElementById('clearDataSubtitle').textContent='ลบข้อมูลที่กรองแล้ว '+currentFilteredRecords.length+' records';document.getElementById('clearDataMsg').textContent='ลบเฉพาะข้อมูลที่แสดงอยู่ในตาราง ('+currentFilteredRecords.length+' records)';}modal.classList.add('open');}
 function closeClearModal(){document.getElementById('clearDataModal').classList.remove('open');}
 function onClearConfirmInput(){document.getElementById('clearConfirmBtn').disabled=document.getElementById('clearConfirmInput').value!=='CONFIRM';}
@@ -874,6 +939,158 @@ function openLightbox(src,cap){document.getElementById('lightboxImg').src=src;do
 function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox'))document.getElementById('lightbox').classList.remove('open');}
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){['lightbox','deleteModal','clearDataModal','userModal','bpiPopup'].forEach(function(id){var el=document.getElementById(id);if(el)el.classList.remove('open');});}});
 function showToast(msg,type){var wrap=document.getElementById('toastWrap'),t=document.createElement('div');t.className='toast'+(type?' '+type:'');t.textContent=msg;wrap.appendChild(t);setTimeout(function(){t.remove();},3000);}
+
+/* ══════════════════════════════════════════════════════════
+   SUMMARY PAGE — Release Condition label map แก้ไข C/E
+══════════════════════════════════════════════════════════ */
+
+/* ★ KEY FIX: map รหัสตัวอักษร → ชื่อเต็ม สำหรับกราฟ Summary เท่านั้น
+   ค่าใน Firestore ยังคงเป็น "C" / "E" ตามเดิม — ไม่มีการแก้ไขข้อมูล */
+var RELEASE_LABEL_MAP={
+  'A':'A/Building General Alarm',
+  'B':'B/No Power Supplied',
+  'C':'C/No Support',
+  'D':'D/Both A & B',
+  'E':'E/Re-confirm'
+};
+
+var SUM_CHARTS=[
+  {id:'sc_doorType',   field:'doorType',         label:'Door Type',         icon:'fa-door-closed'},
+  {id:'sc_doorLeaf',   field:'doorLeaf',          label:'Door Leaf',         icon:'fa-object-group'},
+  {id:'sc_mechanism',  field:'mechanism',         label:'Mechanism',         icon:'fa-key'},
+  {id:'sc_release',    field:'releaseCondition',  label:'Release Condition', icon:'fa-lock-open',  labelMap:RELEASE_LABEL_MAP},
+  {id:'sc_localLaw',   field:'localLaw',          label:'3.4 Local Law',     icon:'fa-scale-balanced'},
+  {id:'sc_rba',        field:'rba',               label:'3.5 RBA',           icon:'fa-shield-halved'}
+];
+var SUM_COLORS=['sc-c0','sc-c1','sc-c2','sc-c3','sc-c4','sc-c5','sc-c6','sc-c7'];
+
+function onSumBUChange(){
+  var bu=document.getElementById('sumBU').value;
+  var bSel=document.getElementById('sumBuilding');
+  var bWrap=document.getElementById('sumBuildingWrap');
+  bSel.innerHTML='<option value="">All Buildings</option>';
+  if(!bu){bWrap.style.display='none';return;}
+  getBuildingsForBU(bu).forEach(function(b){
+    var o=document.createElement('option');o.value=b;o.textContent=b;bSel.appendChild(o);
+  });
+  bWrap.style.display='flex';
+}
+
+function resetSummaryFilter(){
+  document.getElementById('sumBU').value='';
+  document.getElementById('sumBuilding').innerHTML='<option value="">All Buildings</option>';
+  document.getElementById('sumBuildingWrap').style.display='none';
+  renderSummaryCharts();
+}
+
+function getSummaryRecords(){
+  var bu=document.getElementById('sumBU').value;
+  var building=document.getElementById('sumBuilding').value;
+  var recs=allRecords;
+  if(bu)recs=recs.filter(function(r){return r.bu===bu;});
+  if(building)recs=recs.filter(function(r){return r.building===building;});
+  return recs;
+}
+
+/* buildFreq รับ optional labelMap เพื่อแปลงรหัสเป็นชื่อเต็มก่อนนับ */
+function buildFreq(records,field,labelMap){
+  var map={};
+  records.forEach(function(r){
+    var raw=(r[field]||'').toString().trim();
+    if(!raw)return;
+    /* แปลงชื่อถ้ามี labelMap */
+    var v=labelMap&&labelMap[raw]?labelMap[raw]:raw;
+    map[v]=(map[v]||0)+1;
+  });
+  var arr=Object.keys(map).map(function(k){return{label:k,count:map[k]};});
+  arr.sort(function(a,b){return b.count-a.count;});
+  return arr;
+}
+
+function renderSummaryCharts(){
+  var recs=getSummaryRecords();
+  var bu=document.getElementById('sumBU').value;
+  var building=document.getElementById('sumBuilding').value;
+
+  var scopeText='ทั้งหมด (All)';
+  if(bu&&building)scopeText=bu+' › '+building;
+  else if(bu)scopeText=bu+' · All Buildings';
+  document.getElementById('sumScopeBadge').innerHTML='<i class="fa fa-layer-group"></i> '+scopeText+' <span style="background:rgba(34,102,255,.15);color:var(--primary);font-size:10px;font-weight:800;padding:2px 8px;border-radius:var(--radius-full);margin-left:4px">'+recs.length+' records</span>';
+  document.getElementById('printSummaryMeta').textContent=scopeText+' · '+new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'long',year:'numeric'});
+
+  var grid=document.getElementById('summaryChartsGrid');
+
+  if(!recs.length){
+    grid.innerHTML='<div style="grid-column:1/-1"><div class="sc-empty"><i class="fa fa-inbox"></i>ไม่มีข้อมูลในเงื่อนไขที่เลือก</div></div>';
+    return;
+  }
+
+  grid.innerHTML=SUM_CHARTS.map(function(cfg){
+    /* ส่ง labelMap เข้า buildFreq ถ้ามี */
+    var freq=buildFreq(recs,cfg.field,cfg.labelMap||null);
+    var total=freq.reduce(function(s,x){return s+x.count;},0);
+    var barsHtml='';
+    if(!freq.length){
+      barsHtml='<div class="sc-empty"><i class="fa fa-chart-simple"></i>ไม่มีข้อมูล</div>';
+    } else {
+      barsHtml=freq.map(function(item,idx){
+        var pct=total>0?Math.round(item.count/total*100):0;
+        var colorCls=SUM_COLORS[idx%SUM_COLORS.length];
+        var labelShort=item.label.length>22?item.label.slice(0,22)+'…':item.label;
+        var barWidth=Math.max(pct,0);
+        var pctInside=pct>=18?'<span class="sc-bar-pct">'+pct+'%</span>':'';
+        var pctOutside=pct<18?'<span class="sc-bar-pct-outside">'+pct+'%</span>':'';
+        return '<div class="sc-bar-row">'
+          +'<div class="sc-label" title="'+item.label+'">'+labelShort+'</div>'
+          +'<div class="sc-bar-wrap">'
+            +pctOutside
+            +'<div class="sc-bar-fill '+colorCls+'" style="width:'+barWidth+'%">'+pctInside+'</div>'
+          +'</div>'
+          +'<div class="sc-count-val">'+item.count+'</div>'
+          +'</div>';
+      }).join('');
+    }
+    return '<div class="summary-chart-card">'
+      +'<div class="sc-header">'
+        +'<div class="sc-title"><i class="fa '+cfg.icon+'"></i> '+cfg.label+'</div>'
+        +'<div class="sc-count">'+recs.length+' records</div>'
+      +'</div>'
+      +'<div class="sc-body">'+barsHtml+'</div>'
+      +'</div>';
+  }).join('');
+
+  setTimeout(function(){
+    document.querySelectorAll('.sc-bar-fill').forEach(function(el){
+      var w=el.style.width;el.style.width='0%';
+      setTimeout(function(){el.style.width=w;},50);
+    });
+  },30);
+}
+
+function exportSummaryCSV(){
+  var recs=getSummaryRecords();
+  if(!recs.length){showToast('ไม่มีข้อมูล','warning');return;}
+  var bu=document.getElementById('sumBU').value;
+  var building=document.getElementById('sumBuilding').value;
+  var rows=[['Chart','Category','Count','Percent(%)']];
+  SUM_CHARTS.forEach(function(cfg){
+    var freq=buildFreq(recs,cfg.field,cfg.labelMap||null);
+    var total=freq.reduce(function(s,x){return s+x.count;},0);
+    freq.forEach(function(item){
+      var pct=total>0?Math.round(item.count/total*100):0;
+      rows.push([cfg.label,item.label,item.count,pct]);
+    });
+    rows.push(['','','','']);
+  });
+  var csv=rows.map(function(r){return r.map(function(v){return'"'+(v||'').toString().replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var scope=(bu?(bu+(building?'_'+building:'')):'All');
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;
+  a.download='SafeGuard_Summary_'+scope+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  showToast('Export Summary CSV เรียบร้อย!','success');
+}
 </script>
 </body>
 </html>
